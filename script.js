@@ -221,6 +221,10 @@ function addSearchFunctionality() {
     // Cacher la barre de recherche par défaut (seulement visible sur l'onglet programmes)
     const searchContainer = document.querySelector('.search-container');
     
+    // Sauvegarder l'ordre original des sections
+    const programmesTab = document.getElementById('programmes');
+    const originalSections = Array.from(programmesTab.querySelectorAll('.concert-section'));
+    
     // Gérer la visibilité de la barre de recherche selon l'onglet actif
     function toggleSearchVisibility() {
         const programmesTab = document.getElementById('programmes');
@@ -234,7 +238,6 @@ function addSearchFunctionality() {
     // Ajouter l'événement de recherche
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
-        const programmesTab = document.getElementById('programmes');
         const sections = Array.from(programmesTab.querySelectorAll('.concert-section'));
         
         if (!searchTerm) {
@@ -246,6 +249,11 @@ function addSearchFunctionality() {
                     piece.style.opacity = '1';
                 });
                 section.style.display = 'block';
+            });
+            
+            // Restaurer l'ordre original
+            originalSections.forEach(section => {
+                programmesTab.appendChild(section);
             });
             return;
         }
