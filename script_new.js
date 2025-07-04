@@ -215,23 +215,33 @@ document.querySelectorAll('.piece-card').forEach(card => {
 
 // Fonction pour rechercher dans les pièces
 function addSearchFunctionality() {
-    const searchInput = document.getElementById('search-input');
-    if (!searchInput) return;
+    const programmesContent = document.getElementById('programmes');
+    if (!programmesContent) return;
     
-    // Cacher la barre de recherche par défaut (seulement visible sur l'onglet programmes)
-    const searchContainer = document.querySelector('.search-container');
+    const searchContainer = document.createElement('div');
+    searchContainer.innerHTML = `
+        <div style="text-align: center; margin: 2rem 0 3rem;">
+            <input type="text" id="searchInput" placeholder="Rechercher une pièce, un compositeur..." 
+                   style="padding: 1rem 1.5rem; width: 100%; max-width: 400px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem; background: #ffffff; color: #2d3748; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;">
+        </div>
+    `;
     
-    // Gérer la visibilité de la barre de recherche selon l'onglet actif
-    function toggleSearchVisibility() {
-        const programmesTab = document.getElementById('programmes');
-        const isVisible = programmesTab && programmesTab.classList.contains('active');
-        searchContainer.style.display = isVisible ? 'block' : 'none';
-    }
+    // Insérer la recherche au début de l'onglet programmes
+    programmesContent.insertBefore(searchContainer, programmesContent.firstChild);
     
-    // Initialiser la visibilité
-    toggleSearchVisibility();
+    const searchInput = document.getElementById('searchInput');
     
-    // Ajouter l'événement de recherche
+    // Améliorer le style au focus
+    searchInput.addEventListener('focus', function() {
+        this.style.borderColor = '#4299e1';
+        this.style.boxShadow = '0 0 0 3px rgba(66, 153, 225, 0.1)';
+    });
+    
+    searchInput.addEventListener('blur', function() {
+        this.style.borderColor = '#e2e8f0';
+        this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
+    });
+    
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const pieces = document.querySelectorAll('#programmes .piece-card');
@@ -246,133 +256,9 @@ function addSearchFunctionality() {
             }
         });
     });
-    
-    // Écouter les changements d'onglets pour ajuster la visibilité
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', function() {
-            setTimeout(toggleSearchVisibility, 10); // Petit délai pour que l'onglet soit activé
-        });
-    });
 }
 
 // Initialiser la recherche
 addSearchFunctionality();
 
-// Gestionnaire de modale vidéo YouTube
-function initVideoModal() {
-    const modal = document.getElementById('video-modal');
-    const audioPlayer = document.getElementById('audio-player');
-    const youtubePlayer = document.getElementById('youtube-player');
-    const videoTitle = document.getElementById('video-title');
-    const audioTitle = document.getElementById('audio-title');
-    
-    const closeModalBtn = document.getElementById('close-modal-btn');
-    const audioModeBtn = document.getElementById('audio-mode-btn');
-    const showVideoBtn = document.getElementById('show-video-btn');
-    const stopAudioBtn = document.getElementById('stop-audio-btn');
-    
-    let currentVideoId = '';
-    let currentTitle = '';
-    
-    // Fonction pour extraire l'ID YouTube d'une URL
-    function getYouTubeVideoId(url) {
-        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-        const match = url.match(regex);
-        return match ? match[1] : null;
-    }
-    
-    // Intercepter les clics sur les liens audio YouTube
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a[href*="youtube.com"]');
-        if (link && link.textContent.includes('🎵')) {
-            e.preventDefault();
-            
-            const videoUrl = link.href;
-            const videoId = getYouTubeVideoId(videoUrl);
-            
-            if (videoId) {
-                // Trouver le titre de la pièce
-                const pieceCard = link.closest('.piece-card');
-                const title = pieceCard ? pieceCard.querySelector('h3').textContent : 'Vidéo YouTube';
-                
-                openVideoModal(videoId, title);
-            }
-        }
-    });
-    
-    // Ouvrir la modale vidéo
-    function openVideoModal(videoId, title) {
-        currentVideoId = videoId;
-        currentTitle = title;
-        
-        videoTitle.textContent = title;
-        audioTitle.textContent = title;
-        
-        // URL avec autoplay
-        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-        youtubePlayer.src = embedUrl;
-        
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Empêcher le scroll de la page
-    }
-    
-    // Fermer la modale
-    function closeModal() {
-        modal.classList.remove('active');
-        youtubePlayer.src = '';
-        document.body.style.overflow = '';
-        currentVideoId = '';
-    }
-    
-    // Basculer en mode audio
-    function switchToAudioMode() {
-        modal.classList.remove('active');
-        audioPlayer.classList.add('active');
-        
-        // Garder la vidéo en cours mais invisible
-        document.body.style.overflow = '';
-    }
-    
-    // Revenir au mode vidéo
-    function switchToVideoMode() {
-        audioPlayer.classList.remove('active');
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    
-    // Arrêter complètement
-    function stopAudio() {
-        audioPlayer.classList.remove('active');
-        closeModal();
-    }
-    
-    // Événements des boutons
-    closeModalBtn.addEventListener('click', closeModal);
-    audioModeBtn.addEventListener('click', switchToAudioMode);
-    showVideoBtn.addEventListener('click', switchToVideoMode);
-    stopAudioBtn.addEventListener('click', stopAudio);
-    
-    // Fermer avec Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            if (modal.classList.contains('active')) {
-                closeModal();
-            } else if (audioPlayer.classList.contains('active')) {
-                stopAudio();
-            }
-        }
-    });
-    
-    // Fermer en cliquant sur le fond
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-}
-
-// Initialiser la modale vidéo
-initVideoModal();
-
 console.log('✨ Toutes les fonctionnalités JavaScript ont été initialisées!');
-console.log('🎵 Système de modale vidéo YouTube activé!');
