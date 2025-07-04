@@ -322,6 +322,56 @@ main {
     border: 1px solid #e2e8f0;
 }
 
+/* En-tête de section avec bouton PDF */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.section-header h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    margin: 0;
+    text-align: left;
+    position: relative;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    flex: 1;
+}
+
+/* Bouton de téléchargement PDF */
+.pdf-download-btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+    white-space: nowrap;
+}
+
+.pdf-download-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.pdf-download-btn:active {
+    transform: translateY(0);
+}
+
+/* Anciens styles pour h2 dans les sections sans header */
 .concert-section h2 {
     color: #2d3748;
     font-size: 2.2rem;
@@ -580,6 +630,24 @@ tbody tr:hover {
     
     .concert-section h2 {
         font-size: 1.5rem;
+    }
+    
+    /* Responsive pour les en-têtes de section avec boutons PDF */
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+    
+    .section-header h2 {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    
+    .pdf-download-btn {
+        align-self: center;
+        font-size: 0.9rem;
+        padding: 0.7rem 1.3rem;
     }
     
     .piece-card {

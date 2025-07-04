@@ -31,7 +31,12 @@
         <div id="programmes" class="tab-content active">
         <!-- Ma région virtuose -->
         <section id="ma-region-virtuose" class="concert-section">
-            <h2>Ma région virtuose (25 minutes)</h2>
+            <div class="section-header">
+                <h2>Ma région virtuose (25 minutes)</h2>
+                <button class="pdf-download-btn" data-section="ma-region-virtuose" title="Télécharger ce programme en PDF">
+                    📄 Télécharger PDF
+                </button>
+            </div>
             <div class="pieces-grid">
                 <div class="piece-card">
                     <h3>Ammerland</h3>
@@ -94,7 +99,12 @@
 
         <!-- Concert Eric Aubier -->
         <section id="concert-eric-aubier" class="concert-section">
-            <h2>Concert du 11 avril avec Eric Aubier (1h)</h2>
+            <div class="section-header">
+                <h2>Concert du 11 avril avec Eric Aubier (1h)</h2>
+                <button class="pdf-download-btn" data-section="concert-eric-aubier" title="Télécharger ce programme en PDF">
+                    📄 Télécharger PDF
+                </button>
+            </div>
             <div class="pieces-grid">
                 <div class="piece-card">
                     <h3>Aratunian</h3>
@@ -169,7 +179,12 @@
 
         <!-- Fête de la Musique -->
         <section id="fete-musique" class="concert-section">
-            <h2>Programme fête de la musique (35-40 minutes)</h2>
+            <div class="section-header">
+                <h2>Programme fête de la musique (35-40 minutes)</h2>
+                <button class="pdf-download-btn" data-section="fete-musique" title="Télécharger ce programme en PDF">
+                    📄 Télécharger PDF
+                </button>
+            </div>
             <div class="pieces-grid">
                 <div class="piece-card">
                     <h3>Begegnung</h3>
@@ -191,7 +206,12 @@
 
         <!-- Autres pièces -->
         <section id="autres-pieces" class="concert-section">
-            <h2>Pièces qui n'ont pas trouvé leur concert</h2>
+            <div class="section-header">
+                <h2>Pièces qui n'ont pas trouvé leur concert</h2>
+                <button class="pdf-download-btn" data-section="autres-pieces" title="Télécharger ce programme en PDF">
+                    📄 Télécharger PDF
+                </button>
+            </div>
             <div class="pieces-grid">
                 <div class="piece-card">
                     <h3>Oregon</h3>
@@ -375,6 +395,8 @@
         </div>
     </div>
 
+    <!-- Bibliothèque jsPDF pour la génération de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

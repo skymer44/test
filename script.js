@@ -79,9 +79,11 @@ function calculateTotalDurations() {
         let totalSeconds = 0;
         
         pieces.forEach(piece => {
-            const durationText = piece.querySelector('p:contains("Durée:")');
-            if (durationText) {
-                const durationMatch = durationText.textContent.match(/(\d{2}):(\d{2})/);
+            const durationElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                p.textContent.includes('Durée:')
+            );
+            if (durationElement) {
+                const durationMatch = durationElement.textContent.match(/(\d{2}):(\d{2})/);
                 if (durationMatch) {
                     totalMinutes += parseInt(durationMatch[1]);
                     totalSeconds += parseInt(durationMatch[2]);
@@ -119,7 +121,9 @@ function calculateTotalDurations() {
 // Ajouter des tooltips informatifs
 function addTooltips() {
     // Ajouter des tooltips aux étoiles de probabilité
-    const probabilityElements = document.querySelectorAll('td:contains("★")');
+    const probabilityElements = Array.from(document.querySelectorAll('td')).filter(el => 
+        el.textContent.includes('★')
+    );
     probabilityElements.forEach(element => {
         element.title = 'Probabilité d\'obtention du financement';
         element.style.cursor = 'help';
@@ -137,12 +141,6 @@ function addTooltips() {
         }
     });
 }
-
-// Fonction helper pour sélectionner les éléments contenant du texte
-HTMLElement.prototype.querySelector_contains = function(selector, text) {
-    return Array.from(this.querySelectorAll(selector))
-        .find(el => el.textContent.includes(text));
-};
 
 // Ajouter un bouton "retour en haut"
 function addBackToTopButton() {
@@ -454,5 +452,228 @@ function initVideoModal() {
 // Initialiser la modale vidéo
 initVideoModal();
 
+// Fonction de génération de PDF
+function initPDFGeneration() {
+    // Vérifier que jsPDF est disponible avec plusieurs tentatives
+    function checkJsPDF() {
+        if (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined') {
+            console.log('✅ jsPDF chargé avec succès');
+            setupPDFButtons();
+            return true;
+        }
+        return false;
+    }
+    
+    // Fonction pour configurer les boutons PDF
+    function setupPDFButtons() {
+        document.querySelectorAll('.pdf-download-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const sectionId = this.getAttribute('data-section');
+                generatePDF(sectionId);
+            });
+        });
+    }
+    
+    // Vérifier immédiatement
+    if (!checkJsPDF()) {
+        console.log('⏳ En attente du chargement de jsPDF...');
+        // Réessayer après un délai
+        setTimeout(() => {
+            if (!checkJsPDF()) {
+                console.error('❌ jsPDF n\'a pas pu être chargé');
+                // Désactiver les boutons PDF
+                document.querySelectorAll('.pdf-download-btn').forEach(button => {
+                    button.disabled = true;
+                    button.textContent = '❌ PDF indisponible';
+                    button.style.opacity = '0.5';
+                });
+            }
+        }, 1000);
+    }
+}
+
+function generatePDF(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) {
+        console.error('Section non trouvée:', sectionId);
+        return;
+    }
+
+    // Créer une nouvelle instance jsPDF
+    const doc = new window.jspdf.jsPDF();
+    
+    // Configuration de base
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+    let currentY = margin;
+    
+    // Fonction helper pour ajouter du texte avec gestion automatique des sauts de page
+    function addText(text, x, y, options = {}) {
+        const fontSize = options.fontSize || 10;
+        const maxWidth = options.maxWidth || contentWidth;
+        const lineHeight = options.lineHeight || fontSize * 0.15;
+        
+        doc.setFontSize(fontSize);
+        if (options.fontStyle) {
+            doc.setFont(undefined, options.fontStyle);
+        } else {
+            doc.setFont(undefined, 'normal');
+        }
+        
+        // Diviser le texte en lignes si nécessaire
+        const lines = doc.splitTextToSize(text, maxWidth);
+        
+        // Vérifier si on a besoin d'une nouvelle page
+        if (y + (lines.length * lineHeight) > pageHeight - margin) {
+            doc.addPage();
+            y = margin;
+        }
+        
+        // Ajouter chaque ligne
+        lines.forEach((line, index) => {
+            doc.text(line, x, y + (index * lineHeight));
+        });
+        
+        return y + (lines.length * lineHeight);
+    }
+    
+    // Récupérer le titre de la section
+    const titleElement = section.querySelector('h2');
+    const sectionTitle = titleElement ? titleElement.textContent.trim() : 'Programme Musical';
+    
+    // En-tête du document
+    doc.setFontSize(18);
+    doc.setFont(undefined, 'bold');
+    doc.text('Programme Musical 2026', pageWidth / 2, currentY, { align: 'center' });
+    currentY += 15;
+    
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text(sectionTitle, pageWidth / 2, currentY, { align: 'center' });
+    currentY += 10;
+    
+    // Ligne de séparation
+    doc.setLineWidth(0.5);
+    doc.line(margin, currentY, pageWidth - margin, currentY);
+    currentY += 15;
+    
+    // Date de génération avec horaire
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'italic');
+    const currentDate = new Date().toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const currentTime = new Date().toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    doc.text(`Document généré le ${currentDate} à ${currentTime}`, pageWidth / 2, currentY, { align: 'center' });
+    currentY += 20;
+    
+    // Récupérer toutes les pièces de la section
+    const pieces = section.querySelectorAll('.piece-card');
+    
+    if (pieces.length === 0) {
+        // Si pas de pièces, afficher un message
+        currentY = addText('Cette section ne contient pas encore de pièces musicales.', margin, currentY, {
+            fontSize: 12,
+            fontStyle: 'italic'
+        });
+    } else {
+        // Traiter chaque pièce
+        pieces.forEach((piece, index) => {
+            const title = piece.querySelector('h3')?.textContent.trim() || 'Titre non spécifié';
+            const composerElement = piece.querySelector('p');
+            const composer = composerElement ? 
+                composerElement.textContent.replace('Compositeur:', '').trim() : 
+                'Compositeur non spécifié';
+            
+            // Chercher la durée
+            const allParagraphs = piece.querySelectorAll('p');
+            let duration = '';
+            allParagraphs.forEach(p => {
+                if (p.textContent.includes('Durée:')) {
+                    duration = p.textContent.replace('Durée:', '').trim();
+                }
+            });
+            
+            // Chercher les infos supplémentaires
+            let info = '';
+            allParagraphs.forEach(p => {
+                if (p.textContent.includes('Info:')) {
+                    info = p.textContent.replace('Info:', '').trim();
+                }
+            });
+            
+            // Ajouter un espacement entre les pièces
+            if (index > 0) {
+                currentY += 8;
+            }
+            
+            // Titre de la pièce
+            currentY = addText(`${index + 1}. ${title}`, margin, currentY, {
+                fontSize: 13,
+                fontStyle: 'bold'
+            });
+            currentY += 3;
+            
+            // Compositeur
+            currentY = addText(`Compositeur : ${composer}`, margin + 10, currentY, {
+                fontSize: 10
+            });
+            currentY += 3;
+            
+            // Durée (si disponible)
+            if (duration) {
+                currentY = addText(`Durée : ${duration}`, margin + 10, currentY, {
+                    fontSize: 10
+                });
+                currentY += 3;
+            }
+            
+            // Note: Les informations supplémentaires (notes) ne sont plus incluses dans le PDF
+        });
+        
+        // Calculer et afficher la durée totale si elle existe
+        const totalDurationElement = section.querySelector('.total-duration');
+        if (totalDurationElement) {
+            const totalText = totalDurationElement.textContent.trim();
+            currentY += 10;
+            
+            // Ligne de séparation
+            doc.setLineWidth(0.3);
+            doc.line(margin, currentY, pageWidth - margin, currentY);
+            currentY += 8;
+            
+            currentY = addText(totalText, pageWidth / 2, currentY, {
+                fontSize: 11,
+                fontStyle: 'bold'
+            });
+        }
+    }
+    
+    // Pied de page
+    const footerY = pageHeight - 15;
+    doc.setFontSize(8);
+    doc.setFont(undefined, 'normal');
+    doc.text('Programme Musical 2026', pageWidth / 2, footerY, { align: 'center' });
+    
+    // Générer le nom de fichier
+    const fileName = `Programme_${sectionTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+    
+    // Télécharger le PDF
+    doc.save(fileName);
+    
+    console.log(`✅ PDF généré: ${fileName}`);
+}
+
+// Initialiser la génération de PDF
+initPDFGeneration();
+
 console.log('✨ Toutes les fonctionnalités JavaScript ont été initialisées!');
 console.log('🎵 Système de modale vidéo YouTube activé!');
+console.log('📄 Génération de PDF activée!');
