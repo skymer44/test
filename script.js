@@ -2,6 +2,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Programme Musical 2026 - Site chargé avec succès!');
     
+    // Initialiser les onglets
+    initTabs();
+    
     // Ajouter des animations au scroll
     initScrollAnimations();
     
@@ -14,6 +17,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Navigation smooth scrolling
     initSmoothScrolling();
 });
+
+// Gestion des onglets
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Retirer la classe active de tous les boutons et contenus
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Ajouter la classe active au bouton cliqué
+            this.classList.add('active');
+            
+            // Afficher le contenu correspondant
+            const targetContent = document.getElementById(targetTab);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            // Scroll vers le haut du contenu
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+}
 
 // Animations au scroll
 function initScrollAnimations() {
@@ -109,7 +143,7 @@ function addTooltips() {
 
 // Navigation smooth scrolling
 function initSmoothScrolling() {
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    const navLinks = document.querySelectorAll('.sub-nav-link[href^="#"]');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -118,10 +152,26 @@ function initSmoothScrolling() {
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+                // S'assurer que l'onglet "programmes" est actif
+                const programmesTab = document.querySelector('[data-tab="programmes"]');
+                const programmesContent = document.getElementById('programmes');
+                
+                if (programmesTab && programmesContent) {
+                    // Activer l'onglet programmes
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    programmesTab.classList.add('active');
+                    programmesContent.classList.add('active');
+                }
+                
+                // Scroll vers la section
+                setTimeout(() => {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
                 
                 // Ajouter une classe active temporairement
                 this.classList.add('active');
@@ -210,16 +260,19 @@ document.querySelectorAll('.piece-card').forEach(card => {
 
 // Fonction pour rechercher dans les pièces
 function addSearchFunctionality() {
+    const programmesContent = document.getElementById('programmes');
+    if (!programmesContent) return;
+    
     const searchContainer = document.createElement('div');
     searchContainer.innerHTML = `
-        <div style="text-align: center; margin: 3rem 0;">
+        <div style="text-align: center; margin: 2rem 0 3rem;">
             <input type="text" id="searchInput" placeholder="Rechercher une pièce, un compositeur..." 
                    style="padding: 1rem 1.5rem; width: 100%; max-width: 400px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem; background: #ffffff; color: #2d3748; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;">
         </div>
     `;
     
-    const main = document.querySelector('main');
-    main.insertBefore(searchContainer, main.firstChild);
+    // Insérer la recherche au début de l'onglet programmes
+    programmesContent.insertBefore(searchContainer, programmesContent.firstChild);
     
     const searchInput = document.getElementById('searchInput');
     
@@ -236,7 +289,7 @@ function addSearchFunctionality() {
     
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
-        const pieces = document.querySelectorAll('.piece-card');
+        const pieces = document.querySelectorAll('#programmes .piece-card');
         
         pieces.forEach(piece => {
             const text = piece.textContent.toLowerCase();

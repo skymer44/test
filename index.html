@@ -8,19 +8,31 @@
 </head>
 <body>
     <header>
-        <h1>Programme Musical 2026</h1>
-        <nav>
-            <ul>
-                <li><a href="#ma-region-virtuose">Ma région virtuose</a></li>
-                <li><a href="#concert-eric-aubier">Concert avec Eric Aubier</a></li>
-                <li><a href="#fete-musique">Fête de la Musique</a></li>
-                <li><a href="#autres-pieces">Autres pièces</a></li>
-                <li><a href="#financement">Financement</a></li>
-            </ul>
-        </nav>
+        <div class="header-content">
+            <h1>Programme Musical 2026</h1>
+        </div>
     </header>
 
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+            <button class="tab-button" data-tab="financement">💰 Financement</button>
+        </div>
+    </nav>
+
     <main>
+        <!-- Section Programmes -->
+        <div id="programmes" class="tab-content active">
+            <!-- Sous-navigation pour les programmes -->
+            <div class="sub-navigation">
+                <div class="sub-nav-container">
+                    <a href="#ma-region-virtuose" class="sub-nav-link">Ma région virtuose</a>
+                    <a href="#concert-eric-aubier" class="sub-nav-link">Concert avec Eric Aubier</a>
+                    <a href="#fete-musique" class="sub-nav-link">Fête de la Musique</a>
+                    <a href="#autres-pieces" class="sub-nav-link">Autres pièces</a>
+                </div>
+            </div>
         <!-- Ma région virtuose -->
         <section id="ma-region-virtuose" class="concert-section">
             <h2>Ma région virtuose (25 minutes)</h2>
@@ -209,8 +221,28 @@
             </div>
         </section>
 
-        <!-- Financement -->
-        <section id="financement" class="funding-section">
+        <!-- Sections en attente / à développer -->
+        <section id="auto-concerts" class="concert-section empty-section">
+            <h2>Auto-concerts</h2>
+            <div class="empty-content">
+                <p>🚧 Section en cours de développement</p>
+                <p>Les détails de cette programmation seront bientôt disponibles.</p>
+            </div>
+        </section>
+
+        <section id="karaoké" class="concert-section empty-section">
+            <h2>Karaoké Musical</h2>
+            <div class="empty-content">
+                <p>🚧 Section en cours de développement</p>
+                <p>Les détails de cette programmation seront bientôt disponibles.</p>
+            </div>
+        </section>
+
+        </div> <!-- Fin de la section programmes -->
+
+        <!-- Section Financement -->
+        <div id="financement" class="tab-content">
+        <section class="funding-section">
             <h2>Informations sur les moyens de financement du projet avec Eric Aubier</h2>
             <div class="funding-table">
                 <table>
@@ -293,6 +325,8 @@
                 </table>
             </div>
         </section>
+        </div> <!-- Fin de la section financement -->
+
     </main>
 
     <footer>
