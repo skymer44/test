@@ -16,8 +16,13 @@
     <!-- Navigation par onglets -->
     <nav class="tab-navigation">
         <div class="tab-container">
-            <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
-            <button class="tab-button" data-tab="financement">💰 Financement</button>
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button" data-tab="financement">💰 Financement</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
+            </div>
         </div>
     </nav>
 
@@ -335,10 +340,6 @@
         </div> <!-- Fin de la section financement -->
 
     </main>
-
-    <footer>
-        <p>&copy; Rémi Lecomte</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>

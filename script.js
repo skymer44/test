@@ -215,33 +215,23 @@ document.querySelectorAll('.piece-card').forEach(card => {
 
 // Fonction pour rechercher dans les pièces
 function addSearchFunctionality() {
-    const programmesContent = document.getElementById('programmes');
-    if (!programmesContent) return;
+    const searchInput = document.getElementById('search-input');
+    if (!searchInput) return;
     
-    const searchContainer = document.createElement('div');
-    searchContainer.innerHTML = `
-        <div style="text-align: center; margin: 2rem 0 3rem;">
-            <input type="text" id="searchInput" placeholder="Rechercher une pièce, un compositeur..." 
-                   style="padding: 1rem 1.5rem; width: 100%; max-width: 400px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 1rem; background: #ffffff; color: #2d3748; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;">
-        </div>
-    `;
+    // Cacher la barre de recherche par défaut (seulement visible sur l'onglet programmes)
+    const searchContainer = document.querySelector('.search-container');
     
-    // Insérer la recherche au début de l'onglet programmes
-    programmesContent.insertBefore(searchContainer, programmesContent.firstChild);
+    // Gérer la visibilité de la barre de recherche selon l'onglet actif
+    function toggleSearchVisibility() {
+        const programmesTab = document.getElementById('programmes');
+        const isVisible = programmesTab && programmesTab.classList.contains('active');
+        searchContainer.style.display = isVisible ? 'block' : 'none';
+    }
     
-    const searchInput = document.getElementById('searchInput');
+    // Initialiser la visibilité
+    toggleSearchVisibility();
     
-    // Améliorer le style au focus
-    searchInput.addEventListener('focus', function() {
-        this.style.borderColor = '#4299e1';
-        this.style.boxShadow = '0 0 0 3px rgba(66, 153, 225, 0.1)';
-    });
-    
-    searchInput.addEventListener('blur', function() {
-        this.style.borderColor = '#e2e8f0';
-        this.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
-    });
-    
+    // Ajouter l'événement de recherche
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const pieces = document.querySelectorAll('#programmes .piece-card');
@@ -254,6 +244,13 @@ function addSearchFunctionality() {
             } else {
                 piece.style.display = searchTerm ? 'none' : 'block';
             }
+        });
+    });
+    
+    // Écouter les changements d'onglets pour ajuster la visibilité
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            setTimeout(toggleSearchVisibility, 10); // Petit délai pour que l'onglet soit activé
         });
     });
 }
