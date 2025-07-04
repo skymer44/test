@@ -263,7 +263,6 @@ function initVideoModal() {
     const modal = document.getElementById('video-modal');
     const audioPlayer = document.getElementById('audio-player');
     const youtubePlayer = document.getElementById('youtube-player');
-    const videoTitle = document.getElementById('video-title');
     const audioTitle = document.getElementById('audio-title');
     
     const closeModalBtn = document.getElementById('close-modal-btn');
@@ -305,7 +304,6 @@ function initVideoModal() {
         currentVideoId = videoId;
         currentTitle = title;
         
-        videoTitle.textContent = title;
         audioTitle.textContent = title;
         
         // URL avec autoplay
@@ -342,15 +340,35 @@ function initVideoModal() {
     
     // Arrêter complètement
     function stopAudio() {
+        console.log('🛑 Arrêt demandé');
         audioPlayer.classList.remove('active');
-        closeModal();
+        youtubePlayer.src = ''; // Arrêter complètement la vidéo
+        currentVideoId = '';
+        currentTitle = '';
+        document.body.style.overflow = '';
+        console.log('✅ Audio arrêté et nettoyé');
     }
     
     // Événements des boutons
-    closeModalBtn.addEventListener('click', closeModal);
-    audioModeBtn.addEventListener('click', switchToAudioMode);
-    showVideoBtn.addEventListener('click', switchToVideoMode);
-    stopAudioBtn.addEventListener('click', stopAudio);
+    closeModalBtn.addEventListener('click', function() {
+        console.log('🗙 Fermeture modale');
+        closeModal();
+    });
+    
+    audioModeBtn.addEventListener('click', function() {
+        console.log('🎧 Basculement en mode audio');
+        switchToAudioMode();
+    });
+    
+    showVideoBtn.addEventListener('click', function() {
+        console.log('▶ Retour en mode vidéo');
+        switchToVideoMode();
+    });
+    
+    stopAudioBtn.addEventListener('click', function() {
+        console.log('⏹ Clic sur arrêt audio');
+        stopAudio();
+    });
     
     // Fermer avec Escape
     document.addEventListener('keydown', function(e) {
