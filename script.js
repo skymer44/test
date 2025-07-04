@@ -234,16 +234,70 @@ function addSearchFunctionality() {
     // Ajouter l'événement de recherche
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
-        const pieces = document.querySelectorAll('#programmes .piece-card');
+        const programmesTab = document.getElementById('programmes');
+        const sections = Array.from(programmesTab.querySelectorAll('.concert-section'));
         
-        pieces.forEach(piece => {
-            const text = piece.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-                piece.style.display = 'block';
-                piece.style.opacity = '1';
+        if (!searchTerm) {
+            // Si pas de recherche, remettre l'ordre original et tout afficher
+            sections.forEach(section => {
+                const pieces = section.querySelectorAll('.piece-card');
+                pieces.forEach(piece => {
+                    piece.style.display = 'block';
+                    piece.style.opacity = '1';
+                });
+                section.style.display = 'block';
+            });
+            return;
+        }
+        
+        // Créer un tableau pour trier les sections
+        const sectionsWithResults = [];
+        const sectionsWithoutResults = [];
+        
+        sections.forEach(section => {
+            const pieces = section.querySelectorAll('.piece-card');
+            let hasResults = false;
+            
+            // D'abord vérifier si le terme de recherche correspond au titre de la section
+            const sectionTitle = section.querySelector('h2').textContent.toLowerCase();
+            const sectionMatchesSearch = sectionTitle.includes(searchTerm);
+            
+            if (sectionMatchesSearch) {
+                // Si la section correspond, afficher toutes les pièces de cette section
+                pieces.forEach(piece => {
+                    piece.style.display = 'block';
+                    piece.style.opacity = '1';
+                });
+                hasResults = true;
             } else {
-                piece.style.display = searchTerm ? 'none' : 'block';
+                // Sinon, vérifier pièce par pièce
+                pieces.forEach(piece => {
+                    const text = piece.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        piece.style.display = 'block';
+                        piece.style.opacity = '1';
+                        hasResults = true;
+                    } else {
+                        piece.style.display = 'none';
+                    }
+                });
             }
+            
+            if (hasResults) {
+                sectionsWithResults.push(section);
+                section.style.display = 'block';
+            } else {
+                sectionsWithoutResults.push(section);
+                section.style.display = 'none'; // Cacher les sections sans résultats
+            }
+        });
+        
+        // Réorganiser les sections : résultats en haut, puis sections vides
+        const allSections = [...sectionsWithResults, ...sectionsWithoutResults];
+        
+        // Réinsérer les sections dans le bon ordre
+        allSections.forEach(section => {
+            programmesTab.appendChild(section);
         });
     });
     
