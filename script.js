@@ -13,9 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Ajouter des tooltips informatifs
     addTooltips();
-    
-    // Navigation smooth scrolling
-    initSmoothScrolling();
 });
 
 // Gestion des onglets
@@ -138,48 +135,6 @@ function addTooltips() {
         } else if (link.textContent.includes('🛒')) {
             link.title = 'Acheter la partition';
         }
-    });
-}
-
-// Navigation smooth scrolling
-function initSmoothScrolling() {
-    const navLinks = document.querySelectorAll('.sub-nav-link[href^="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                // S'assurer que l'onglet "programmes" est actif
-                const programmesTab = document.querySelector('[data-tab="programmes"]');
-                const programmesContent = document.getElementById('programmes');
-                
-                if (programmesTab && programmesContent) {
-                    // Activer l'onglet programmes
-                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                    
-                    programmesTab.classList.add('active');
-                    programmesContent.classList.add('active');
-                }
-                
-                // Scroll vers la section
-                setTimeout(() => {
-                    targetSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }, 100);
-                
-                // Ajouter une classe active temporairement
-                this.classList.add('active');
-                setTimeout(() => {
-                    this.classList.remove('active');
-                }, 2000);
-            }
-        });
     });
 }
 
