@@ -361,6 +361,141 @@
 
     </main>
 
+            <section id="big-spender">
+            <h2>Big Spender</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="youll-be-back">
+            <h2>You’ll be back</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="skyfall">
+            <h2>Skyfall</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="soundtrack-highlights-from-the-hunger-games">
+            <h2>Soundtrack Highlights from the Hunger Games</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="suite-from-symphonie-fantastique">
+            <h2>Suite from Symphonie Fantastique</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="tableaux-dune-exposition">
+            <h2>Tableaux d’une exposition</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="lhymne-a-lamour">
+            <h2>L’hymne à l’amour</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="mambo-extrait-west-side-story">
+            <h2>Mambo (extrait West side Story)</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="rhapsody-in-blue">
+            <h2>Rhapsody In Blue</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="waltz-no-2">
+            <h2>Waltz No. 2</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="west-side-story-a-medley">
+            <h2>West Side Story (A Medley)</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="epic-gaming-themes">
+            <h2>Epic Gaming Themes</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="bamboleo">
+            <h2>Bamboleo</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="music-from-carmen">
+            <h2>Music from Carmen</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="night-on-bald-mountain">
+            <h2>Night On Bald Mountain</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="danse-des-sauvages">
+            <h2>Danse des Sauvages</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="three-klezmer-miniatures">
+            <h2>Three Klezmer Miniatures</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="lac-des-cygnes">
+            <h2>Lac des cygnes</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="pirates-of-the-caribbean-medley">
+            <h2>Pirates of the Caribbean Medley</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+    </main>
+
     <!-- Modale vidéo YouTube -->
     <div id="video-modal" class="video-modal">
         <div class="video-modal-wrapper">
@@ -398,7 +533,251 @@
     <!-- Bibliothèque jsPDF pour la génération de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Script original pour les fonctionnalités -->
-    <script src="script.js"></script>
+    <!-- Script minimal pour les fonctionnalités de base -->
+    <script>
+        // Attendre que le DOM soit chargé
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Programme Musical 2026 - Chargement terminé!');
+            
+            // Initialiser les fonctionnalités
+            initTabs();
+            initVideoModal();
+            addSearchFunctionality();
+            initPDFGeneration();
+            
+            console.log('✅ Site web prêt!');
+        });
+
+        // Fonction pour générer un PDF (version clean - prioritaire)
+        function generatePDFClean(sectionId) {
+            console.log('🔄 Début de génération PDF pour:', sectionId);
+            
+            const section = document.getElementById(sectionId);
+            if (!section) {
+                console.error('❌ Section non trouvée:', sectionId);
+                alert('Erreur: Section non trouvée');
+                return;
+            }
+
+            // Vérifier les différentes façons dont jsPDF peut être chargé
+            let jsPDFConstructor = null;
+            
+            if (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) {
+                jsPDFConstructor = window.jspdf.jsPDF;
+                console.log('✅ jsPDF trouvé via window.jspdf.jsPDF');
+            } else if (typeof jsPDF !== 'undefined') {
+                jsPDFConstructor = jsPDF;
+                console.log('✅ jsPDF trouvé via jsPDF global');
+            } else if (typeof window.jsPDF !== 'undefined') {
+                jsPDFConstructor = window.jsPDF;
+                console.log('✅ jsPDF trouvé via window.jsPDF');
+            } else {
+                console.error('❌ jsPDF non disponible');
+                alert('Erreur: jsPDF non disponible. Veuillez recharger la page.');
+                return;
+            }
+
+            try {
+                console.log('🔄 Création du document PDF...');
+                // Créer une nouvelle instance jsPDF
+                const doc = new jsPDFConstructor();
+                
+                // Configuration de base
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 20;
+                let currentY = margin;
+                
+                // Récupérer le titre de la section
+                const titleElement = section.querySelector('h2');
+                const sectionTitle = titleElement ? titleElement.textContent.trim() : 'Programme Musical';
+                
+                // En-tête du document
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                doc.text('Programme Musical 2026', pageWidth / 2, currentY, { align: 'center' });
+                currentY += 15;
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text(sectionTitle, pageWidth / 2, currentY, { align: 'center' });
+                currentY += 10;
+                
+                // Ligne de séparation
+                doc.setLineWidth(0.5);
+                doc.line(margin, currentY, pageWidth - margin, currentY);
+                currentY += 15;
+                
+                // Date de génération
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'italic');
+                const currentDate = new Date().toLocaleDateString('fr-FR');
+                const currentTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                doc.text(`Document généré le ${currentDate} à ${currentTime}`, pageWidth / 2, currentY, { align: 'center' });
+                currentY += 20;
+                
+                // Récupérer toutes les pièces de la section
+                const pieces = section.querySelectorAll('.piece-card');
+                const realPieces = Array.from(pieces).filter(piece => {
+                    const title = piece.querySelector('h3');
+                    return title && !piece.textContent.includes('Section en cours');
+                });
+                
+                if (realPieces.length === 0) {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'italic');
+                    doc.text('Cette section ne contient pas encore de pièces musicales.', pageWidth / 2, currentY, { align: 'center' });
+                } else {
+                    // Traiter chaque pièce
+                    realPieces.forEach((piece, index) => {
+                        const title = piece.querySelector('h3')?.textContent.trim() || 'Titre non spécifié';
+                        
+                        // Chercher le compositeur
+                        const composerElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                            p.textContent.includes('Compositeur:')
+                        );
+                        const composer = composerElement ? 
+                            composerElement.textContent.replace('Compositeur:', '').trim() : 
+                            'Compositeur non spécifié';
+                        
+                        // Chercher la durée
+                        const durationElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                            p.textContent.includes('Durée:')
+                        );
+                        const duration = durationElement ? 
+                            durationElement.textContent.replace('Durée:', '').trim() : '';
+                        
+                        // Ajouter un espacement entre les pièces
+                        if (index > 0) {
+                            currentY += 8;
+                        }
+                        
+                        // Vérifier si on a besoin d'une nouvelle page
+                        if (currentY > pageHeight - 40) {
+                            doc.addPage();
+                            currentY = margin;
+                        }
+                        
+                        // Titre de la pièce
+                        doc.setFontSize(13);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${index + 1}. ${title}`, margin, currentY);
+                        currentY += 6;
+                        
+                        // Compositeur
+                        doc.setFontSize(10);
+                        doc.setFont(undefined, 'normal');
+                        doc.text(`Compositeur : ${composer}`, margin + 10, currentY);
+                        currentY += 5;
+                        
+                        // Durée (si disponible)
+                        if (duration) {
+                            doc.text(`Durée : ${duration}`, margin + 10, currentY);
+                            currentY += 5;
+                        }
+                    });
+                }
+                
+                // Pied de page
+                const footerY = pageHeight - 15;
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text('Programme Musical 2026', pageWidth / 2, footerY, { align: 'center' });
+                
+                // Générer le nom de fichier
+                const fileName = `Programme_${sectionTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+                
+                // Télécharger le PDF
+                console.log('💾 Téléchargement du PDF:', fileName);
+                doc.save(fileName);
+                
+                console.log(`✅ PDF généré avec succès: ${fileName}`);
+            } catch (error) {
+                console.error('❌ Erreur lors de la génération PDF:', error);
+                alert('Erreur lors de la génération du PDF');
+            }
+        }
+
+        // Fonction d'initialisation des boutons PDF
+        function initPDFGeneration() {
+            console.log('🔄 Initialisation des boutons PDF...');
+            
+            // Vérifier que jsPDF est disponible
+            function checkJsPDF() {
+                return (typeof window.jspdf !== 'undefined' && window.jspdf.jsPDF) ||
+                       (typeof jsPDF !== 'undefined') ||
+                       (typeof window.jsPDF !== 'undefined');
+            }
+            
+            // Fonction pour configurer les boutons PDF
+            function setupPDFButtons() {
+                const buttons = document.querySelectorAll('.pdf-download-btn');
+                console.log(`🔄 Configuration de ${buttons.length} boutons PDF`);
+                
+                buttons.forEach((button, index) => {
+                    const sectionId = button.getAttribute('data-section');
+                    console.log(`   - Bouton ${index + 1}: section "${sectionId}"`);
+                    
+                    // Supprimer les anciens listeners
+                    button.onclick = null;
+                    
+                    // Ajouter le nouveau listener
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log(`🖱️ Clic sur bouton PDF pour section: ${sectionId}`);
+                        generatePDFClean(sectionId);
+                    });
+                    
+                    // S'assurer que le bouton est activé
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                });
+                
+                console.log('✅ Boutons PDF configurés avec succès');
+            }
+            
+            // Vérifier immédiatement
+            if (checkJsPDF()) {
+                console.log('✅ jsPDF détecté immédiatement');
+                setupPDFButtons();
+            } else {
+                console.log('⏳ En attente du chargement de jsPDF...');
+                
+                // Attendre un peu plus longtemps pour le chargement
+                let attempts = 0;
+                const maxAttempts = 10;
+                
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    console.log(`⏳ Tentative ${attempts}/${maxAttempts} de détection jsPDF...`);
+                    
+                    if (checkJsPDF()) {
+                        console.log('✅ jsPDF détecté après attente');
+                        clearInterval(checkInterval);
+                        setupPDFButtons();
+                    } else if (attempts >= maxAttempts) {
+                        console.error('❌ jsPDF non disponible après plusieurs tentatives');
+                        clearInterval(checkInterval);
+                        
+                        // Désactiver les boutons PDF
+                        document.querySelectorAll('.pdf-download-btn').forEach(button => {
+                            button.disabled = true;
+                            button.textContent = '❌ PDF indisponible';
+                            button.style.opacity = '0.5';
+                        });
+                        
+                        alert('Erreur: Impossible de charger jsPDF. Les fonctions PDF ne sont pas disponibles.');
+                    }
+                }, 500); // Vérifier toutes les 500ms
+            }
+        }
+        
+        // Écraser la fonction generatePDF du script.js pour assurer la compatibilité
+        window.generatePDF = generatePDFClean;
+        console.log('🔄 Fonction generatePDF redéfinie pour la version clean');
+    </script>
+    
+    <!-- AUCUN SCRIPT D'ANALYSE AUTOMATIQUE -->
+    <script src="script-clean-v2.js"></script>
 </body>
 </html>

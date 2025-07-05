@@ -20,6 +20,15 @@ const CONFIG = {
     // Type de synchronisation ('full' ou 'test')
     syncType: process.env.SYNC_TYPE || 'full',
     
+    // FILTRE: Seulement les 4 bases de données souhaitées par l'utilisateur
+    // (avec les bonnes apostrophes Unicode 8217)
+    allowedDatabases: [
+        "Programme fête de la musique",
+        `Concert du 11 d${String.fromCharCode(8217)}avril avec Eric Aubier`,
+        "Ma région virtuose",
+        `Pièces qui n${String.fromCharCode(8217)}ont pas trouvé leur concert`,
+    ],
+    
     // IDs des bases de données Notion (à remplir après création)
     databases: {
         // concerts: 'NOTION_DATABASE_ID_CONCERTS',
@@ -202,19 +211,33 @@ async function findNotionDatabases() {
             }
         });
         
-        const databases = response.results.map(db => ({
+        // Mapper toutes les bases trouvées
+        const allDatabases = response.results.map(db => ({
             id: db.id,
             title: getNotionTitle(db.title),
             url: db.url,
             properties: Object.keys(db.properties || {})
         }));
         
-        console.log(`✅ ${databases.length} base(s) de données trouvée(s):`);
+        // Filtrer seulement les bases autorisées
+        const databases = allDatabases.filter(db => {
+            const isAllowed = CONFIG.allowedDatabases.includes(db.title);
+            console.log(`🔍 "${db.title}" → ${isAllowed ? 'AUTORISÉE ✅' : 'IGNORÉE ⏭️'}`);
+            return isAllowed;
+        });
+        
+        console.log(`🔍 ${allDatabases.length} base(s) trouvée(s) au total, ${databases.length} autorisée(s):`);
         databases.forEach(db => {
             console.log(`  📊 "${db.title}" (${db.properties.length} propriétés)`);
             console.log(`     ID: ${db.id}`);
             console.log(`     Propriétés: ${db.properties.join(', ')}`);
         });
+        
+        if (databases.length === 0) {
+            console.warn('⚠️ Aucune base de données autorisée trouvée !');
+            console.warn('📋 Bases autorisées:', CONFIG.allowedDatabases);
+            console.warn('📋 Bases trouvées:', allDatabases.map(db => db.title));
+        }
         
         return databases;
         
