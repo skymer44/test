@@ -136,32 +136,73 @@ function initVideoModal() {
     });
 }
 
-// Fonction de recherche
+// Fonction de recherche avec tri dynamique
 function addSearchFunctionality() {
     const searchInput = document.getElementById('search-input');
     if (!searchInput) return;
 
+    // Stocker l'ordre original des cartes pour chaque section
+    const originalOrders = new Map();
+    
+    // Sauvegarder l'ordre original au chargement
+    document.querySelectorAll('.pieces-grid').forEach(grid => {
+        const cards = Array.from(grid.querySelectorAll('.piece-card'));
+        originalOrders.set(grid, cards.map(card => ({ element: card, parent: grid })));
+    });
+
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
-        const pieceCards = document.querySelectorAll('.piece-card');
         
-        pieceCards.forEach(card => {
-            const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
-            const composer = card.textContent.toLowerCase();
+        if (searchTerm === '') {
+            // Restaurer l'ordre original quand la recherche est vide
+            originalOrders.forEach((originalCards, grid) => {
+                originalCards.forEach(({ element }) => {
+                    element.style.display = '';
+                    element.classList.remove('hidden', 'search-match');
+                    grid.appendChild(element); // Remettre dans l'ordre original
+                });
+            });
             
-            if (title.includes(searchTerm) || composer.includes(searchTerm)) {
-                card.style.display = '';
-                card.classList.remove('hidden');
-            } else {
-                card.style.display = 'none';
-                card.classList.add('hidden');
-            }
+            // Restaurer l'opacité des sections
+            document.querySelectorAll('.concert-section').forEach(section => {
+                section.style.opacity = '1';
+            });
+            return;
+        }
+        
+        // Traiter chaque section séparément
+        document.querySelectorAll('.pieces-grid').forEach(grid => {
+            const cards = Array.from(grid.querySelectorAll('.piece-card'));
+            const matchingCards = [];
+            const nonMatchingCards = [];
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                const composer = card.textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || composer.includes(searchTerm)) {
+                    card.style.display = '';
+                    card.classList.remove('hidden');
+                    card.classList.add('search-match');
+                    matchingCards.push(card);
+                } else {
+                    card.style.display = 'none';
+                    card.classList.add('hidden');
+                    card.classList.remove('search-match');
+                    nonMatchingCards.push(card);
+                }
+            });
+            
+            // Réorganiser : d'abord les cartes correspondantes, puis les autres
+            [...matchingCards, ...nonMatchingCards].forEach(card => {
+                grid.appendChild(card);
+            });
         });
 
         // Gérer l'affichage des sections vides
         document.querySelectorAll('.concert-section').forEach(section => {
             const visibleCards = section.querySelectorAll('.piece-card:not(.hidden)');
-            if (visibleCards.length === 0 && searchTerm !== '') {
+            if (visibleCards.length === 0) {
                 section.style.opacity = '0.5';
             } else {
                 section.style.opacity = '1';

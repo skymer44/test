@@ -770,3 +770,20 @@ section:target {
     50% { background-color: rgba(66, 153, 225, 0.05); }
     100% { background-color: transparent; }
 }
+
+/* Styles pour la recherche */
+.piece-card.search-match {
+    border: 2px solid #4299e1;
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.piece-card.search-match::before {
+    content: "🔍";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    opacity: 0.7;
+}
