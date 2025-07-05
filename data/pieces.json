@@ -1,0 +1,51 @@
+{
+  "pieces": [
+    {
+      "title": "Libertango",
+      "composer": "Astor Piazzola / arr. Tony Che",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=aZzTrSx2B-Y"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "142fcf9e-3abc-8088-b83e-c75c458b2c5b",
+        "lastModified": "2025-05-08T07:00:00.000Z"
+      }
+    },
+    {
+      "title": "The Mandalorian",
+      "composer": "Ludwig Göransson/arr. Paul Mur",
+      "info": "Pièce courte",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=PzkdBtYW0YI"
+      },
+      "source": {
+        "notion": true,
+        "database": "Concert du 11 d'avril avec Eric Aubier",
+        "pageId": "21efcf9e-3abc-80b6-8ba7-cedabb1ba43e",
+        "lastModified": "2025-05-08T07:01:00.000Z"
+      }
+    },
+    {
+      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
+      "composer": "Camille Saint-Saëns / arr. L. Cailliet",
+      "info": "La pièce est peut-être trop difficile pour nous.",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=aTCUhEyGXyU",
+        "purchase": "https://www.laflutedepan.com/partition/24636/saint-saens-camille-danse-bacchanale-de-samson-et-dalila-harmonie.html"
+      },
+      "source": {
+        "notion": true,
+        "database": "Pièces qui n'ont pas trouvé leur concert",
+        "pageId": "226fcf9e-3abc-80d3-ae67-d880ad2b1ef6",
+        "lastModified": "2025-05-08T07:02:00.000Z"
+      }
+    }
+  ],
+  "metadata": {
+    "syncDate": "2025-07-05T16:02:09.272Z",
+    "source": "notion",
+    "totalPieces": 16
+  }
+}

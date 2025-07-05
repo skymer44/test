@@ -1,0 +1,20 @@
+{
+  "name": "programme-musical-2026",
+  "version": "1.0.0",
+  "description": "Synchronisation Notion pour Programme Musical 2026",
+  "main": "scripts/notion-sync.js",
+  "scripts": {
+    "sync": "node scripts/notion-sync.js",
+    "guide": "node scripts/notion-guide.js",
+    "test": "node scripts/test-notion.js",
+    "update-site": "node scripts/update-site.js",
+    "full-sync": "npm run sync && npm run update-site",
+    "start": "python3 -m http.server 8000"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  },
+  "keywords": ["notion", "music", "synchronization", "github-actions"],
+  "author": "Programme Musical 2026",
+  "license": "MIT"
+}

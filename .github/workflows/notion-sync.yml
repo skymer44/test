@@ -1,0 +1,85 @@
+name: 🎵 Notion Sync - Programme Musical 2026
+
+on:
+  # Déclenchement manuel via l'interface GitHub
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Type de synchronisation'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - test
+      
+  # Déclenchement programmé (tous les jours à 8h et 18h)
+  schedule:
+    - cron: '0 8,18 * * *'  # 8h00 et 18h00 UTC (10h et 20h en France)
+
+  # Déclenchement sur push (pour tester les modifications du script)
+  push:
+    paths:
+      - 'scripts/notion-sync.js'
+      - '.github/workflows/notion-sync.yml'
+
+jobs:
+  sync-notion-data:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Nécessaire pour commit et push
+      
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 📦 Install dependencies
+        run: |
+          npm init -y
+          npm install @notionhq/client@latest
+          
+      - name: 🎯 Sync Notion data
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          SYNC_TYPE: ${{ github.event.inputs.sync_type || 'full' }}
+        run: |
+          echo "🚀 Démarrage de la synchronisation Notion..."
+          echo "📊 Type de sync: $SYNC_TYPE"
+          node scripts/notion-sync.js
+          
+      - name: 📝 Check for changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Changements détectés"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Aucun changement détecté"
+          fi
+          
+      - name: 💾 Commit and push changes
+        if: steps.changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "🎵 Sync automatique depuis Notion - $(date +'%Y-%m-%d %H:%M')"
+          git push
+          
+      - name: 📊 Summary
+        run: |
+          if [ "${{ steps.changes.outputs.changes }}" == "true" ]; then
+            echo "✅ Synchronisation réussie avec changements appliqués"
+          else
+            echo "ℹ️ Synchronisation réussie - aucun changement nécessaire"
+          fi
