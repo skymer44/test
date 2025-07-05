@@ -66,7 +66,7 @@ function initVideoModal() {
         const videoId = extractVideoId(videoUrl);
         if (videoId) {
             youtubePlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            videoModal.style.display = 'flex';
+            videoModal.classList.add('active'); // Utiliser la classe active
             document.body.style.overflow = 'hidden';
             currentVideoData = { videoId, title, fullUrl: videoUrl };
         }
@@ -75,17 +75,18 @@ function initVideoModal() {
     // Fermer la modale vidéo
     function closeVideoModal() {
         youtubePlayer.src = '';
-        videoModal.style.display = 'none';
+        videoModal.classList.remove('active'); // Utiliser la classe active
         document.body.style.overflow = '';
-        audioPlayer.style.display = 'none';
+        audioPlayer.classList.remove('active'); // Utiliser classList au lieu de style.display
     }
 
     // Mode audio uniquement
     function switchToAudioMode() {
         if (currentVideoData) {
             audioTitle.textContent = currentVideoData.title;
-            audioPlayer.style.display = 'flex';
-            videoModal.style.display = 'none';
+            audioPlayer.classList.add('active'); // Utiliser la classe au lieu de style.display
+            videoModal.classList.remove('active'); // Utiliser classList au lieu de style.display
+            document.body.style.overflow = ''; // Restaurer le scroll
         }
     }
 
@@ -93,8 +94,9 @@ function initVideoModal() {
     function switchToVideoMode() {
         if (currentVideoData) {
             youtubePlayer.src = `https://www.youtube.com/embed/${currentVideoData.videoId}?autoplay=1`;
-            videoModal.style.display = 'flex';
-            audioPlayer.style.display = 'none';
+            videoModal.classList.add('active'); // Utiliser la classe active
+            audioPlayer.classList.remove('active'); // Utiliser classList au lieu de style.display
+            document.body.style.overflow = 'hidden'; // Bloquer le scroll pour la modale
         }
     }
 
@@ -136,43 +138,80 @@ function initVideoModal() {
     });
 }
 
-// Fonction de recherche avec tri dynamique
+// Fonction de recherche avec réorganisation des sections
 function addSearchFunctionality() {
+    console.log('🔄 Initialisation de la fonction de recherche...');
     const searchInput = document.getElementById('search-input');
-    if (!searchInput) return;
+    if (!searchInput) {
+        console.error('❌ Champ de recherche non trouvé!');
+        return;
+    }
+    console.log('✅ Champ de recherche trouvé');
 
-    // Stocker l'ordre original des cartes pour chaque section
-    const originalOrders = new Map();
+    const programmesContainer = document.getElementById('programmes');
     
-    // Sauvegarder l'ordre original au chargement
-    document.querySelectorAll('.pieces-grid').forEach(grid => {
-        const cards = Array.from(grid.querySelectorAll('.piece-card'));
-        originalOrders.set(grid, cards.map(card => ({ element: card, parent: grid })));
+    // Stocker l'ordre original des sections (seulement celles avec du contenu)
+    const originalSectionOrder = Array.from(programmesContainer.querySelectorAll('.concert-section:not(.empty-section)'));
+    const originalCardOrders = new Map();
+    
+    console.log(`📋 ${originalSectionOrder.length} sections trouvées`);
+    
+    // Sauvegarder l'ordre original des cartes dans chaque section
+    originalSectionOrder.forEach(section => {
+        const grid = section.querySelector('.pieces-grid');
+        if (grid) {
+            const cards = Array.from(grid.querySelectorAll('.piece-card'));
+            originalCardOrders.set(section, cards);
+            console.log(`📦 Section "${section.querySelector('h2')?.textContent}" avec ${cards.length} cartes sauvegardée`);
+        }
     });
 
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase().trim();
+        console.log(`🔍 Recherche: "${searchTerm}"`);
         
         if (searchTerm === '') {
-            // Restaurer l'ordre original quand la recherche est vide
-            originalOrders.forEach((originalCards, grid) => {
-                originalCards.forEach(({ element }) => {
-                    element.style.display = '';
-                    element.classList.remove('hidden', 'search-match');
-                    grid.appendChild(element); // Remettre dans l'ordre original
-                });
-            });
+            console.log('🔄 Restauration de l\'ordre original...');
             
-            // Restaurer l'opacité des sections
-            document.querySelectorAll('.concert-section').forEach(section => {
+            // Restaurer l'ordre original des sections
+            originalSectionOrder.forEach((section, index) => {
+                // Réinsérer chaque section dans l'ordre original
+                if (index === 0) {
+                    programmesContainer.insertBefore(section, programmesContainer.firstChild);
+                } else {
+                    programmesContainer.insertBefore(section, originalSectionOrder[index - 1].nextSibling);
+                }
                 section.style.opacity = '1';
             });
+            
+            // Restaurer l'ordre original des cartes
+            originalCardOrders.forEach((originalCards, section) => {
+                const grid = section.querySelector('.pieces-grid');
+                if (grid) {
+                    // Vider la grille et remettre les cartes dans l'ordre
+                    grid.innerHTML = '';
+                    originalCards.forEach(card => {
+                        card.style.display = '';
+                        card.classList.remove('hidden', 'search-match');
+                        grid.appendChild(card);
+                    });
+                }
+            });
+            
+            console.log('✅ Ordre original restauré');
             return;
         }
         
-        // Traiter chaque section séparément
-        document.querySelectorAll('.pieces-grid').forEach(grid => {
+        const sectionsWithMatches = [];
+        const sectionsWithoutMatches = [];
+        
+        // Analyser chaque section
+        originalSectionOrder.forEach(section => {
+            const grid = section.querySelector('.pieces-grid');
+            if (!grid) return;
+            
             const cards = Array.from(grid.querySelectorAll('.piece-card'));
+            let hasMatches = false;
             const matchingCards = [];
             const nonMatchingCards = [];
             
@@ -181,10 +220,12 @@ function addSearchFunctionality() {
                 const composer = card.textContent.toLowerCase();
                 
                 if (title.includes(searchTerm) || composer.includes(searchTerm)) {
+                    console.log(`✅ Correspondance trouvée: ${title}`);
                     card.style.display = '';
                     card.classList.remove('hidden');
                     card.classList.add('search-match');
                     matchingCards.push(card);
+                    hasMatches = true;
                 } else {
                     card.style.display = 'none';
                     card.classList.add('hidden');
@@ -193,22 +234,50 @@ function addSearchFunctionality() {
                 }
             });
             
-            // Réorganiser : d'abord les cartes correspondantes, puis les autres
+            // Réorganiser les cartes dans cette section : correspondances en premier
+            grid.innerHTML = '';
             [...matchingCards, ...nonMatchingCards].forEach(card => {
                 grid.appendChild(card);
             });
-        });
-
-        // Gérer l'affichage des sections vides
-        document.querySelectorAll('.concert-section').forEach(section => {
-            const visibleCards = section.querySelectorAll('.piece-card:not(.hidden)');
-            if (visibleCards.length === 0) {
-                section.style.opacity = '0.5';
-            } else {
+            
+            // Classer la section selon qu'elle a des correspondances ou non
+            if (hasMatches) {
+                sectionsWithMatches.push(section);
                 section.style.opacity = '1';
+                console.log(`📌 Section avec correspondances: ${section.querySelector('h2')?.textContent}`);
+            } else {
+                sectionsWithoutMatches.push(section);
+                section.style.opacity = '0.5';
             }
         });
+        
+        console.log(`📊 ${sectionsWithMatches.length} sections avec correspondances, ${sectionsWithoutMatches.length} sans`);
+        
+        // Réorganiser les sections : d'abord celles avec des correspondances, puis les autres
+        // On doit manipuler le DOM correctement
+        const allSectionsInOrder = [...sectionsWithMatches, ...sectionsWithoutMatches];
+        
+        // Détacher toutes les sections d'abord
+        allSectionsInOrder.forEach(section => {
+            if (section.parentNode) {
+                section.parentNode.removeChild(section);
+            }
+        });
+        
+        // Réinsérer dans le bon ordre
+        const emptySection = programmesContainer.querySelector('.empty-section');
+        allSectionsInOrder.forEach(section => {
+            if (emptySection) {
+                programmesContainer.insertBefore(section, emptySection);
+            } else {
+                programmesContainer.appendChild(section);
+            }
+        });
+        
+        console.log('🎯 Réorganisation terminée!');
     });
+    
+    console.log('✅ Fonction de recherche initialisée avec succès');
 }
 
 console.log('✨ Script clean v2 chargé avec succès - AUCUNE fonction PDF dans ce script!');

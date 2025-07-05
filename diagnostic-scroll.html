@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Scroll - Audio Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            height: 200vh; /* Force une hauteur pour tester le scroll */
+            background: linear-gradient(to bottom, #f0f0f0, #d0d0d0);
+        }
+        
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        /* Audio player similaire à celui du site */
+        .audio-player {
+            display: none;
+            position: fixed;
+            bottom: 2rem;
+            right: 6rem;
+            background: rgba(45, 55, 72, 0.95);
+            color: white;
+            z-index: 100;
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+        
+        .audio-player.active {
+            display: block;
+        }
+        
+        .audio-player-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1.25rem;
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1001;
+        }
+        
+        .test-button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            writing-mode: vertical-rl;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debug-info">
+        Debug Info: <br>
+        Body overflow: <span id="body-overflow">auto</span><br>
+        HTML overflow: <span id="html-overflow">auto</span><br>
+        Audio player actif: <span id="audio-status">non</span><br>
+        Scroll Y: <span id="scroll-y">0</span>
+    </div>
+    
+    <div class="scroll-indicator">SCROLL TEST</div>
+    
+    <div class="content">
+        <h1>🔍 Diagnostic du problème de scroll</h1>
+        
+        <div class="test-section">
+            <h2>Test 1: Activation du lecteur audio</h2>
+            <p>Ce bouton simule l'activation du lecteur audio comme dans le site principal.</p>
+            <button class="test-button" onclick="activateAudioPlayer()">🎧 Activer le lecteur audio</button>
+            <button class="test-button" onclick="deactivateAudioPlayer()">⏹ Désactiver le lecteur audio</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Manipulation des styles de overflow</h2>
+            <button class="test-button" onclick="setBodyOverflow('hidden')">Body overflow: hidden</button>
+            <button class="test-button" onclick="setBodyOverflow('auto')">Body overflow: auto</button>
+            <button class="test-button" onclick="setBodyOverflow('')">Body overflow: reset</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Test de scroll programmatique</h2>
+            <button class="test-button" onclick="scrollToTop()">Scroll vers le haut</button>
+            <button class="test-button" onclick="scrollToBottom()">Scroll vers le bas</button>
+            <button class="test-button" onclick="scrollBy(0, 100)">Scroll +100px</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Information de diagnostic</h2>
+            <p>Cette page fait <strong>200vh</strong> de hauteur pour forcer l'apparition d'une barre de scroll.</p>
+            <p>Le lecteur audio est positionné en <code>position: fixed</code> avec <code>z-index: 100</code>.</p>
+            <p>Surveillez les informations de debug en haut à gauche.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Contenu de test</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        
+        <!-- Répéter le contenu pour forcer le scroll -->
+        <div class="test-section">
+            <h2>Section supplémentaire 1</h2>
+            <p>Contenu pour tester le scroll...</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Section supplémentaire 2</h2>
+            <p>Contenu pour tester le scroll...</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Section supplémentaire 3</h2>
+            <p>Contenu pour tester le scroll...</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Section finale</h2>
+            <p>Si vous pouvez voir cette section, le scroll fonctionne !</p>
+        </div>
+    </div>
+    
+    <!-- Audio player de test -->
+    <div id="audio-player" class="audio-player">
+        <div class="audio-player-content">
+            <div class="audio-info">
+                <span>🎵 Test Audio Player</span>
+            </div>
+            <div class="audio-controls">
+                <button onclick="deactivateAudioPlayer()" style="background: none; border: none; color: white; cursor: pointer;">⏹ Stop</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables de debug
+        let debugInfo = document.getElementById('debug-info');
+        let bodyOverflowSpan = document.getElementById('body-overflow');
+        let htmlOverflowSpan = document.getElementById('html-overflow');
+        let audioStatusSpan = document.getElementById('audio-status');
+        let scrollYSpan = document.getElementById('scroll-y');
+        
+        // Fonction pour activer le lecteur audio
+        function activateAudioPlayer() {
+            console.log('🎧 Activation du lecteur audio');
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.classList.add('active');
+            audioPlayer.style.display = 'block';
+            
+            // Simuler le comportement du site principal
+            document.body.style.overflow = '';
+            
+            updateDebugInfo();
+        }
+        
+        // Fonction pour désactiver le lecteur audio
+        function deactivateAudioPlayer() {
+            console.log('⏹ Désactivation du lecteur audio');
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.classList.remove('active');
+            audioPlayer.style.display = 'none';
+            
+            document.body.style.overflow = '';
+            
+            updateDebugInfo();
+        }
+        
+        // Fonction pour modifier l'overflow du body
+        function setBodyOverflow(value) {
+            console.log('🔧 Modification body overflow:', value);
+            document.body.style.overflow = value;
+            updateDebugInfo();
+        }
+        
+        // Fonctions de scroll
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+        
+        // Fonction de mise à jour des informations de debug
+        function updateDebugInfo() {
+            bodyOverflowSpan.textContent = document.body.style.overflow || 'auto';
+            htmlOverflowSpan.textContent = document.documentElement.style.overflow || 'auto';
+            
+            const audioPlayer = document.getElementById('audio-player');
+            audioStatusSpan.textContent = audioPlayer.classList.contains('active') ? 'oui' : 'non';
+            
+            scrollYSpan.textContent = window.scrollY;
+        }
+        
+        // Mettre à jour les infos de scroll en temps réel
+        window.addEventListener('scroll', updateDebugInfo);
+        window.addEventListener('resize', updateDebugInfo);
+        
+        // Initialiser
+        updateDebugInfo();
+        
+        // Test de détection d'événements bloqués
+        document.addEventListener('wheel', function(e) {
+            console.log('🖱️ Événement wheel détecté:', e.deltaY);
+        }, { passive: false });
+        
+        document.addEventListener('touchmove', function(e) {
+            console.log('👆 Événement touchmove détecté');
+        }, { passive: false });
+        
+        // Test de diagnostic au chargement
+        console.log('🔍 Page de diagnostic chargée');
+        console.log('📏 Hauteur du body:', document.body.scrollHeight);
+        console.log('📏 Hauteur de la fenêtre:', window.innerHeight);
+        console.log('📊 Scroll nécessaire:', document.body.scrollHeight > window.innerHeight);
+    </script>
+</body>
+</html>

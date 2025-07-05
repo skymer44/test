@@ -153,12 +153,13 @@ main {
     z-index: 1000;
     padding: 2rem;
     box-sizing: border-box;
+    /* Toujours centré quand affiché */
+    align-items: center;
+    justify-content: center;
 }
 
 .video-modal.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .video-modal-wrapper {
@@ -230,17 +231,22 @@ main {
     right: 6rem; /* Décalé vers la gauche pour éviter le bouton retour en haut */
     background: rgba(45, 55, 72, 0.95);
     color: white;
-    z-index: 999;
+    z-index: 100; /* Réduit pour ne pas interférer avec le scroll */
     border-radius: 16px;
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
     max-width: 300px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    /* Retirer backdrop-filter qui peut causer des problèmes de scroll */
+    /* backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); */
     border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: auto; /* S'assurer que les événements de pointeur fonctionnent */
+    /* Assurer que l'élément ne bloque pas le scroll */
+    will-change: transform;
+    transform: translateZ(0); /* Forcer l'accélération matérielle */
 }
 
 .audio-player.active {
-    display: block;
+    display: flex;
     animation: slideInUp 0.3s ease;
 }
 
@@ -773,17 +779,8 @@ section:target {
 
 /* Styles pour la recherche */
 .piece-card.search-match {
-    border: 2px solid #4299e1;
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
-    transform: translateY(-2px);
+    /* Pas de bordure bleue, juste un léger effet de mise en valeur */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
     transition: all 0.3s ease;
-}
-
-.piece-card.search-match::before {
-    content: "🔍";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 12px;
-    opacity: 0.7;
 }
