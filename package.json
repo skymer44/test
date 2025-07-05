@@ -9,7 +9,7 @@
     "test": "node scripts/test-notion.js",
     "test-sync": "node test-sync.js",
     "list-db": "node scripts/list-databases.js",
-    "update-site": "node scripts/update-site.js",
+    "update-site": "node scripts/intelligent-update-site.js",
     "full-sync": "npm run sync && npm run update-site",
     "start": "python3 -m http.server 8000"
   },

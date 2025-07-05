@@ -1,0 +1,424 @@
+#!/usr/bin/env node
+
+/**
+ * Script de mise à jour intelligente du site web
+ * Remplace complètement les données existantes par les données Notion
+ */
+
+const fs = require('fs').promises;
+const path = require('path');
+
+class IntelligentSiteUpdater {
+    constructor() {
+        this.dataDir = path.join(__dirname, '..', 'data');
+        this.indexPath = path.join(__dirname, '..', 'index.html');
+        this.backupDir = path.join(this.dataDir, 'site-backups');
+        
+        // Mapping des bases de données Notion vers les sections du site
+        this.sectionMapping = {
+            'Ma région virtuose': 'ma-region-virtuose',
+            'Concert du 11 d\'avril avec Eric Aubier': 'concert-eric-aubier',
+            'Insertion dans les 60 ans du Conservatoire ': 'conservatoire-60-ans',
+            'Retour Karaoké': 'retour-karaoke',
+            'Programme fête de la musique': 'fete-musique',
+            'Loto': 'loto',
+            'Pièces d\'ajout sans direction': 'pieces-ajout',
+            'Pièces qui n\'ont pas trouvé leur concert': 'pieces-orphelines'
+        };
+        
+        // Titres français des sections
+        this.sectionTitles = {
+            'ma-region-virtuose': 'Ma région virtuose',
+            'concert-eric-aubier': 'Concert du 11 d\'avril avec Eric Aubier',
+            'conservatoire-60-ans': 'Insertion dans les 60 ans du Conservatoire',
+            'retour-karaoke': 'Retour Karaoké',
+            'fete-musique': 'Programme fête de la musique',
+            'loto': 'Loto',
+            'pieces-ajout': 'Pièces d\'ajout sans direction',
+            'pieces-orphelines': 'Pièces qui n\'ont pas trouvé leur concert'
+        };
+    }
+
+    // Normalise les noms de bases de données pour gérer les différents types d'apostrophes
+    normalizeDatabaseName(name) {
+        // Remplace tous les types d'apostrophes par des apostrophes normales (39)
+        return name.replace(/[\u2019\u2018\u201B\u0060\u00B4]/g, "'");
+    }
+
+    // Obtient la section correspondante à une base de données
+    getSectionForDatabase(databaseName) {
+        const normalizedName = this.normalizeDatabaseName(databaseName);
+        return this.sectionMapping[normalizedName] || 'nouvelles-pieces';
+    }
+
+    async updateSite() {
+        console.log('🔄 === MISE À JOUR INTELLIGENTE DU SITE ===');
+        
+        try {
+            // 1. Créer une sauvegarde
+            await this.createBackup();
+            
+            // 2. Charger les données Notion
+            const notionData = await this.loadNotionData();
+            
+            // 3. Organiser les données par section
+            const organizedData = this.organizeDataBySections(notionData);
+            
+            // 4. Lire le template HTML de base
+            const baseHTML = await this.getBaseHTMLTemplate();
+            
+            // 5. Générer le nouveau HTML complet
+            const newHTML = await this.generateCompleteHTML(baseHTML, organizedData);
+            
+            // 6. Sauvegarder le nouveau HTML
+            await fs.writeFile(this.indexPath, newHTML);
+            
+            console.log('✅ Site mis à jour avec succès !');
+            this.generateReport(organizedData);
+            
+        } catch (error) {
+            console.error('❌ Erreur lors de la mise à jour:', error.message);
+            throw error;
+        }
+    }
+
+    async createBackup() {
+        try {
+            await fs.mkdir(this.backupDir, { recursive: true });
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const backupPath = path.join(this.backupDir, `index-intelligent-${timestamp}.html`);
+            
+            const currentHTML = await fs.readFile(this.indexPath, 'utf8');
+            await fs.writeFile(backupPath, currentHTML);
+            
+            console.log(`💾 Sauvegarde créée: ${backupPath}`);
+        } catch (error) {
+            console.warn('⚠️ Impossible de créer la sauvegarde:', error.message);
+        }
+    }
+
+    async loadNotionData() {
+        const data = { pieces: [] };
+        
+        try {
+            const piecesPath = path.join(this.dataDir, 'pieces.json');
+            const piecesData = await fs.readFile(piecesPath, 'utf8');
+            data.pieces = JSON.parse(piecesData).pieces || [];
+            
+            console.log(`📊 ${data.pieces.length} pièces chargées depuis Notion`);
+        } catch (error) {
+            console.warn('⚠️ Impossible de charger pieces.json:', error.message);
+        }
+        
+        return data;
+    }
+
+    organizeDataBySections(notionData) {
+        console.log('🗂️ Organisation des données par sections...');
+        
+        const sections = {};
+        
+        // Initialiser toutes les sections
+        Object.keys(this.sectionMapping).forEach(dbName => {
+            const sectionId = this.sectionMapping[dbName];
+            sections[sectionId] = {
+                id: sectionId,
+                title: this.sectionTitles[sectionId],
+                pieces: [],
+                database: dbName
+            };
+        });
+        
+        // Répartir les pièces dans les bonnes sections
+        notionData.pieces.forEach(piece => {
+            const dbName = piece.source?.database;
+            
+            if (dbName) {
+                const sectionId = this.getSectionForDatabase(dbName);
+                
+                if (sectionId && sections[sectionId]) {
+                    sections[sectionId].pieces.push(piece);
+                    console.log(`📋 "${piece.title}" → ${this.sectionTitles[sectionId]}`);
+                } else {
+                    console.warn(`⚠️ Pièce orpheline: "${piece.title}" (DB: ${dbName})`);
+                    // Mettre dans "pièces orphelines" par défaut
+                    sections['pieces-orphelines'].pieces.push(piece);
+                }
+            } else {
+                console.log(`⚠️  Pas de base de données pour "${piece.title}"`);
+                sections['pieces-orphelines'].pieces.push(piece);
+            }
+        });
+        
+        // Statistiques
+        Object.values(sections).forEach(section => {
+            if (section.pieces.length > 0) {
+                console.log(`✅ ${section.title}: ${section.pieces.length} pièce(s)`);
+            }
+        });
+        
+        return sections;
+    }
+
+    async getBaseHTMLTemplate() {
+        // Template HTML de base propre
+        return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme Musical 2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Programme Musical 2026</h1>
+        </div>
+    </header>
+
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button" data-tab="financement">💰 Financement</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section Programmes -->
+        <div id="programmes" class="tab-content active">
+            {{SECTIONS_CONTENT}}
+        </div>
+
+        <!-- Section Financement -->
+        <div id="financement" class="tab-content">
+            <section class="financement-section">
+                <h2>💰 Financement du Programme Musical 2026</h2>
+                <div class="financement-content">
+                    <div class="financement-card">
+                        <h3>📊 Budget Total Estimé</h3>
+                        <div class="budget-amount">
+                            <span class="amount">12,450€</span>
+                            <span class="period">pour l'année 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="financement-breakdown">
+                        <h3>💸 Répartition des Coûts</h3>
+                        <div class="cost-items">
+                            <div class="cost-item">
+                                <span class="cost-label">🎼 Partitions et arrangements</span>
+                                <span class="cost-value">3,200€</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">🎺 Location d'instruments spéciaux</span>
+                                <span class="cost-value">1,800€</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">🎤 Équipement audio/technique</span>
+                                <span class="cost-value">2,100€</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">🏛️ Location de salles</span>
+                                <span class="cost-value">2,850€</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">🚌 Transport et logistique</span>
+                                <span class="cost-value">1,500€</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">📣 Communication et promotion</span>
+                                <span class="cost-value">1,000€</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="financement-sources">
+                        <h3>💰 Sources de Financement</h3>
+                        <div class="source-items">
+                            <div class="source-item confirmed">
+                                <span class="source-label">🏛️ Subvention municipale</span>
+                                <span class="source-value">4,500€</span>
+                                <span class="source-status">✅ Confirmé</span>
+                            </div>
+                            <div class="source-item pending">
+                                <span class="source-label">🌍 Subvention régionale</span>
+                                <span class="source-value">3,000€</span>
+                                <span class="source-status">⏳ En attente</span>
+                            </div>
+                            <div class="source-item confirmed">
+                                <span class="source-label">🎫 Billetterie concerts</span>
+                                <span class="source-value">2,200€</span>
+                                <span class="source-status">📊 Estimé</span>
+                            </div>
+                            <div class="source-item pending">
+                                <span class="source-label">🤝 Partenariats privés</span>
+                                <span class="source-value">1,500€</span>
+                                <span class="source-status">🔍 Recherche</span>
+                            </div>
+                            <div class="source-item needed">
+                                <span class="source-label">💡 Financement complémentaire</span>
+                                <span class="source-value">1,250€</span>
+                                <span class="source-status">❓ À trouver</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="financement-status">
+                        <h3>📈 État du Financement</h3>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 72%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span class="current">8,950€ sécurisés</span>
+                                <span class="target">/ 12,450€ objectif</span>
+                                <span class="percentage">(72%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modale vidéo YouTube -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-modal-wrapper">
+            <div class="video-controls">
+                <button id="audio-mode-btn" class="control-btn" title="Mode audio uniquement">🎧</button>
+                <button id="close-modal-btn" class="control-btn" title="Fermer">✕</button>
+            </div>
+            <div class="video-modal-content">
+                <div class="video-container">
+                    <iframe id="youtube-player" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-lecteur audio en bas -->
+    <div id="audio-player" class="audio-player">
+        <div class="audio-player-content">
+            <div class="audio-info">
+                <span id="audio-title">Titre de la pièce</span>
+            </div>
+            <div class="audio-controls">
+                <button id="show-video-btn" class="audio-control-btn" title="Afficher la vidéo">▶</button>
+                <button id="stop-audio-btn" class="audio-control-btn" title="Arrêter">⏹</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bibliothèque jsPDF pour la génération de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Script original pour les fonctionnalités -->
+    <script src="script.js"></script>
+</body>
+</html>`;
+    }
+
+    generateCompleteHTML(baseHTML, sections) {
+        let sectionsHTML = '';
+        
+        // Générer chaque section avec ses pièces
+        Object.values(sections).forEach(section => {
+            if (section.pieces.length > 0) {
+                sectionsHTML += this.generateSectionHTML(section);
+            }
+        });
+        
+        // Remplacer le placeholder
+        return baseHTML.replace('{{SECTIONS_CONTENT}}', sectionsHTML);
+    }
+
+    generateSectionHTML(section) {
+        const piecesHTML = section.pieces.map(piece => this.generatePieceHTML(piece)).join('\\n                ');
+        
+        return `
+        <!-- ${section.title} -->
+        <section id="${section.id}" class="concert-section">
+            <div class="section-header">
+                <h2>${section.title}</h2>
+                <button class="pdf-download-btn" data-section="${section.id}" title="Télécharger ce programme en PDF">
+                    📄 Télécharger PDF
+                </button>
+            </div>
+            <div class="pieces-grid">
+                ${piecesHTML}
+            </div>
+        </section>
+`;
+    }
+
+    generatePieceHTML(piece) {
+        const linksHTML = [];
+        
+        if (piece.links) {
+            if (piece.links.audio) {
+                linksHTML.push(`<a href="${piece.links.audio}" target="_blank" title="Arrangement audio">🎵 Audio</a>`);
+            }
+            if (piece.links.original) {
+                linksHTML.push(`<a href="${piece.links.original}" target="_blank" title="Œuvre originale">🎬 Original</a>`);
+            }
+            if (piece.links.purchase) {
+                linksHTML.push(`<a href="${piece.links.purchase}" target="_blank" title="Lien d'achat">🛒 Achat</a>`);
+            }
+        }
+        
+        return `<div class="piece-card">
+                    <h3>${piece.title}</h3>
+                    ${piece.composer ? `<p><strong>Compositeur:</strong> ${piece.composer}</p>` : ''}
+                    ${piece.duration ? `<p><strong>Durée:</strong> ${piece.duration}</p>` : ''}
+                    ${piece.info ? `<p><strong>Info:</strong> ${piece.info}</p>` : ''}
+                    ${linksHTML.length > 0 ? `<div class="links">\\n                        ${linksHTML.join('\\n                        ')}\\n                    </div>` : ''}
+                </div>`;
+    }
+
+    generateReport(sections) {
+        console.log('\\n📊 === RAPPORT DE MISE À JOUR INTELLIGENTE ===');
+        console.log(`📅 Date: ${new Date().toLocaleString('fr-FR')}`);
+        
+        let totalPieces = 0;
+        let sectionsWithData = 0;
+        
+        Object.values(sections).forEach(section => {
+            if (section.pieces.length > 0) {
+                console.log(`🎭 ${section.title}: ${section.pieces.length} pièce(s)`);
+                totalPieces += section.pieces.length;
+                sectionsWithData++;
+            }
+        });
+        
+        console.log(`\\n✅ ${sectionsWithData} section(s) avec données`);
+        console.log(`🎵 ${totalPieces} pièce(s) au total`);
+        console.log('🌐 Site web régénéré complètement');
+        console.log('🔄 Toutes les données sont maintenant synchronisées avec Notion');
+        console.log('=====================================\\n');
+    }
+}
+
+// Fonction principale
+async function main() {
+    const updater = new IntelligentSiteUpdater();
+    await updater.updateSite();
+}
+
+if (require.main === module) {
+    main().catch(console.error);
+}
+
+module.exports = IntelligentSiteUpdater;

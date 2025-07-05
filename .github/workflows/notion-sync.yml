@@ -22,7 +22,7 @@ on:
   push:
     paths:
       - 'scripts/notion-sync.js'
-      - 'scripts/update-site.js'
+      - 'scripts/intelligent-update-site.js'
       - '.github/workflows/notion-sync.yml'
 
 jobs:
@@ -59,9 +59,9 @@ jobs:
           
       - name: 🌐 Update website
         run: |
-          echo "🔄 Mise à jour du site web..."
-          node scripts/update-site.js
-          echo "✅ Site web mis à jour"
+          echo "🔄 Mise à jour intelligente du site web..."
+          node scripts/intelligent-update-site.js
+          echo "✅ Site web mis à jour avec organisation intelligente"
           
       - name: 📝 Check for changes
         id: changes

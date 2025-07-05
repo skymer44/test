@@ -362,7 +362,7 @@ async function processConcertData(pages, database) {
                 pieces: [],
                 source: {
                     notion: true,
-                    database: database.title[0]?.plain_text || 'Unknown',
+                    database: database.title, // Utiliser le titre complet de la base
                     pageId: page.id,
                     lastModified: page.last_edited_time
                 }
@@ -409,7 +409,7 @@ async function processPieceData(pages, database) {
                 links: mappedData.links || {},
                 source: {
                     notion: true,
-                    database: database.title[0]?.plain_text || 'Unknown',
+                    database: database.title, // Utiliser le titre complet de la base
                     pageId: page.id,
                     lastModified: page.last_edited_time
                 }
