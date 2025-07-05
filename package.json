@@ -14,7 +14,6 @@
   "dependencies": {
     "@notionhq/client": "^4.0.0"
   },
-  "devDependencies": {},
   "keywords": [
     "notion",
     "music",
