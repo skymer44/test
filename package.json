@@ -12,9 +12,14 @@
     "start": "python3 -m http.server 8000"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15"
+    "@notionhq/client": "^4.0.0"
   },
-  "keywords": ["notion", "music", "synchronization", "github-actions"],
+  "keywords": [
+    "notion",
+    "music",
+    "synchronization",
+    "github-actions"
+  ],
   "author": "Programme Musical 2026",
   "license": "MIT"
 }
