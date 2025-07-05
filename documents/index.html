@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionnaire de Documents - Programme Musical 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 2px solid #e3f2fd;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #4CAF50;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background: #f0f8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #45a049;
+            background: #e8f5e8;
+        }
+
+        .upload-area.dragover {
+            border-color: #ff4444;
+            background: #ffe8e8;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .changes-list {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .change-item {
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .change-item.added {
+            border-left-color: #4CAF50;
+        }
+
+        .change-item.modified {
+            border-left-color: #ff9800;
+        }
+
+        .change-item.removed {
+            border-left-color: #f44336;
+        }
+
+        .document-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .document-info h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎼 Gestionnaire de Documents</h1>
+            <p>Système de comparaison automatique des programmes musicaux</p>
+        </div>
+
+        <div class="content">
+            <a href="../index.html" class="back-link">← Retour au site principal</a>
+
+            <!-- Section d'upload de documents -->
+            <div class="section">
+                <h2>📤 Charger un nouveau document</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div>
+                        <h3>Glissez-déposez votre document PDF ici</h3>
+                        <p>ou cliquez pour sélectionner un fichier</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            Choisir un fichier
+                        </button>
+                    </div>
+                    <input type="file" id="fileInput" class="file-input" accept=".pdf" />
+                </div>
+                <div id="uploadStatus"></div>
+                <div id="uploadProgress" class="progress" style="display: none;">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Informations sur les documents -->
+            <div class="grid">
+                <div class="section">
+                    <h2>📄 Document Actuel</h2>
+                    <div id="currentDocumentInfo" class="document-info">
+                        <p>Aucun document chargé</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📄 Document Précédent</h2>
+                    <div id="previousDocumentInfo" class="document-info">
+                        <p>Aucun document précédent</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section de comparaison -->
+            <div class="section">
+                <h2>🔍 Comparaison et Changements</h2>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="compareDocuments()">
+                        Comparer les documents
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportHistory()">
+                        Exporter l'historique
+                    </button>
+                    <button class="btn btn-danger" onclick="clearHistory()">
+                        Effacer l'historique
+                    </button>
+                </div>
+                <div id="comparisonResults"></div>
+            </div>
+
+            <!-- Section d'application des changements -->
+            <div class="section" id="changesSection" style="display: none;">
+                <h2>⚡ Application des Changements</h2>
+                <p>Cliquez sur "Appliquer les changements" pour mettre à jour automatiquement le site principal.</p>
+                <button class="btn btn-primary" onclick="applyChanges()">
+                    Appliquer les changements au site
+                </button>
+                <div id="applyStatus"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="document-manager.js"></script>
+    <script>
+        const documentManager = new DocumentManager();
+        let currentChanges = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDocumentInfo();
+            setupUploadHandlers();
+        });
+
+        function setupUploadHandlers() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // Gestion du drag & drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            // Gestion du clic
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+        }
+
+        async function handleFileUpload(file) {
+            if (file.type !== 'application/pdf') {
+                showStatus('error', 'Veuillez sélectionner un fichier PDF.');
+                return;
+            }
+
+            showProgress(true);
+            updateProgress(10);
+            showStatus('info', 'Lecture du fichier...');
+
+            try {
+                // Simulation du traitement du PDF
+                updateProgress(30);
+                const documentData = await simulatePDFProcessing(file);
+                
+                updateProgress(60);
+                showStatus('info', 'Analyse du document...');
+                
+                updateProgress(80);
+                const result = documentManager.saveNewDocument(documentData, {
+                    filename: file.name,
+                    size: file.size,
+                    uploadDate: new Date().toISOString()
+                });
+
+                updateProgress(100);
+                showStatus('success', `Document traité avec succès! Version ${result.version}`);
+                
+                currentChanges = result.changes.changes || [];
+                loadDocumentInfo();
+                displayChanges(result.changes);
+
+                setTimeout(() => showProgress(false), 1000);
+
+            } catch (error) {
+                showStatus('error', `Erreur lors du traitement: ${error.message}`);
+                showProgress(false);
+            }
+        }
+
+        async function simulatePDFProcessing(file) {
+            // Simulation du traitement PDF
+            // En réalité, ici on analyserait le PDF pour extraire les données
+            return {
+                programmes: [
+                    {
+                        id: 'test-123',
+                        title: 'test',
+                        section: 'ma-region-virtuose',
+                        compositeur: 'À définir',
+                        duree: 'À définir',
+                        info: 'Pièce en cours d\'évaluation',
+                        links: [{
+                            type: 'details',
+                            url: 'https://www.notion.so/test-123-227fcf9e3abc800b9f33ccc90069ff0b?pvs=21',
+                            label: '📝 Détails'
+                        }]
+                    }
+                    // Autres programmes extraits du PDF...
+                ],
+                financement: {
+                    // Données de financement extraites...
+                }
+            };
+        }
+
+        function loadDocumentInfo() {
+            const docs = documentManager.loadDocuments();
+            
+            const currentDiv = document.getElementById('currentDocumentInfo');
+            const previousDiv = document.getElementById('previousDocumentInfo');
+
+            if (docs.current) {
+                currentDiv.innerHTML = `
+                    <h3>Document chargé</h3>
+                    <p><strong>Version:</strong> ${docs.current.metadata.version}</p>
+                    <p><strong>Date:</strong> ${new Date(docs.current.metadata.timestamp).toLocaleString('fr-FR')}</p>
+                    <p><strong>Fichier:</strong> ${docs.current.metadata.filename || 'Non spécifié'}</p>
+                `;
+            } else {
+                currentDiv.innerHTML = '<p>Aucun document chargé</p>';
+            }
+
+            if (docs.previous) {
+                previousDiv.innerHTML = `
+                    <h3>Version précédente</h3>
+                    <p><strong>Version:</strong> ${docs.previous.metadata.version}</p>
+                    <p><strong>Date:</strong> ${new Date(docs.previous.metadata.timestamp).toLocaleString('fr-FR')}</p>
+                    <p><strong>Fichier:</strong> ${docs.previous.metadata.filename || 'Non spécifié'}</p>
+                `;
+            } else {
+                previousDiv.innerHTML = '<p>Aucun document précédent</p>';
+            }
+        }
+
+        function compareDocuments() {
+            const comparison = documentManager.compareDocuments();
+            displayChanges(comparison);
+        }
+
+        function displayChanges(comparison) {
+            const resultsDiv = document.getElementById('comparisonResults');
+            
+            if (!comparison.hasChanges) {
+                resultsDiv.innerHTML = `
+                    <div class="status info">
+                        <strong>Aucun changement détecté</strong>
+                        <p>${comparison.summary}</p>
+                    </div>
+                `;
+                document.getElementById('changesSection').style.display = 'none';
+                return;
+            }
+
+            let changesHTML = `
+                <div class="status success">
+                    <strong>Changements détectés!</strong>
+                    <p>${comparison.summary}</p>
+                </div>
+                <div class="changes-list">
+                    <h3>Détail des changements:</h3>
+            `;
+
+            comparison.changes.forEach(change => {
+                const typeClass = change.type.includes('added') ? 'added' : 
+                                 change.type.includes('removed') ? 'removed' : 'modified';
+                
+                changesHTML += `
+                    <div class="change-item ${typeClass}">
+                        <strong>${change.description}</strong>
+                        ${change.section ? `<br><small>Section: ${change.section}</small>` : ''}
+                    </div>
+                `;
+            });
+
+            changesHTML += '</div>';
+            resultsDiv.innerHTML = changesHTML;
+            
+            currentChanges = comparison.changes;
+            document.getElementById('changesSection').style.display = 'block';
+        }
+
+        async function applyChanges() {
+            if (currentChanges.length === 0) {
+                showApplyStatus('error', 'Aucun changement à appliquer.');
+                return;
+            }
+
+            showApplyStatus('info', 'Application des changements en cours...');
+
+            try {
+                // Ici, on appellerait une API ou on modifierait directement les fichiers
+                const appliedChanges = await documentManager.applyChangesToSite(currentChanges);
+                
+                showApplyStatus('success', `${appliedChanges.length} changement(s) appliqué(s) avec succès!`);
+                
+                // Recharger la page principale (simulation)
+                setTimeout(() => {
+                    if (confirm('Changements appliqués! Voulez-vous voir le site mis à jour?')) {
+                        window.open('../index.html', '_blank');
+                    }
+                }, 1000);
+
+            } catch (error) {
+                showApplyStatus('error', `Erreur lors de l'application: ${error.message}`);
+            }
+        }
+
+        function exportHistory() {
+            const history = documentManager.exportHistory();
+            const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `programme-musical-history-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatus('success', 'Historique exporté avec succès!');
+        }
+
+        function clearHistory() {
+            if (confirm('Êtes-vous sûr de vouloir effacer tout l\'historique?')) {
+                documentManager.clearHistory();
+                loadDocumentInfo();
+                document.getElementById('comparisonResults').innerHTML = '';
+                document.getElementById('changesSection').style.display = 'none';
+                showStatus('info', 'Historique effacé.');
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('uploadStatus');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showApplyStatus(type, message) {
+            const statusDiv = document.getElementById('applyStatus');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function showProgress(show) {
+            const progressDiv = document.getElementById('uploadProgress');
+            progressDiv.style.display = show ? 'block' : 'none';
+            if (!show) updateProgress(0);
+        }
+
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percent + '%';
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
-// Script principal - Version clean
+// Script principal - Version clean (v2)
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Programme Musical 2026 - Chargement terminé!');
+    console.log('Programme Musical 2026 - Script clean v2 chargé!');
     
     // Initialiser les fonctionnalités de base
     initTabs();
@@ -170,4 +170,4 @@ function addSearchFunctionality() {
     });
 }
 
-console.log('✨ Script principal chargé avec succès!');
+console.log('✨ Script clean v2 chargé avec succès - AUCUNE fonction PDF dans ce script!');

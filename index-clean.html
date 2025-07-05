@@ -557,6 +557,11 @@
                 doc.save(fileName);
                 
                 console.log(`✅ PDF généré avec succès: ${fileName}`);
+                
+                // Confirmation visuelle pour l'utilisateur
+                setTimeout(() => {
+                    alert(`PDF "${fileName}" téléchargé avec succès!`);
+                }, 100);
             } catch (error) {
                 console.error('❌ Erreur lors de la génération PDF:', error);
                 alert('Erreur lors de la génération du PDF');
@@ -643,6 +648,6 @@
     </script>
     
     <!-- AUCUN SCRIPT D'ANALYSE AUTOMATIQUE -->
-    <script src="script-clean-v2.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
