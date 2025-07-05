@@ -12,15 +12,18 @@ const path = require('path');
 // Configuration
 const CONFIG = {
     // Token d'intégration Notion
-    notionToken: process.env.NOTION_TOKEN,
+    notionToken: process.env.NOTION_TOKEN || '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',
     
-    // FILTRE: Seulement les 4 bases de données souhaitées par l'utilisateur
-    // Noms avec les bonnes apostrophes Unicode (8217 = ')
+    // FILTRE: Toutes les bases de données souhaitées par l'utilisateur
     allowedDatabases: [
+        "Retour Karaoké",
         "Programme fête de la musique",
-        `Concert du 11 d${String.fromCharCode(8217)}avril avec Eric Aubier`,
+        "Insertion dans les 60 ans du Conservatoire ",
+        "Concert du 11 d'avril avec Eric Aubier",
         "Ma région virtuose",
-        `Pièces qui n${String.fromCharCode(8217)}ont pas trouvé leur concert`,
+        "Pièces qui n'ont pas trouvé leur concert",
+        "Pièces d'ajout sans direction",
+        "Loto"
     ]
 };
 

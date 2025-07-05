@@ -14,19 +14,25 @@ const { NOTION_SUGGESTIONS } = require('./structure-analysis.js');
 
 // Configuration
 const CONFIG = {
-    // Token d'intégration Notion (défini dans les secrets GitHub)
-    notionToken: process.env.NOTION_TOKEN,
+    // Token d'intégration Notion (défini dans les secrets GitHub ou en local)
+    notionToken: process.env.NOTION_TOKEN || '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',
     
     // Type de synchronisation ('full' ou 'test')
     syncType: process.env.SYNC_TYPE || 'full',
     
-    // FILTRE: Seulement les 4 bases de données souhaitées par l'utilisateur
-    // (avec les bonnes apostrophes Unicode 8217)
+    // FILTRE: Toutes les bases de données souhaitées par l'utilisateur
     allowedDatabases: [
+        "Retour Karaoké",
         "Programme fête de la musique",
-        `Concert du 11 d${String.fromCharCode(8217)}avril avec Eric Aubier`,
+        "Insertion dans les 60 ans du Conservatoire ",
+        "Concert du 11 d'avril avec Eric Aubier",
+        "Concert du 11 d'avril avec Eric Aubier", // Version avec apostrophe droite
         "Ma région virtuose",
-        `Pièces qui n${String.fromCharCode(8217)}ont pas trouvé leur concert`,
+        "Pièces qui n'ont pas trouvé leur concert",
+        "Pièces qui n'ont pas trouvé leur concert", // Version avec apostrophe droite
+        "Pièces d'ajout sans direction",
+        "Pièces d'ajout sans direction", // Version avec apostrophe droite
+        "Loto"
     ],
     
     // IDs des bases de données Notion (à remplir après création)
@@ -219,11 +225,10 @@ async function findNotionDatabases() {
             properties: Object.keys(db.properties || {})
         }));
         
-        // Filtrer seulement les bases autorisées
+        // Filtrer seulement les bases autorisées - on autorise tout maintenant
         const databases = allDatabases.filter(db => {
-            const isAllowed = CONFIG.allowedDatabases.includes(db.title);
-            console.log(`🔍 "${db.title}" → ${isAllowed ? 'AUTORISÉE ✅' : 'IGNORÉE ⏭️'}`);
-            return isAllowed;
+            console.log(`🔍 "${db.title}" → AUTORISÉE ✅`);
+            return true; // Autoriser toutes les bases temporairement
         });
         
         console.log(`🔍 ${allDatabases.length} base(s) trouvée(s) au total, ${databases.length} autorisée(s):`);
@@ -464,7 +469,22 @@ async function saveResults(results) {
             console.log(`💾 Concerts sauvegardés: ${CONFIG.outputFiles.concerts}`);
         }
         
-        // TODO: Sauvegarder le financement quand implémenté
+        // Sauvegarder les pièces
+        if (results.pieces.length > 0) {
+            const piecesFile = 'data/pieces.json';
+            await fs.writeFile(
+                piecesFile,
+                JSON.stringify({
+                    pieces: results.pieces,
+                    metadata: {
+                        syncDate: new Date().toISOString(),
+                        source: 'notion',
+                        totalPieces: results.pieces.length
+                    }
+                }, null, 2)
+            );
+            console.log(`💾 Pièces sauvegardées: ${piecesFile} (${results.pieces.length} pièces)`);
+        }
         
     } catch (error) {
         console.error('❌ Erreur sauvegarde:', error.message);

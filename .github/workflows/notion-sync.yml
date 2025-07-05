@@ -13,14 +13,16 @@ on:
           - full
           - test
       
-  # Déclenchement programmé (tous les jours à 8h et 18h)
+  # Déclenchement programmé - synchronisation fréquente
   schedule:
-    - cron: '0 8,18 * * *'  # 8h00 et 18h00 UTC (10h et 20h en France)
+    - cron: '0 8,18 * * *'    # 8h00 et 18h00 UTC (principales syncs)
+    - cron: '*/30 * * * *'    # Toutes les 30 minutes (synchronisation rapide)
 
   # Déclenchement sur push (pour tester les modifications du script)
   push:
     paths:
       - 'scripts/notion-sync.js'
+      - 'scripts/update-site.js'
       - '.github/workflows/notion-sync.yml'
 
 jobs:
@@ -44,17 +46,22 @@ jobs:
           
       - name: 📦 Install dependencies
         run: |
-          npm init -y
-          npm install @notionhq/client@latest
+          npm ci || npm install
           
       - name: 🎯 Sync Notion data
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_TOKEN: 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
           SYNC_TYPE: ${{ github.event.inputs.sync_type || 'full' }}
         run: |
           echo "🚀 Démarrage de la synchronisation Notion..."
           echo "📊 Type de sync: $SYNC_TYPE"
           node scripts/notion-sync.js
+          
+      - name: 🌐 Update website
+        run: |
+          echo "🔄 Mise à jour du site web..."
+          node scripts/update-site.js
+          echo "✅ Site web mis à jour"
           
       - name: 📝 Check for changes
         id: changes
@@ -71,15 +78,35 @@ jobs:
         if: steps.changes.outputs.changes == 'true'
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "🎵 Sync automatique depuis Notion - $(date +'%Y-%m-%d %H:%M')"
+          git config --local user.name "GitHub Action - Notion Sync"
+          git add data/ index.html
+          
+          # Créer un commit avec timestamp français
+          TIMESTAMP=$(TZ='Europe/Paris' date +'%Y-%m-%d à %H:%M:%S')
+          git commit -m "🎵 Sync automatique depuis Notion - $TIMESTAMP" -m "✨ Données mises à jour depuis les bases Notion"
           git push
           
       - name: 📊 Summary
         run: |
+          echo "📊 === RAPPORT DE SYNCHRONISATION ==="
+          echo "📅 Date: $(TZ='Europe/Paris' date +'%Y-%m-%d %H:%M:%S')"
+          echo "🎯 Type: ${{ github.event.inputs.sync_type || 'full' }}"
+          
           if [ "${{ steps.changes.outputs.changes }}" == "true" ]; then
             echo "✅ Synchronisation réussie avec changements appliqués"
+            
+            # Statistiques
+            if [ -f "data/concerts.json" ]; then
+              CONCERTS=$(jq '.concerts | length' data/concerts.json 2>/dev/null || echo "0")
+              echo "🎭 Concerts: $CONCERTS"
+            fi
+            
+            if [ -f "data/pieces.json" ]; then
+              PIECES=$(jq '.pieces | length' data/pieces.json 2>/dev/null || echo "0")
+              echo "🎵 Pièces: $PIECES"
+            fi
           else
             echo "ℹ️ Synchronisation réussie - aucun changement nécessaire"
           fi
+          
+          echo "🌐 Site disponible à: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
