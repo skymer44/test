@@ -346,7 +346,7 @@ class IntelligentSiteUpdater {
     }
 
     generateSectionHTML(section) {
-        const piecesHTML = section.pieces.map(piece => this.generatePieceHTML(piece)).join('\\n                ');
+        const piecesHTML = section.pieces.map(piece => this.generatePieceHTML(piece)).join('\n                ');
         
         return `
         <!-- ${section.title} -->
@@ -384,12 +384,14 @@ class IntelligentSiteUpdater {
                     ${piece.composer ? `<p><strong>Compositeur:</strong> ${piece.composer}</p>` : ''}
                     ${piece.duration ? `<p><strong>Durée:</strong> ${piece.duration}</p>` : ''}
                     ${piece.info ? `<p><strong>Info:</strong> ${piece.info}</p>` : ''}
-                    ${linksHTML.length > 0 ? `<div class="links">\\n                        ${linksHTML.join('\\n                        ')}\\n                    </div>` : ''}
+                    ${linksHTML.length > 0 ? `<div class="links">
+                        ${linksHTML.join('\n                        ')}
+                    </div>` : ''}
                 </div>`;
     }
 
     generateReport(sections) {
-        console.log('\\n📊 === RAPPORT DE MISE À JOUR INTELLIGENTE ===');
+        console.log('\n📊 === RAPPORT DE MISE À JOUR INTELLIGENTE ===');
         console.log(`📅 Date: ${new Date().toLocaleString('fr-FR')}`);
         
         let totalPieces = 0;
@@ -403,11 +405,11 @@ class IntelligentSiteUpdater {
             }
         });
         
-        console.log(`\\n✅ ${sectionsWithData} section(s) avec données`);
+        console.log(`\n✅ ${sectionsWithData} section(s) avec données`);
         console.log(`🎵 ${totalPieces} pièce(s) au total`);
         console.log('🌐 Site web régénéré complètement');
         console.log('🔄 Toutes les données sont maintenant synchronisées avec Notion');
-        console.log('=====================================\\n');
+        console.log('=====================================\n');
     }
 }
 
