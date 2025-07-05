@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Proxy - Programme Musical 2026</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; max-height: 300px; }
+        .loading { opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Proxy - Programme Musical 2026</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testProxyHealth()">🏥 Test Health</button>
+    <button onclick="testSingleDatabase()">📊 Test Base Simple</button>
+    <button onclick="testAllDatabases()">📋 Test Toutes Bases</button>
+    <button onclick="testChanges()">🔍 Test Changements</button>
+    <button onclick="clearResults()">🗑️ Effacer</button>
+
+    <script src="notion-sync-proxy.js"></script>
+    <script>
+        function addResult(title, content, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<h3>${title}</h3><div>${content}</div>`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function testProxyHealth() {
+            addResult('🔄 Test Health', 'Vérification du serveur proxy...');
+            
+            try {
+                const response = await fetch('http://localhost:3010/api/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult('✅ Serveur Proxy OK', `<pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                } else {
+                    addResult('❌ Erreur Proxy', `Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Proxy Inaccessible', `Erreur: ${error.message}<br><br>💡 <strong>Solution:</strong> Démarrez le serveur avec: <code>npm start</code>`, 'error');
+            }
+        }
+
+        async function testSingleDatabase() {
+            addResult('🔄 Test Base Simple', 'Récupération base "ma-rgion-virtuose"...');
+            
+            try {
+                const notionSync = new NotionSyncProxy();
+                const pieces = await notionSync.getPiecesFromDatabase('ma-rgion-virtuose');
+                
+                addResult('✅ Base Récupérée', `${pieces.length} pièces trouvées`, 'success');
+                
+                if (pieces.length > 0) {
+                    addResult('📝 Première Pièce', `<pre>${JSON.stringify(pieces[0], null, 2)}</pre>`, 'info');
+                }
+            } catch (error) {
+                addResult('❌ Erreur Récupération', error.message, 'error');
+            }
+        }
+
+        async function testAllDatabases() {
+            addResult('🔄 Test Complet', 'Synchronisation de toutes les bases...');
+            
+            try {
+                const notionSync = new NotionSyncProxy();
+                const results = await notionSync.syncAllData();
+                
+                let summary = '';
+                for (const [key, pieces] of Object.entries(results)) {
+                    summary += `• ${key}: ${pieces.length} pièces\\n`;
+                }
+                
+                addResult('✅ Synchronisation Complète', `<pre>${summary}</pre>`, 'success');
+            } catch (error) {
+                addResult('❌ Erreur Synchronisation', error.message, 'error');
+            }
+        }
+
+        async function testChanges() {
+            addResult('🔄 Test Changements', 'Vérification des changements récents...');
+            
+            try {
+                const timestamp = Date.now() - (24 * 60 * 60 * 1000); // 24h ago
+                const response = await fetch(`http://localhost:3010/api/notion/changes/${timestamp}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult('✅ Changements Vérifiés', `<pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                } else {
+                    addResult('❌ Erreur Changements', `Status: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Erreur Test', error.message, 'error');
+            }
+        }
+
+        // Auto-test au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            addResult('📋 Page Test Chargée', 'Prêt pour les tests du proxy');
+            setTimeout(testProxyHealth, 1000);
+        });
+    </script>
+</body>
+</html>
