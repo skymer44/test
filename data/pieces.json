@@ -126,15 +126,15 @@
       }
     },
     {
-      "title": "test 123",
+      "title": "test 12344",
       "composer": "Rémi",
-      "duration": "00:00",
-      "info": "11H31",
+      "duration": "00:01",
+      "info": "11H311",
       "source": {
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "227fcf9e-3abc-800b-9f33-ccc90069ff0b",
-        "lastModified": "2025-07-05T09:31:00.000Z"
+        "lastModified": "2025-07-05T20:54:00.000Z"
       }
     },
     {
@@ -253,7 +253,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-05T20:42:08.647Z",
+    "syncDate": "2025-07-05T20:57:17.582Z",
     "source": "notion",
     "totalPieces": 16
   }
