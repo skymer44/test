@@ -14,6 +14,7 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15"
   },
+  "devDependencies": {},
   "keywords": ["notion", "music", "synchronization", "github-actions"],
   "author": "Programme Musical 2026",
   "license": "MIT"
