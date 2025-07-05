@@ -13,10 +13,9 @@ on:
           - full
           - test
       
-  # Déclenchement programmé - synchronisation fréquente
+  # Déclenchement programmé - synchronisation optimale
   schedule:
-    - cron: '0 8,18 * * *'    # 8h00 et 18h00 UTC (principales syncs)
-    - cron: '*/30 * * * *'    # Toutes les 30 minutes (synchronisation rapide)
+    - cron: '*/10 * * * *'     # Toutes les 10 minutes (excellent compromis)
 
   # Déclenchement sur push (pour tester les modifications du script)
   push:
