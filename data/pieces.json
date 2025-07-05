@@ -1,29 +1,19 @@
 {
   "pieces": [
     {
-      "title": "Libertango",
-      "composer": "Astor Piazzola / arr. Tony Cheseaux",
+      "title": "Eldorado",
+      "composer": "Thierry Deleruyelle",
+      "duration": "10:20",
+      "info": "Challenge accessible",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
+        "audio": "https://www.youtube.com/watch?v=skTOXVCcER4&list=RDskTOXVCcER4&start_radio=1",
+        "purchase": "https://www.partitions-musicales.net/Harmonie/Eldorado-nr-1.html"
       },
       "source": {
         "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
-        "lastModified": "2025-07-04T08:31:00.000Z"
-      }
-    },
-    {
-      "title": "Begegnung",
-      "composer": "Kurt Gäble",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
-      },
-      "source": {
-        "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
-        "lastModified": "2025-07-04T08:28:00.000Z"
+        "database": "Retour Karaoké",
+        "pageId": "227fcf9e-3abc-80eb-a7da-c95fdeb599f2",
+        "lastModified": "2025-07-05T21:20:00.000Z"
       }
     },
     {
@@ -123,6 +113,32 @@
         "database": "Concert du 11 d’avril avec Eric Aubier",
         "pageId": "21efcf9e-3abc-80ff-8be2-ecaf7bba954d",
         "lastModified": "2025-07-04T09:13:00.000Z"
+      }
+    },
+    {
+      "title": "Libertango",
+      "composer": "Astor Piazzola / arr. Tony Cheseaux",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
+        "lastModified": "2025-07-04T08:31:00.000Z"
+      }
+    },
+    {
+      "title": "Begegnung",
+      "composer": "Kurt Gäble",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
+        "lastModified": "2025-07-04T08:28:00.000Z"
       }
     },
     {
@@ -252,8 +268,8 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-05T21:15:12.813Z",
+    "syncDate": "2025-07-05T21:20:35.480Z",
     "source": "notion",
-    "totalPieces": 16
+    "totalPieces": 17
   }
 }
