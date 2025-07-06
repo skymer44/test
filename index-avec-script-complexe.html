@@ -320,41 +320,10 @@
         </div>
     </div>
 
-    <!-- JavaScript simple pour les onglets qui fonctionne -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Programme Musical 2026 - Version simple chargée');
-            
-            // Initialiser seulement les onglets avec la logique qui marche
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            
-            tabButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('data-tab');
-                    
-                    // Masquer tous les contenus
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    // Désactiver tous les boutons
-                    tabButtons.forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    
-                    // Activer le contenu et bouton ciblés
-                    const targetContent = document.getElementById(targetId);
-                    if (targetContent) {
-                        targetContent.classList.add('active');
-                    }
-                    this.classList.add('active');
-                });
-            });
-            
-            console.log('✅ Onglets initialisés avec succès');
-        });
-    </script>
+    <!-- Bibliothèque jsPDF pour la génération de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Script original pour les fonctionnalités -->
+    <script src="script.js"></script>
 </body>
 </html>
