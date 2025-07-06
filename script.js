@@ -327,15 +327,19 @@ function initNotionSync() {
 // Calculer la durée totale
 function calculateTotalDurations() {
     const sections = document.querySelectorAll('.concert-section');
-    let totalMinutes = 0;
+    let totalSeconds = 0;
     let totalSections = 0;
     let totalPieces = 0;
+    let sectionDurations = {};
     
     sections.forEach(section => {
+        const sectionId = section.id;
+        let sectionSeconds = 0;
+        
         const pieces = section.querySelectorAll('.piece-card');
         const realPieces = Array.from(pieces).filter(piece => {
             const title = piece.querySelector('h3');
-            return title && !piece.textContent.includes('Aucune pièce ajoutée');
+            return title && !piece.textContent.includes('Aucune pièce ajoutée') && !piece.textContent.includes('Section en cours');
         });
         
         if (realPieces.length > 0) {
@@ -344,19 +348,57 @@ function calculateTotalDurations() {
         }
         
         realPieces.forEach(piece => {
-            const durationText = piece.textContent.match(/Durée:\s*(\d+)\s*min/);
+            // Gérer le format MM:SS ou MM:SS:ms ou "X min"
+            const durationText = piece.textContent.match(/Durée:\s*([0-9:]+)/);
             if (durationText) {
-                totalMinutes += parseInt(durationText[1]);
+                const duration = durationText[1];
+                const timeComponents = duration.split(':');
+                
+                if (timeComponents.length >= 2) {
+                    // Format MM:SS ou MM:SS:ms
+                    const minutes = parseInt(timeComponents[0]) || 0;
+                    const seconds = parseInt(timeComponents[1]) || 0;
+                    const pieceSeconds = minutes * 60 + seconds;
+                    totalSeconds += pieceSeconds;
+                    sectionSeconds += pieceSeconds;
+                }
+            } else {
+                // Fallback pour format "X min"
+                const minText = piece.textContent.match(/Durée:\s*(\d+)\s*min/);
+                if (minText) {
+                    const minutes = parseInt(minText[1]);
+                    totalSeconds += minutes * 60;
+                    sectionSeconds += minutes * 60;
+                }
             }
         });
+        
+        sectionDurations[sectionId] = sectionSeconds;
     });
     
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = totalSeconds % 60;
+    
     return {
+        totalSeconds,
         totalMinutes,
         totalHours: Math.floor(totalMinutes / 60),
         remainingMinutes: totalMinutes % 60,
         totalSections,
-        totalPieces
+        totalPieces,
+        sectionDurations,
+        formatTime: (seconds) => {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) {
+                return `${h}h ${m.toString().padStart(2, '0')}min`;
+            } else if (m > 0) {
+                return `${m}min ${s.toString().padStart(2, '0')}s`;
+            } else {
+                return `${s}s`;
+            }
+        }
     };
 }
 
@@ -364,12 +406,10 @@ function calculateTotalDurations() {
 function updateSiteStatistics() {
     const stats = calculateTotalDurations();
     
-    // Mettre à jour l'élément des statistiques s'il existe
+    // Mettre à jour l'élément des statistiques globales s'il existe
     const statsElement = document.getElementById('site-stats');
     if (statsElement) {
-        const timeDisplay = stats.totalHours > 0 ? 
-            `${stats.totalHours}h ${stats.remainingMinutes}min` : 
-            `${stats.totalMinutes}min`;
+        const timeDisplay = stats.formatTime(stats.totalSeconds);
             
         statsElement.innerHTML = `
             <div class="stat-item">
@@ -387,10 +427,34 @@ function updateSiteStatistics() {
         `;
     }
     
-    // Mettre à jour le titre de la page avec les statistiques
-    document.title = `Programme Musical 2026 - ${stats.totalPieces} pièces, ${stats.totalSections} concerts`;
+    // Mettre à jour les durées de chaque section
+    Object.keys(stats.sectionDurations).forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            const header = section.querySelector('.section-header h2');
+            const durationSpan = section.querySelector('.section-duration');
+            const sectionSeconds = stats.sectionDurations[sectionId];
+            
+            if (header && sectionSeconds > 0) {
+                // Supprimer l'ancienne durée si elle existe
+                if (durationSpan) {
+                    durationSpan.remove();
+                }
+                
+                // Ajouter la nouvelle durée
+                const newDurationSpan = document.createElement('span');
+                newDurationSpan.className = 'section-duration';
+                newDurationSpan.textContent = ` (${stats.formatTime(sectionSeconds)})`;
+                header.appendChild(newDurationSpan);
+            }
+        }
+    });
     
-    console.log(`📊 Statistiques mises à jour: ${stats.totalPieces} pièces, ${stats.totalSections} concerts, ${stats.totalMinutes} minutes au total`);
+    // Mettre à jour le titre de la page avec les statistiques
+    const timeForTitle = stats.formatTime(stats.totalSeconds);
+    document.title = `Programme Musical 2026 - ${stats.totalPieces} pièces, ${timeForTitle}`;
+    
+    console.log(`📊 Statistiques mises à jour: ${stats.totalPieces} pièces, ${stats.totalSections} concerts, ${stats.formatTime(stats.totalSeconds)} au total`);
 }
 
 // Fonction pour générer un PDF
@@ -448,8 +512,46 @@ function generatePDF(sectionId) {
         const pieces = section.querySelectorAll('.piece-card');
         const realPieces = Array.from(pieces).filter(piece => {
             const title = piece.querySelector('h3');
-            return title && !piece.textContent.includes('Aucune pièce ajoutée');
+            return title && !piece.textContent.includes('Aucune pièce ajoutée') && !piece.textContent.includes('Section en cours');
         });
+        
+        // Calculer la durée totale de cette section
+        let sectionTotalSeconds = 0;
+        realPieces.forEach(piece => {
+            const durationElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                p.textContent.includes('Durée:')
+            );
+            if (durationElement) {
+                const durationText = durationElement.textContent.match(/Durée:\s*([0-9:]+)/);
+                if (durationText) {
+                    const duration = durationText[1];
+                    const timeComponents = duration.split(':');
+                    if (timeComponents.length >= 2) {
+                        const minutes = parseInt(timeComponents[0]) || 0;
+                        const seconds = parseInt(timeComponents[1]) || 0;
+                        sectionTotalSeconds += minutes * 60 + seconds;
+                    }
+                }
+            }
+        });
+        
+        // Afficher le nombre de pièces et la durée totale
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Nombre de pièces : ${realPieces.length}`, margin, currentY);
+        currentY += 6;
+        
+        if (sectionTotalSeconds > 0) {
+            const totalMinutes = Math.floor(sectionTotalSeconds / 60);
+            const remainingSeconds = sectionTotalSeconds % 60;
+            const timeDisplay = totalMinutes > 0 ? 
+                `${totalMinutes}min ${remainingSeconds.toString().padStart(2, '0')}s` : 
+                `${remainingSeconds}s`;
+            doc.text(`Durée totale estimée : ${timeDisplay}`, margin, currentY);
+            currentY += 6;
+        }
+        
+        currentY += 5; // Espacement avant la liste des pièces
         
         if (realPieces.length === 0) {
             doc.setFontSize(12);

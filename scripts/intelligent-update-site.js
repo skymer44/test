@@ -174,6 +174,9 @@ class IntelligentSiteUpdater {
     <header>
         <div class="header-content">
             <h1>Programme Musical 2026</h1>
+            <div id="site-stats" class="site-statistics">
+                <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
+            </div>
         </div>
     </header>
 
