@@ -32,7 +32,15 @@ const CONFIG = {
         "Pièces qui n'ont pas trouvé leur concert", // Version avec apostrophe droite
         "Pièces d'ajout sans direction",
         "Pièces d'ajout sans direction", // Version avec apostrophe droite
-        "Loto"
+        "Loto",
+        // Base de données pour les événements/répétitions
+        "Programme répétitions 2025-2026",
+        "Programme répétitions",
+        "Répétitions",
+        "Événements",
+        "Events",
+        "Calendar",
+        "Calendrier"
     ],
     
     // IDs des bases de données Notion (à remplir après création)
@@ -46,6 +54,7 @@ const CONFIG = {
     outputFiles: {
         concerts: 'data/concerts.json',
         financement: 'data/financement.json',
+        events: 'data/events.json', // Nouveau fichier pour les événements
         backup: 'data/backup-{timestamp}.json'
     }
 };
@@ -222,7 +231,8 @@ async function findNotionDatabases() {
             id: db.id,
             title: getNotionTitle(db.title),
             url: db.url,
-            properties: Object.keys(db.properties || {})
+            properties: db.properties || {}, // Garder l'objet complet des propriétés
+            propertyNames: Object.keys(db.properties || {}) // Ajouter les noms pour l'affichage
         }));
         
         // Filtrer seulement les bases autorisées - on autorise tout maintenant
@@ -233,9 +243,9 @@ async function findNotionDatabases() {
         
         console.log(`🔍 ${allDatabases.length} base(s) trouvée(s) au total, ${databases.length} autorisée(s):`);
         databases.forEach(db => {
-            console.log(`  📊 "${db.title}" (${db.properties.length} propriétés)`);
+            console.log(`  📊 "${db.title}" (${db.propertyNames.length} propriétés)`);
             console.log(`     ID: ${db.id}`);
-            console.log(`     Propriétés: ${db.properties.join(', ')}`);
+            console.log(`     Propriétés: ${db.propertyNames.join(', ')}`);
         });
         
         if (databases.length === 0) {
@@ -260,6 +270,7 @@ async function synchronizeData(databases) {
         databases: databases.length,
         concerts: [],
         pieces: [],
+        events: [], // Ajouter les événements
         errors: []
     };
     
@@ -270,9 +281,17 @@ async function synchronizeData(databases) {
             // Récupérer les données de la base
             const pages = await queryNotionDatabase(database.id);
             
-            // Analyser le type de données en fonction des propriétés
-            const dataType = analyzeDataType(database.properties, pages);
-            console.log(`📊 Type détecté: ${dataType}`);
+            // Utiliser le smart mapper pour détecter le type
+            // Reconstituer la structure attendue par le smart-mapper
+            const databaseForMapper = {
+                title: [{ plain_text: database.title }],
+                id: database.id,
+                properties: database.properties
+            };
+            const analysis = mapper.analyzeDatabaseStructure(databaseForMapper);
+            const dataType = analysis.detectedType;
+            console.log(`📊 Type détecté: ${dataType} (confiance: ${analysis.confidence}%)`);
+            console.log(`🔍 Propriétés analysées:`, Object.keys(database.properties));
             
             // Traiter selon le type
             if (dataType === 'concerts' || dataType === 'musical') {
@@ -281,6 +300,9 @@ async function synchronizeData(databases) {
             } else if (dataType === 'pieces') {
                 const pieces = await processPieceData(pages, database);
                 results.pieces.push(...pieces);
+            } else if (dataType === 'events') {
+                const events = await processEventData(pages, database);
+                results.events.push(...events);
             } else {
                 console.log(`⚠️ Type de données non reconnu pour "${database.title}"`);
             }
@@ -530,6 +552,48 @@ async function processPieceData(pages, database) {
 }
 
 /**
+ * Traite les données d'événements/répétitions
+ */
+async function processEventData(pages, database) {
+    const events = [];
+    const analysis = mapper.analyzeDatabaseStructure(database);
+    
+    for (const page of pages) {
+        try {
+            // Utiliser le smart mapper pour extraire les données
+            const mappedData = mapper.mapNotionPage(page, 'events');
+            
+            // Transformer les données pour le format attendu
+            const event = {
+                date: mappedData.date || null,
+                type: mappedData.type || 'Événement',
+                title: mappedData.type || 'Événement',
+                pieces: Array.isArray(mappedData.pieces) ? mappedData.pieces : 
+                       mappedData.pieces ? mappedData.pieces.split(',').map(p => p.trim()) : [],
+                notes: mappedData.notes || '',
+                source: {
+                    notion: true,
+                    database: database.title,
+                    pageId: page.id,
+                    lastModified: page.last_edited_time
+                }
+            };
+            
+            // Nettoyer les valeurs vides
+            if (event.date && event.type) {
+                events.push(event);
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur traitement événement:', error.message);
+        }
+    }
+    
+    console.log(`✅ ${events.length} événement(s) traité(s)`);
+    return events;
+}
+
+/**
  * Sauvegarde les résultats
  */
 async function saveResults(results) {
@@ -567,6 +631,22 @@ async function saveResults(results) {
             console.log(`💾 Pièces sauvegardées: ${piecesFile} (${results.pieces.length} pièces)`);
         }
         
+        // Sauvegarder les événements
+        if (results.events.length > 0) {
+            await fs.writeFile(
+                CONFIG.outputFiles.events,
+                JSON.stringify({
+                    events: results.events,
+                    metadata: {
+                        syncDate: new Date().toISOString(),
+                        source: 'notion',
+                        totalEvents: results.events.length
+                    }
+                }, null, 2)
+            );
+            console.log(`💾 Événements sauvegardés: ${CONFIG.outputFiles.events} (${results.events.length} événements)`);
+        }
+        
     } catch (error) {
         console.error('❌ Erreur sauvegarde:', error.message);
     }
@@ -581,6 +661,7 @@ function generateSyncReport(results) {
     console.log(`📊 Bases de données traitées: ${results.databases}`);
     console.log(`🎭 Concerts synchronisés: ${results.concerts.length}`);
     console.log(`🎵 Pièces synchronisées: ${results.pieces.length}`);
+    console.log(`🗓️ Événements synchronisés: ${results.events.length}`);
     
     if (results.errors.length > 0) {
         console.log(`❌ Erreurs: ${results.errors.length}`);

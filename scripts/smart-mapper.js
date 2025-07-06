@@ -50,7 +50,8 @@ class SmartMapper {
         const indicators = {
             concerts: ['concert', 'programme', 'date', 'événement', 'spectacle'],
             pieces: ['titre', 'compositeur', 'durée', 'pièce', 'musique', 'morceau'],
-            financement: ['financement', 'dispositif', 'montant', 'subvention', 'aide']
+            financement: ['financement', 'dispositif', 'montant', 'subvention', 'aide'],
+            events: ['date', 'événement', 'répétition', 'répétitions', 'multi-select', 'notes', 'evènement']
         };
 
         let maxScore = 0;
@@ -83,7 +84,21 @@ class SmartMapper {
      * Trouve les propriétés mappables selon le type détecté
      */
     getMappableProperties(properties, type) {
-        const mapping = type === 'concerts' ? NOTION_MAPPING.concerts : NOTION_MAPPING.pieces;
+        let mapping;
+        switch(type) {
+            case 'concerts':
+                mapping = NOTION_MAPPING.concerts;
+                break;
+            case 'pieces':
+                mapping = NOTION_MAPPING.pieces;
+                break;
+            case 'events':
+                mapping = NOTION_MAPPING.events;
+                break;
+            default:
+                mapping = NOTION_MAPPING.pieces; // Fallback
+        }
+        
         return Object.keys(properties).filter(prop => 
             Object.keys(mapping).some(mappingKey => 
                 prop.toLowerCase().includes(mappingKey.toLowerCase()) ||
@@ -97,7 +112,22 @@ class SmartMapper {
      */
     mapNotionPage(page, databaseType) {
         const mapped = {};
-        const mapping = databaseType === 'concerts' ? NOTION_MAPPING.concerts : NOTION_MAPPING.pieces;
+        let mapping;
+        
+        // Choisir le bon mapping selon le type de base
+        switch(databaseType) {
+            case 'concerts':
+                mapping = NOTION_MAPPING.concerts;
+                break;
+            case 'pieces':
+                mapping = NOTION_MAPPING.pieces;
+                break;
+            case 'events':
+                mapping = NOTION_MAPPING.events;
+                break;
+            default:
+                mapping = NOTION_MAPPING.pieces; // Fallback
+        }
 
         for (const [propName, propData] of Object.entries(page.properties)) {
             // Recherche du mapping

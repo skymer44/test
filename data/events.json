@@ -1,0 +1,821 @@
+{
+  "events": [
+    {
+      "date": "2025-09-04",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [
+        "Ammerland",
+        "The Lion King",
+        "Allegretto from Symphony No. 7"
+      ],
+      "notes": "Première répétition de l’année. Première lecture des pièces",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-811a-b5c1-f430e527b949",
+        "lastModified": "2025-07-06T17:46:00.000Z"
+      }
+    },
+    {
+      "date": "2025-09-11",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [
+        "Music from How To Train Your Dragon",
+        "Selections from The Nightmare Before Christmas"
+      ],
+      "notes": "Pièces déjà lues une fois avant les vacances",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8141-aade-f1048959423e",
+        "lastModified": "2025-07-06T17:46:00.000Z"
+      }
+    },
+    {
+      "date": "2025-09-18",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8130-94f1-e13fc08a77cd",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-09-25",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-818e-9d4e-c29dcaef3fe7",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-02",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-810f-abef-ee77427a3f3b",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-09",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-811f-9ae2-ebafed273c89",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-16",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81da-88b2-fa1a2d300a56",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-30",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "2ᵉ jeudi vacances Toussaint",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81a8-a7aa-c7f3b61c1a7c",
+        "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-23",
+      "type": [
+        "Répétition pendant les vacances"
+      ],
+      "title": [
+        "Répétition pendant les vacances"
+      ],
+      "pieces": [],
+      "notes": "La date sera confirmée ultérieurement. ",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81c9-a72c-efa4ab4a42d5",
+        "lastModified": "2025-07-06T17:08:00.000Z"
+      }
+    },
+    {
+      "date": "2025-11-06",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8198-a49a-c511492f0749",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-11-13",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-812d-92e7-c2b1e08ff216",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-11-20",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-815d-af50-cfb0753cb77f",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-11-27",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8187-9cf3-d48a131cec54",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-12-04",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8154-8ac3-f4c115316a24",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-12-11",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8154-a306-cbd0d2ad09a2",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-12-18",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-815a-bed2-e882d90e4f3d",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2025-12-25",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "Noël (jour férié)",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81fe-a33c-f0f759aa51ca",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-01",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "2ᵉ jeudi vacances Noël; Jour de l'An (jour férié)",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8144-bb20-e3883a923be1",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-08",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8151-ae2c-ec90d0c5fcc2",
+        "lastModified": "2025-07-06T16:51:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-22",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81c6-b933-e85a0da1cf96",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-15",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81f9-b503-ca0fd6473dc6",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-02-05",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8108-ab69-f134706367fa",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-29",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-817a-b981-e35d4e15b97d",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-02-12",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8162-a5bf-f12f59a44106",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-02-26",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "2ᵉ jeudi vacances Hiver",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8136-8bb8-fa226daba24c",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-02-19",
+      "type": [
+        "Répétition pendant les vacances"
+      ],
+      "title": [
+        "Répétition pendant les vacances"
+      ],
+      "pieces": [],
+      "notes": "La date sera confirmée ultérieurement. ",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8148-b9a4-e5709596f0ce",
+        "lastModified": "2025-07-06T17:09:00.000Z"
+      }
+    },
+    {
+      "date": "2026-03-05",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8167-b7f9-e0f9b791a0f6",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-03-12",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8144-bc82-e4e79dda9521",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-03-19",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8171-8c56-d87baacce9fc",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-02",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8137-a804-eaa6f4a14949",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-03-26",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8165-9f69-c17847b9f2f5",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-09",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8131-b24b-d116f63c5f51",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-16",
+      "type": [
+        "Répétition pendant les vacances"
+      ],
+      "title": [
+        "Répétition pendant les vacances"
+      ],
+      "pieces": [],
+      "notes": "La date sera confirmée ultérieurement. ",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8195-9135-c7ca769ef090",
+        "lastModified": "2025-07-06T17:09:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-23",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "2ᵉ jeudi vacances Printemps",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81c4-a74f-c772fbac6c52",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-30",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8130-bc1b-da71b7afa268",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-05-07",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-815e-8094-f066c0853e16",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-05-14",
+      "type": [
+        "Pas de répétition"
+      ],
+      "title": [
+        "Pas de répétition"
+      ],
+      "pieces": [],
+      "notes": "Ascension (jour férié)",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81a9-9c42-d32cf9d90a6f",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-05-21",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-816c-88e4-e4c7096668f5",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-04",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8142-bb3e-e049b3922b25",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-05-28",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81fc-bdf6-f615b0d625f4",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-11",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-813e-9f5b-c8aa26a2a1bf",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-18",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8180-b224-f27a2eacf52e",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-07-02",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81bd-aad2-e10b4e804f2f",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-25",
+      "type": [
+        "Répétition"
+      ],
+      "title": [
+        "Répétition"
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81df-b956-c36699d1ab53",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-04-11",
+      "type": [
+        "Concert avec Eric Aubier"
+      ],
+      "title": [
+        "Concert avec Eric Aubier"
+      ],
+      "pieces": [],
+      "notes": "Beaucoup de choses à confirmer",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8022-b8aa-fcfaed646145",
+        "lastModified": "2025-07-06T17:07:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-19",
+      "type": [
+        "Fête de la musique"
+      ],
+      "title": [
+        "Fête de la musique"
+      ],
+      "pieces": [],
+      "notes": "Date provisoire à confirmer",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8049-b32b-d4c8bbe8a05e",
+        "lastModified": "2025-07-06T17:07:00.000Z"
+      }
+    },
+    {
+      "date": "2026-01-25",
+      "type": [
+        "Ma Région Virtuose"
+      ],
+      "title": [
+        "Ma Région Virtuose"
+      ],
+      "pieces": [
+        "Ammerland",
+        "Music from How To Train Your Dragon",
+        "The Lion King",
+        "Selections from The Nightmare Before Christmas",
+        "Allegretto from Symphony No. 7"
+      ],
+      "notes": "Date provisoire à confirmer",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8047-ae70-ecdff4f2d4a0",
+        "lastModified": "2025-07-06T18:54:00.000Z"
+      }
+    }
+  ],
+  "metadata": {
+    "syncDate": "2025-07-06T19:13:14.635Z",
+    "source": "notion",
+    "totalEvents": 47
+  }
+}

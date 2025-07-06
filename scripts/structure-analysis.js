@@ -107,6 +107,24 @@ const NOTION_MAPPING = {
         "Video": "links.original",
         "Programme": "concert",
         "Concert": "concert"
+    },
+    
+    // Propriétés pour les événements/répétitions
+    events: {
+        "Date": "date",
+        "Evènement": "type",
+        "Événement": "type", 
+        "Event": "type",
+        "Type": "type",
+        "Multi-select": "pieces",
+        "Pieces": "pieces",
+        "Pièces": "pieces",
+        "Programme": "pieces",
+        "Notes": "notes",
+        "Note": "notes",
+        "Commentaires": "notes",
+        "Info": "notes",
+        "Informations": "notes"
     }
 };
 
