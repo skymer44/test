@@ -21,7 +21,7 @@
         <div class="tab-container">
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
-                <button class="tab-button" data-tab="financement">💰 Financement</button>
+                <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
             </div>
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
@@ -260,90 +260,56 @@
 
         </div>
 
-        <!-- Section Financement -->
-        <div id="financement" class="tab-content">
-            <section class="financement-section">
-                <h2>💰 Financement du Programme Musical 2026</h2>
-                <div class="financement-content">
-                    <div class="financement-card">
-                        <h3>📊 Budget Total Estimé</h3>
-                        <div class="budget-amount">
-                            <span class="amount">12,450€</span>
-                            <span class="period">pour l'année 2026</span>
+        <!-- Section Partitions -->
+        <div id="partitions" class="tab-content">
+            <section class="partitions-section">
+                <h2>🎼 Partitions</h2>
+                <div class="partitions-content">
+                    <div class="partitions-card">
+                        <h3>⚠️ Attention - Droits d'impression</h3>
+                        <div class="warning-content">
+                            <p>
+                                <strong>ATTENTION</strong>, vous ne devez pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page 
+                                (normalement, aucun souci, vous avez au moins un exemplaire chacun).
+                            </p>
+                            <p>
+                                <strong>Par exemple :</strong> si je suis trompette 1 et que nous sommes deux à jouer cette partie, 
+                                je lis en bas de page « 2 copies purchased », je ne peux en imprimer qu'une seule pour moi. 
+                                Mais s'il est écrit « 6 copies purchased », vous pouvez en imprimer 3 
+                                (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue).
+                            </p>
                         </div>
                     </div>
 
-                    <div class="financement-breakdown">
-                        <h3>💸 Répartition des Coûts</h3>
-                        <div class="cost-items">
-                            <div class="cost-item">
-                                <span class="cost-label">🎼 Partitions et arrangements</span>
-                                <span class="cost-value">3,200€</span>
+                    <div class="download-section">
+                        <h3>� Téléchargement des Partitions</h3>
+                        <div class="download-card">
+                            <div class="download-info">
+                                <h4>📁 Dossier Partitions 2026</h4>
+                                <p>Accédez à toutes les partitions du programme musical dans notre drive partagé.</p>
                             </div>
-                            <div class="cost-item">
-                                <span class="cost-label">🎺 Location d'instruments spéciaux</span>
-                                <span class="cost-value">1,800€</span>
-                            </div>
-                            <div class="cost-item">
-                                <span class="cost-label">🎤 Équipement audio/technique</span>
-                                <span class="cost-value">2,100€</span>
-                            </div>
-                            <div class="cost-item">
-                                <span class="cost-label">🏛️ Location de salles</span>
-                                <span class="cost-value">2,850€</span>
-                            </div>
-                            <div class="cost-item">
-                                <span class="cost-label">🚌 Transport et logistique</span>
-                                <span class="cost-value">1,500€</span>
-                            </div>
-                            <div class="cost-item">
-                                <span class="cost-label">📣 Communication et promotion</span>
-                                <span class="cost-value">1,000€</span>
-                            </div>
+                            <a href="https://drive.google.com/drive/folders/1CXdB2LQvuqJ_F6WX-CYrf9DtB3hJgppH" 
+                               target="_blank" 
+                               class="download-btn">
+                                📥 Télécharger les Partitions
+                            </a>
                         </div>
                     </div>
 
-                    <div class="financement-sources">
-                        <h3>💰 Sources de Financement</h3>
-                        <div class="source-items">
-                            <div class="source-item confirmed">
-                                <span class="source-label">🏛️ Subvention municipale</span>
-                                <span class="source-value">4,500€</span>
-                                <span class="source-status">✅ Confirmé</span>
+                    <div class="usage-tips">
+                        <h3>💡 Conseils d'utilisation</h3>
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <h4>🔍 Vérifiez les droits</h4>
+                                <p>Toujours vérifier le nombre de copies autorisées en bas de chaque partition</p>
                             </div>
-                            <div class="source-item pending">
-                                <span class="source-label">🌍 Subvention régionale</span>
-                                <span class="source-value">3,000€</span>
-                                <span class="source-status">⏳ En attente</span>
+                            <div class="tip-card">
+                                <h4>� Version numérique</h4>
+                                <p>Privilégiez les partitions numériques sur tablette quand c'est possible</p>
                             </div>
-                            <div class="source-item confirmed">
-                                <span class="source-label">🎫 Billetterie concerts</span>
-                                <span class="source-value">2,200€</span>
-                                <span class="source-status">📊 Estimé</span>
-                            </div>
-                            <div class="source-item pending">
-                                <span class="source-label">🤝 Partenariats privés</span>
-                                <span class="source-value">1,500€</span>
-                                <span class="source-status">🔍 Recherche</span>
-                            </div>
-                            <div class="source-item needed">
-                                <span class="source-label">💡 Financement complémentaire</span>
-                                <span class="source-value">1,250€</span>
-                                <span class="source-status">❓ À trouver</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="financement-status">
-                        <h3>📈 État du Financement</h3>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 72%"></div>
-                            </div>
-                            <div class="progress-text">
-                                <span class="current">8,950€ sécurisés</span>
-                                <span class="target">/ 12,450€ objectif</span>
-                                <span class="percentage">(72%)</span>
+                            <div class="tip-card">
+                                <h4>🎯 Organisation</h4>
+                                <p>Classez vos partitions par concert et par instrument</p>
                             </div>
                         </div>
                     </div>
