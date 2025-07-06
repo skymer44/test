@@ -13,9 +13,9 @@ on:
           - full
           - test
       
-  # Déclenchement programmé - DÉSACTIVÉ TEMPORAIREMENT
-  # schedule:
-  #   - cron: '*/10 * * * *'     # Toutes les 10 minutes (désactivé)
+  # Déclenchement programmé
+  schedule:
+    - cron: '*/10 * * * *'     # Toutes les 10 minutes
 
   # Déclenchement sur push (pour tester les modifications du script)
   push:
