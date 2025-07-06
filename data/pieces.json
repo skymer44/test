@@ -3,7 +3,7 @@
     {
       "title": "Allegretto from Symphony No. 7 (1)",
       "composer": "Beethoven/arr. Longfield",
-      "duration": "03:00",
+      "duration": "09:00",
       "info": "Bien arrangée, bien gérer la répartition",
       "links": {
         "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
@@ -14,7 +14,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "228fcf9e-3abc-80df-8fac-ff97811579b9",
-        "lastModified": "2025-07-06T12:29:00.000Z"
+        "lastModified": "2025-07-06T12:37:00.000Z"
       }
     },
     {
@@ -258,7 +258,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T12:35:26.031Z",
+    "syncDate": "2025-07-06T12:37:25.011Z",
     "source": "notion",
     "totalPieces": 16
   }

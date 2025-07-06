@@ -603,17 +603,13 @@ function generatePDF(sectionId) {
             }
             
             // Divider (ligne de séparation)
-            doc.setLineWidth(1);
+            doc.setLineWidth(0.5);
             doc.setDrawColor(100, 100, 100); // Gris
             doc.line(margin, currentY, pageWidth - margin, currentY);
             currentY += 10;
             
             // Statistiques sous le divider - alignées à droite
             doc.setFontSize(11);
-            doc.setFont(undefined, 'bold');
-            doc.text(`Resume du programme`, pageWidth - margin, currentY, { align: 'right' });
-            currentY += 8;
-            
             doc.setFont(undefined, 'normal');
             doc.text(`Nombre de pieces : ${realPieces.length}`, pageWidth - margin, currentY, { align: 'right' });
             currentY += 6;
