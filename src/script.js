@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialiser les autres fonctionnalités
     try {
+        initNextEventsSystem(); // Nouveau système d'événements
         initVideoModal();
         addSearchFunctionality();
         initScrollAnimations();
@@ -75,6 +76,403 @@ function initTabs() {
         const firstTabId = tabButtons[0].getAttribute('data-tab');
         showTab(firstTabId);
     }
+}
+
+// ========================================
+// SYSTÈME DE GESTION DES PROCHAINS ÉVÉNEMENTS
+// ========================================
+
+// Données d'événements temporaires (sera remplacé par Notion)
+const tempEventsData = [
+    {
+        date: "2025-09-04",
+        type: "Répétition",
+        title: "Première répétition de l'année",
+        pieces: ["Allegretto from Symphony No. 7", "Ammerland", "The Lion King"],
+        notes: "Première répétition de l'année. Première lecture des pièces"
+    },
+    {
+        date: "2025-09-11", 
+        type: "Répétition",
+        title: "Répétition",
+        pieces: ["Music from How To Train Your Dragon", "Selections from The Nightmare Before Christmas"],
+        notes: "Pièces déjà lues une fois avant les vacances"
+    },
+    {
+        date: "2025-09-18",
+        type: "Répétition", 
+        title: "Répétition",
+        pieces: [],
+        notes: ""
+    },
+    {
+        date: "2025-01-25",
+        type: "Ma Région Virtuose",
+        title: "Ma Région Virtuose",
+        pieces: ["Allegretto from Symphony No. 7", "Ammerland", "Music from How To Train Your Dragon", "Selections from The Nightmare Before Christmas", "The Lion King"],
+        notes: "Date provisoire à confirmer"
+    }
+];
+
+/**
+ * Initialise le système des prochains événements
+ */
+function initNextEventsSystem() {
+    console.log('🗓️ Initialisation du système des prochains événements...');
+    
+    // Charger et afficher les événements
+    loadAndDisplayEvents();
+    
+    // Configurer les boutons d'interaction
+    setupEventInteractions();
+    
+    // Mettre à jour automatiquement les données
+    setInterval(updateEventDisplay, 60000); // Mettre à jour toutes les minutes
+    
+    console.log('✅ Système des prochains événements initialisé');
+}
+
+/**
+ * Charge et affiche les événements
+ */
+async function loadAndDisplayEvents() {
+    try {
+        const eventsData = await loadEventsData();
+        
+        // Calculer le prochain événement et les suivants
+        const { nextEvent, upcomingEvents, allEvents } = processEvents(eventsData);
+        
+        // Afficher le prochain événement principal
+        displayMainEvent(nextEvent);
+        
+        // Afficher l'aperçu des événements suivants
+        displayUpcomingEventsPreview(upcomingEvents.slice(0, 3));
+        
+        // Préparer la liste complète (cachée)
+        prepareAllEventsList(allEvents);
+        
+    } catch (error) {
+        console.error('❌ Erreur lors du chargement des événements:', error);
+        displayEventError();
+    }
+}
+
+/**
+ * Charge les données d'événements depuis Notion (via fichier JSON)
+ */
+async function loadEventsData() {
+    try {
+        console.log('🔍 Tentative de chargement de /data/events.json...');
+        const response = await fetch('/data/events.json');
+        console.log('📡 Réponse fetch:', response.status, response.ok);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('📊 Données reçues:', { hasEvents: !!data.events, length: data.events?.length });
+            
+            if (data.events && data.events.length > 0) {
+                console.log(`✅ ${data.events.length} événements chargés depuis Notion`);
+                return data.events;
+            } else {
+                console.warn('⚠️ Fichier chargé mais pas d\'événements trouvés');
+            }
+        } else {
+            console.warn('⚠️ Erreur HTTP:', response.status);
+        }
+    } catch (error) {
+        console.error('❌ Erreur lors du chargement depuis Notion:', error);
+    }
+    
+    // Fallback : utiliser les données temporaires
+    console.log('📊 Utilisation des données d\'événements temporaires');
+    return tempEventsData;
+}
+
+/**
+ * Traite les événements pour déterminer le prochain et les suivants
+ */
+function processEvents(eventsData) {
+    const now = new Date();
+    const currentTime = now.getHours();
+    
+    // Filtrer et trier les événements futurs
+    const futureEvents = eventsData
+        .map(event => {
+            const eventDate = new Date(event.date);
+            return {
+                ...event,
+                dateObj: eventDate,
+                daysDiff: Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24))
+            };
+        })
+        .filter(event => {
+            // Si c'est aujourd'hui et qu'il est après 22h, passer au suivant
+            if (event.daysDiff === 0 && currentTime >= 22) {
+                return false;
+            }
+            // Sinon, garder tous les événements futurs ou d'aujourd'hui (avant 22h)
+            return event.daysDiff >= 0;
+        })
+        .sort((a, b) => a.dateObj - b.dateObj);
+    
+    const nextEvent = futureEvents[0] || null;
+    const upcomingEvents = futureEvents.slice(1) || [];
+    const allEvents = futureEvents || [];
+    
+    return { nextEvent, upcomingEvents, allEvents };
+}
+
+/**
+ * Affiche l'événement principal
+ */
+function displayMainEvent(event) {
+    const mainEventContainer = document.getElementById('main-next-event');
+    
+    if (!event) {
+        mainEventContainer.innerHTML = `
+            <div class="main-event-content">
+                <div class="no-events-message">
+                    <h3>🎵 Aucun événement prévu</h3>
+                    <p>Les prochains événements seront bientôt annoncés !</p>
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    // Déterminer le type d'événement pour le style
+    const eventTypeClass = determineEventTypeClass(event.type);
+    const eventTypeEmoji = getEventTypeEmoji(event.type);
+    
+    // Gérer les titres et types qui peuvent être des tableaux
+    const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+    const eventType = Array.isArray(event.type) ? event.type[0] || 'Événement' : event.type || 'Événement';
+    
+    // Calculer le countdown
+    const countdownText = generateCountdownText(event);
+    
+    // Générer la liste des pièces
+    const piecesHtml = event.pieces && event.pieces.length > 0 
+        ? generatePiecesHtml(event.pieces)
+        : '<p><em>Programme à définir</em></p>';
+    
+    mainEventContainer.innerHTML = `
+        <div class="main-event-content">
+            <div class="event-type-badge ${eventTypeClass}">
+                ${eventTypeEmoji} ${eventType}
+            </div>
+            
+            <h2 class="event-title">${eventTitle}</h2>
+            
+            <div class="event-countdown">
+                <span>Dans</span>
+                <span class="countdown-number">${countdownText}</span>
+            </div>
+            
+            <div class="event-date">
+                📅 ${formatEventDate(event.date)}
+            </div>
+            
+            ${event.notes ? `
+                <div class="event-notes">
+                    <strong>ℹ️ Informations importantes :</strong><br>
+                    ${event.notes}
+                </div>
+            ` : ''}
+            
+            <div class="event-pieces">
+                <h4>🎼 Programme à travailler :</h4>
+                ${piecesHtml}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Affiche l'aperçu des événements suivants
+ */
+function displayUpcomingEventsPreview(events) {
+    const upcomingContainer = document.getElementById('upcoming-events-list');
+    
+    if (!events || events.length === 0) {
+        upcomingContainer.innerHTML = `
+            <div class="no-events-message">
+                <p>Aucun autre événement prévu pour le moment</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const eventsHtml = events.map(event => generateMiniEventCard(event)).join('');
+    upcomingContainer.innerHTML = eventsHtml;
+}
+
+/**
+ * Prépare la liste complète des événements
+ */
+function prepareAllEventsList(events) {
+    const allEventsContainer = document.getElementById('all-events-list');
+    
+    if (!events || events.length === 0) {
+        allEventsContainer.innerHTML = `
+            <div class="no-events-message">
+                <p>Aucun événement à venir</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const eventsHtml = events.map(event => generateMiniEventCard(event)).join('');
+    allEventsContainer.innerHTML = eventsHtml;
+}
+
+/**
+ * Configure les interactions des boutons
+ */
+function setupEventInteractions() {
+    const showAllBtn = document.getElementById('show-all-events-btn');
+    const hideAllBtn = document.getElementById('hide-all-events-btn');
+    const allEventsSection = document.getElementById('all-events-section');
+    const upcomingPreview = document.querySelector('.upcoming-events-preview');
+    
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', () => {
+            allEventsSection.style.display = 'block';
+            upcomingPreview.style.display = 'none';
+            showAllBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+    
+    if (hideAllBtn) {
+        hideAllBtn.addEventListener('click', () => {
+            allEventsSection.style.display = 'none';
+            upcomingPreview.style.display = 'block';
+            upcomingPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+}
+
+/**
+ * Met à jour l'affichage des événements
+ */
+function updateEventDisplay() {
+    console.log('🔄 Mise à jour de l\'affichage des événements...');
+    loadAndDisplayEvents();
+}
+
+// Fonctions utilitaires
+
+function determineEventTypeClass(type) {
+    // Gérer le cas où type est un tableau ou une chaîne
+    const typeStr = Array.isArray(type) ? type[0] || '' : type || '';
+    const lowerType = typeStr.toLowerCase();
+    
+    if (lowerType.includes('répétition')) return 'repetition';
+    if (lowerType.includes('concert')) return 'concert';
+    if (lowerType.includes('pas de')) return 'vacances';
+    return 'other';
+}
+
+function getEventTypeEmoji(type) {
+    // Gérer le cas où type est un tableau ou une chaîne
+    const typeStr = Array.isArray(type) ? type[0] || '' : type || '';
+    const lowerType = typeStr.toLowerCase();
+    
+    if (lowerType.includes('répétition')) return '🎵';
+    if (lowerType.includes('concert')) return '🎼';
+    if (lowerType.includes('pas de')) return '🏖️';
+    return '📅';
+}
+
+function generateCountdownText(event) {
+    const daysDiff = event.daysDiff;
+    
+    if (daysDiff === 0) return "aujourd'hui";
+    if (daysDiff === 1) return "1 jour";
+    if (daysDiff < 7) return `${daysDiff} jours`;
+    
+    const weeks = Math.floor(daysDiff / 7);
+    const remainingDays = daysDiff % 7;
+    
+    if (weeks === 1 && remainingDays === 0) return "1 semaine";
+    if (weeks === 1) return `1 semaine et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+    if (remainingDays === 0) return `${weeks} semaines`;
+    
+    return `${weeks} semaines et ${remainingDays} jour${remainingDays > 1 ? 's' : ''}`;
+}
+
+function formatEventDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+}
+
+function generatePiecesHtml(pieces) {
+    if (!pieces || pieces.length === 0) {
+        return '<p><em>Programme à définir</em></p>';
+    }
+    
+    return `
+        <div class="pieces-list">
+            ${pieces.map(piece => `
+                <div class="piece-item">
+                    <h5>${piece}</h5>
+                    <p>Cliquez sur "Programmes Musicaux" pour plus d'infos</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function generateMiniEventCard(event) {
+    const eventTypeClass = determineEventTypeClass(event.type);
+    const eventTypeEmoji = getEventTypeEmoji(event.type);
+    const countdownText = generateCountdownText(event);
+    
+    // Gérer les titres et types qui peuvent être des tableaux
+    const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+    const eventType = Array.isArray(event.type) ? event.type[0] || 'Événement' : event.type || 'Événement';
+    
+    const piecesText = event.pieces && event.pieces.length > 0 
+        ? `🎼 ${event.pieces.slice(0, 2).join(', ')}${event.pieces.length > 2 ? '...' : ''}`
+        : '🎼 Programme à définir';
+    
+    return `
+        <div class="mini-event-card ${eventTypeClass}">
+            <div class="mini-event-header">
+                <span class="mini-event-type ${eventTypeClass}">
+                    ${eventTypeEmoji} ${eventType}
+                </span>
+                <span class="mini-event-date">Dans ${countdownText}</span>
+            </div>
+            
+            <h4 class="mini-event-title">${eventTitle}</h4>
+            
+            <div class="mini-event-pieces">${piecesText}</div>
+            
+            ${event.notes ? `
+                <div class="mini-event-notes">
+                    ℹ️ ${event.notes}
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+function displayEventError() {
+    const mainEventContainer = document.getElementById('main-next-event');
+    mainEventContainer.innerHTML = `
+        <div class="main-event-content">
+            <div class="no-events-message">
+                <h3>⚠️ Erreur de chargement</h3>
+                <p>Impossible de charger les événements. Veuillez recharger la page.</p>
+            </div>
+        </div>
+    `;
 }
 
 // Animations de défilement

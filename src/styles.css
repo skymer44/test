@@ -1908,3 +1908,429 @@ section:target {
     transform: translateY(-1px);
     transition: all 0.3s ease;
 }
+
+/* ========================================
+   STYLES POUR LES PROCHAINS ÉVÉNEMENTS
+   ======================================== */
+
+/* Section principale des événements */
+.next-events-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.next-events-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.next-events-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.next-events-header p {
+    font-size: 1.1rem;
+    color: #4a5568;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Carte de l'événement principal */
+.main-next-event {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 24px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    color: white;
+    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.main-next-event::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.main-event-content {
+    position: relative;
+    z-index: 1;
+}
+
+.event-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(10px);
+}
+
+.event-type-badge.repetition {
+    background: rgba(72, 187, 120, 0.9);
+}
+
+.event-type-badge.concert {
+    background: rgba(255, 107, 107, 0.9);
+}
+
+.event-type-badge.vacances {
+    background: rgba(129, 140, 248, 0.9);
+}
+
+.event-type-badge.other {
+    background: rgba(236, 201, 75, 0.9);
+}
+
+.event-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.event-countdown {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+}
+
+.countdown-number {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+}
+
+.event-date {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.event-notes {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.event-pieces h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pieces-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.piece-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.piece-item h5 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.piece-item p {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* Aperçu des événements suivants */
+.upcoming-events-preview {
+    margin-bottom: 2rem;
+}
+
+.upcoming-events-preview h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.upcoming-events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Mini cartes d'événements */
+.mini-event-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mini-event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.mini-event-card.repetition::before {
+    background: linear-gradient(90deg, #48bb78, #38a169);
+}
+
+.mini-event-card.concert::before {
+    background: linear-gradient(90deg, #ff6b6b, #ee5a52);
+}
+
+.mini-event-card.vacances::before {
+    background: linear-gradient(90deg, #818cf8, #6366f1);
+}
+
+.mini-event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.mini-event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.mini-event-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.mini-event-type.repetition {
+    background: rgba(72, 187, 120, 0.1);
+    color: #2f855a;
+}
+
+.mini-event-type.concert {
+    background: rgba(255, 107, 107, 0.1);
+    color: #c53030;
+}
+
+.mini-event-type.vacances {
+    background: rgba(129, 140, 248, 0.1);
+    color: #5a67d8;
+}
+
+.mini-event-type.other {
+    background: rgba(236, 201, 75, 0.1);
+    color: #d69e2e;
+}
+
+.mini-event-date {
+    font-size: 0.85rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.mini-event-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.mini-event-pieces {
+    font-size: 0.9rem;
+    color: #4a5568;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.mini-event-notes {
+    font-size: 0.85rem;
+    color: #718096;
+    background: #f7fafc;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border-left: 3px solid #e2e8f0;
+}
+
+/* Boutons d'action */
+.show-all-events-container {
+    text-align: center;
+}
+
+.show-all-events-btn, .hide-all-events-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.hide-all-events-btn {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    margin-bottom: 1.5rem;
+}
+
+.show-all-events-btn:hover, .hide-all-events-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* Section de tous les événements */
+.all-events-section {
+    margin-top: 3rem;
+}
+
+.all-events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.all-events-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.all-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Messages d'état */
+.no-events-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #e2e8f0;
+}
+
+.no-events-message h3 {
+    font-size: 1.3rem;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.no-events-message p {
+    color: #718096;
+}
+
+.loading-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: #718096;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .next-events-section {
+        padding: 1rem;
+    }
+    
+    .next-events-header h2 {
+        font-size: 2rem;
+    }
+    
+    .main-next-event {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .event-title {
+        font-size: 1.6rem;
+    }
+    
+    .event-countdown {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .upcoming-events-list, .all-events-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .mini-event-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .all-events-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-next-event {
+        padding: 1rem;
+    }
+    
+    .event-title {
+        font-size: 1.4rem;
+    }
+    
+    .mini-event-card {
+        padding: 1rem;
+    }
+    
+    .show-all-events-btn, .hide-all-events-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}

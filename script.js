@@ -78,39 +78,6 @@ function initTabs() {
     }
 }
 
-// Animations de défilement
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-    
-    // Observer toutes les cartes de pièces
-    document.querySelectorAll('.piece-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(card);
-    });
-    
-    // Observer les sections
-    document.querySelectorAll('.concert-section').forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        observer.observe(section);
-    });
-}
-
 // ========================================
 // SYSTÈME DE GESTION DES PROCHAINS ÉVÉNEMENTS
 // ========================================
@@ -139,66 +106,10 @@ const tempEventsData = [
         notes: ""
     },
     {
-        date: "2025-09-25",
-        type: "Répétition",
-        title: "Répétition", 
-        pieces: [],
-        notes: ""
-    },
-    {
-        date: "2025-10-02",
-        type: "Répétition",
-        title: "Répétition",
-        pieces: [],
-        notes: ""
-    },
-    {
-        date: "2025-10-09", 
-        type: "Répétition",
-        title: "Répétition",
-        pieces: [],
-        notes: ""
-    },
-    {
-        date: "2025-10-16",
-        type: "Répétition",
-        title: "Répétition",
-        pieces: [],
-        notes: ""
-    },
-    {
-        date: "2025-10-23",
-        type: "Répétition pendant les vacances",
-        title: "Répétition pendant les vacances", 
-        pieces: [],
-        notes: "La date sera confirmée ultérieurement."
-    },
-    {
-        date: "2025-10-30",
-        type: "Pas de répétition",
-        title: "Pas de répétition",
-        pieces: [],
-        notes: "2ᵉ jeudi vacances Toussaint"
-    },
-    {
         date: "2025-01-25",
         type: "Ma Région Virtuose",
         title: "Ma Région Virtuose",
         pieces: ["Allegretto from Symphony No. 7", "Ammerland", "Music from How To Train Your Dragon", "Selections from The Nightmare Before Christmas", "The Lion King"],
-        notes: "Date provisoire à confirmer"
-    },
-    {
-        date: "2026-04-11",
-        type: "Concert avec Eric Aubier", 
-        title: "Concert avec Eric Aubier",
-        pieces: [],
-        notes: "Beaucoup de choses à confirmer"
-    },
-    {
-        date: "2026-06-19",
-        type: "Fête de la musique",
-        title: "Fête de la musique",
-        pieces: [],
         notes: "Date provisoire à confirmer"
     }
 ];
@@ -226,8 +137,6 @@ function initNextEventsSystem() {
  */
 async function loadAndDisplayEvents() {
     try {
-        // Pour l'instant, utiliser les données temporaires
-        // Plus tard, cela sera remplacé par un appel à l'API Notion
         const eventsData = await loadEventsData();
         
         // Calculer le prochain événement et les suivants
@@ -237,7 +146,7 @@ async function loadAndDisplayEvents() {
         displayMainEvent(nextEvent);
         
         // Afficher l'aperçu des événements suivants
-        displayUpcomingEventsPreview(upcomingEvents.slice(0, 3)); // Afficher 3 événements en aperçu
+        displayUpcomingEventsPreview(upcomingEvents.slice(0, 3));
         
         // Préparer la liste complète (cachée)
         prepareAllEventsList(allEvents);
@@ -253,7 +162,6 @@ async function loadAndDisplayEvents() {
  */
 async function loadEventsData() {
     try {
-        // Essayer de charger depuis le fichier JSON généré par Notion
         console.log('🔍 Tentative de chargement de /data/events.json...');
         const response = await fetch('/data/events.json');
         console.log('📡 Réponse fetch:', response.status, response.ok);
@@ -565,6 +473,39 @@ function displayEventError() {
             </div>
         </div>
     `;
+}
+
+// Animations de défilement
+function initScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observer toutes les cartes de pièces
+    document.querySelectorAll('.piece-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Observer les sections
+    document.querySelectorAll('.concert-section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(section);
+    });
 }
 
 // Initialisation du système Notion avec synchronisation automatique via proxy

@@ -20,7 +20,8 @@
     <nav class="tab-navigation">
         <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button active" data-tab="prochains-evenements">🗓️ Prochains événements à venir</button>
+                <button class="tab-button" data-tab="programmes">📚 Programmes Musicaux</button>
                 <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
             </div>
             <div class="search-container">
@@ -30,8 +31,56 @@
     </nav>
 
     <main>
+        <!-- Section Prochains événements à venir -->
+        <div id="prochains-evenements" class="tab-content active">
+            <section class="next-events-section">
+                <div class="next-events-header">
+                    <h2>🗓️ Prochains événements à venir</h2>
+                    <p>Voici les prochaines répétitions et concerts programmés</p>
+                </div>
+                
+                <!-- Événement principal suivant -->
+                <div class="main-next-event" id="main-next-event">
+                    <div class="loading-placeholder">
+                        <p>Chargement des événements...</p>
+                    </div>
+                </div>
+                
+                <!-- Aperçu des événements suivants -->
+                <div class="upcoming-events-preview">
+                    <h3>Les prochains événements</h3>
+                    <div class="upcoming-events-list" id="upcoming-events-list">
+                        <div class="loading-placeholder">
+                            <p>Chargement...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="show-all-events-container">
+                        <button id="show-all-events-btn" class="show-all-events-btn">
+                            📅 Voir tous les événements à venir
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Section pour tous les événements (cachée par défaut) -->
+                <div id="all-events-section" class="all-events-section" style="display: none;">
+                    <div class="all-events-header">
+                        <h3>Tous les événements à venir</h3>
+                        <button id="hide-all-events-btn" class="hide-all-events-btn">
+                            ← Retour à l'aperçu
+                        </button>
+                    </div>
+                    <div class="all-events-grid" id="all-events-list">
+                        <div class="loading-placeholder">
+                            <p>Chargement...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
         <!-- Section Programmes -->
-        <div id="programmes" class="tab-content active">
+        <div id="programmes" class="tab-content">
             
         <!-- Ma région virtuose -->
         <section id="ma-region-virtuose" class="concert-section">
