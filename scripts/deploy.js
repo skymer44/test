@@ -28,19 +28,11 @@ class IntelligentDeployer {
             console.log('🏗️ Construction du site...');
             execSync('node scripts/site-builder.js', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
             
-            // 2. Vérifier s'il y a des changements
-            const hasChanges = await this.checkForChanges();
-            
-            if (!hasChanges) {
-                console.log('ℹ️ Aucun changement à déployer');
-                return;
-            }
-            
-            // 3. Déployer vers la racine pour GitHub Pages
+            // 2. Déployer vers la racine pour GitHub Pages
             console.log('📁 Déploiement des fichiers...');
             await this.deployFiles();
             
-            // 4. Commit et push
+            // 3. TOUJOURS commiter et pusher (pour les données et changements)
             console.log('📤 Commit et push...');
             await this.commitAndPush();
             
@@ -101,20 +93,22 @@ class IntelligentDeployer {
             execSync('git add index.html script.js styles.css data/ src/ build/', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
             
             // Vérifier s'il y a quelque chose à commiter
+            let hasChangesToCommit = false;
             try {
                 execSync('git diff --staged --quiet', { cwd: path.join(__dirname, '..') });
-                console.log('ℹ️ Aucun changement à commiter');
-                return;
+                console.log('ℹ️ Aucun changement de code à commiter');
             } catch (error) {
-                // Il y a des changements, on continue
+                // Il y a des changements, on les commite
+                hasChangesToCommit = true;
+                const commitMessage = `🎵 Mise à jour site - ${timestamp}`;
+                execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+                console.log('✅ Changements committés');
             }
             
-            // Git commit
-            const commitMessage = `🎵 Mise à jour site - ${timestamp}`;
-            execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit', cwd: path.join(__dirname, '..') });
-            
-            // Git push
+            // TOUJOURS faire le push (pour s'assurer que tout est à jour)
+            console.log('📤 Push vers GitHub...');
             execSync('git push origin main', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+            console.log('✅ Push réussi !');
             
         } catch (error) {
             throw new Error(`Erreur lors du commit/push: ${error.message}`);
