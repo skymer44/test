@@ -2,27 +2,39 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Programme Musical 2026 - Chargement terminé!');
     
-    // Initialiser toutes les fonctionnalités
+    // Initialiser les onglets en priorité
     initTabs();
-    initVideoModal();
-    addSearchFunctionality();
-    initScrollAnimations();
-    addTooltips();
-    addBackToTopButton();
-    initPDFGeneration();
-    initNotionSync();
-    initManualSync();
+    
+    // Initialiser les autres fonctionnalités
+    try {
+        initVideoModal();
+        addSearchFunctionality();
+        initScrollAnimations();
+        addTooltips();
+        addBackToTopButton();
+        initPDFGeneration();
+        initNotionSync();
+        initManualSync();
+    } catch (error) {
+        console.log('Certaines fonctionnalités avancées ne se sont pas chargées:', error);
+    }
     
     console.log('✅ Site web complètement initialisé et prêt!');
 });
 
-// Initialisation des onglets
+// Initialisation des onglets - VERSION SIMPLE ET ROBUSTE
 function initTabs() {
+    console.log('🔄 Initialisation des onglets...');
+    
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     
+    console.log('Onglets trouvés:', tabButtons.length, 'Contenus trouvés:', tabContents.length);
+    
     // Fonction pour afficher un onglet
     function showTab(targetId) {
+        console.log('Affichage onglet:', targetId);
+        
         // Masquer tous les contenus d'onglets
         tabContents.forEach(content => {
             content.classList.remove('active');
@@ -37,6 +49,9 @@ function initTabs() {
         const targetContent = document.getElementById(targetId);
         if (targetContent) {
             targetContent.classList.add('active');
+            console.log('✅ Onglet', targetId, 'activé');
+        } else {
+            console.error('❌ Contenu introuvable pour:', targetId);
         }
         
         // Activer le bouton correspondant
@@ -48,7 +63,8 @@ function initTabs() {
     
     // Gérer les clics sur les boutons d'onglets
     tabButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
             const targetId = this.getAttribute('data-tab');
             showTab(targetId);
         });
