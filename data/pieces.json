@@ -1,22 +1,6 @@
 {
   "pieces": [
     {
-      "title": "Eldorado",
-      "composer": "Thierry Deleruyelle 2",
-      "duration": "10:20",
-      "info": "Challenge accessible",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=skTOXVCcER4&list=RDskTOXVCcER4&start_radio=1",
-        "purchase": "https://www.partitions-musicales.net/Harmonie/Eldorado-nr-1.html"
-      },
-      "source": {
-        "notion": true,
-        "database": "Retour Karaoké",
-        "pageId": "227fcf9e-3abc-80eb-a7da-c95fdeb599f2",
-        "lastModified": "2025-07-06T08:47:00.000Z"
-      }
-    },
-    {
       "title": "The Mandalorian",
       "composer": "Ludwig Göransson/arr. Paul Murtha",
       "duration": "02:34",
@@ -142,20 +126,9 @@
       }
     },
     {
-      "title": "test 2",
-      "composer": "Rémi 2",
-      "duration": "00:02",
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "227fcf9e-3abc-800b-9f33-ccc90069ff0b",
-        "lastModified": "2025-07-06T08:47:00.000Z"
-      }
-    },
-    {
-      "title": "Allegretto from Symphony No. 7 2",
+      "title": "Allegretto from Symphony No. 7",
       "composer": "Beethoven/arr. Longfield",
-      "duration": "03:01",
+      "duration": "03:00",
       "info": "Bien arrangée, bien gérer la répartition",
       "links": {
         "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
@@ -166,7 +139,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
-        "lastModified": "2025-07-05T16:21:00.000Z"
+        "lastModified": "2025-07-06T09:26:00.000Z"
       }
     },
     {
@@ -268,8 +241,8 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T09:13:17.147Z",
+    "syncDate": "2025-07-06T09:31:48.727Z",
     "source": "notion",
-    "totalPieces": 17
+    "totalPieces": 15
   }
 }
