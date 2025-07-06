@@ -192,7 +192,7 @@
       }
     },
     {
-      "title": "Ammerland 3",
+      "title": "Ammerland",
       "composer": "Jacob de Haan",
       "duration": "03:10",
       "info": "Très interessant pour le son mais assez chère",
@@ -204,7 +204,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-06T12:12:00.000Z"
+        "lastModified": "2025-07-06T12:13:00.000Z"
       }
     },
     {
@@ -241,7 +241,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T12:12:20.460Z",
+    "syncDate": "2025-07-06T12:13:15.325Z",
     "source": "notion",
     "totalPieces": 15
   }
