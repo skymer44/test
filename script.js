@@ -535,22 +535,6 @@ function generatePDF(sectionId) {
             }
         });
         
-        // Afficher le nombre de pièces et la durée totale
-        doc.setFontSize(11);
-        doc.setFont(undefined, 'normal');
-        doc.text(`Nombre de pièces : ${realPieces.length}`, margin, currentY);
-        currentY += 6;
-        
-        if (sectionTotalSeconds > 0) {
-            const totalMinutes = Math.floor(sectionTotalSeconds / 60);
-            const remainingSeconds = sectionTotalSeconds % 60;
-            const timeDisplay = totalMinutes > 0 ? 
-                `${totalMinutes}min ${remainingSeconds.toString().padStart(2, '0')}s` : 
-                `${remainingSeconds}s`;
-            doc.text(`Durée totale estimée : ${timeDisplay}`, margin, currentY);
-            currentY += 6;
-        }
-        
         currentY += 5; // Espacement avant la liste des pièces
         
         if (realPieces.length === 0) {
@@ -606,6 +590,43 @@ function generatePDF(sectionId) {
                     currentY += 5;
                 }
             });
+        }
+        
+        // Ajouter un divider et les statistiques après les pièces
+        if (realPieces.length > 0) {
+            currentY += 15; // Espacement avant le divider
+            
+            // Vérifier si on a besoin d'une nouvelle page
+            if (currentY > pageHeight - 60) {
+                doc.addPage();
+                currentY = margin;
+            }
+            
+            // Divider (ligne de séparation)
+            doc.setLineWidth(1);
+            doc.setDrawColor(100, 100, 100); // Gris
+            doc.line(margin, currentY, pageWidth - margin, currentY);
+            currentY += 10;
+            
+            // Statistiques sous le divider
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            doc.text(`📊 Résumé du programme`, margin, currentY);
+            currentY += 8;
+            
+            doc.setFont(undefined, 'normal');
+            doc.text(`🎵 Nombre de pièces : ${realPieces.length}`, margin, currentY);
+            currentY += 6;
+            
+            if (sectionTotalSeconds > 0) {
+                const totalMinutes = Math.floor(sectionTotalSeconds / 60);
+                const remainingSeconds = sectionTotalSeconds % 60;
+                const timeDisplay = totalMinutes > 0 ? 
+                    `${totalMinutes}min ${remainingSeconds.toString().padStart(2, '0')}s` : 
+                    `${remainingSeconds}s`;
+                doc.text(`⏱️ Durée totale estimée : ${timeDisplay}`, margin, currentY);
+                currentY += 6;
+            }
         }
         
         // Pied de page
