@@ -636,6 +636,59 @@ main {
 }
 
 /* Styles simples pour l'onglet Partitions */
+.partitions-main-text {
+    background: #fff5f5;
+    border-left: 4px solid #e53e3e;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.partitions-main-text p {
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+}
+
+.partitions-main-text p:last-child {
+    margin-bottom: 0;
+}
+
+.highlight {
+    background: #fed7aa;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #c05621;
+}
+
+.download-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.partitions-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.partitions-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+/* Section partitions existante - nettoyage */
 .download-section {
     text-align: center;
     margin: 2rem 0;
