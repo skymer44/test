@@ -168,7 +168,7 @@
       }
     },
     {
-      "title": "Ammerland 20h",
+      "title": "Ammerland",
       "composer": "Jacob de Haan",
       "duration": "03:10",
       "info": "Très interessant pour le son mais assez chère",
@@ -180,7 +180,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-06T18:05:00.000Z",
+        "lastModified": "2025-07-06T18:37:00.000Z",
         "order": 1
       }
     },
@@ -256,7 +256,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T18:37:03.005Z",
+    "syncDate": "2025-07-06T18:41:56.266Z",
     "source": "notion",
     "totalPieces": 15
   }
