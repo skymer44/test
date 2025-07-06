@@ -429,22 +429,25 @@ async function processPieceData(pages, database) {
     const pieces = [];
     const analysis = mapper.analyzeDatabaseStructure(database);
     
-    // Détecter la colonne "Ordre" dans la base
-    const orderProperty = Object.keys(database.properties).find(key => 
-        key.toLowerCase().includes('ordre') || 
-        key.toLowerCase().includes('order') ||
-        key.toLowerCase() === 'ordre'
-    );
-    
+    // Détecter la colonne "Ordre" dans les pages elles-mêmes
     for (const page of pages) {
         try {
             // Utiliser le smart mapper pour extraire les données
             const mappedData = mapper.mapNotionPage(page, analysis.detectedType);
             
+            // Chercher la propriété "Ordre" directement dans cette page
+            const orderProperty = Object.keys(page.properties || {}).find(key => 
+                key.toLowerCase().includes('ordre') || 
+                key.toLowerCase().includes('order') ||
+                key.toLowerCase() === 'ordre'
+            );
+            
             // Extraire la valeur de la colonne "Ordre" si elle existe
             let order = null;
+            
             if (orderProperty && page.properties[orderProperty]) {
                 const orderValue = getPropertyValue(page, orderProperty);
+                
                 if (orderValue !== null && orderValue !== undefined && orderValue !== '') {
                     order = typeof orderValue === 'number' ? orderValue : (parseInt(orderValue) || null);
                 }
