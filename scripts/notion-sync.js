@@ -307,6 +307,12 @@ async function queryNotionDatabase(databaseId) {
     try {
         const response = await notion.databases.query({
             database_id: databaseId,
+            sorts: [
+                {
+                    timestamp: 'created_time',
+                    direction: 'ascending'
+                }
+            ]
         });
         
         return response.results;
@@ -444,7 +450,16 @@ async function processPieceData(pages, database) {
         }
     }
     
-    console.log(`✅ ${pieces.length} pièce(s) traitée(s)`);
+    // Trier les pièces par date de création (order de Notion)
+    pieces.sort((a, b) => {
+        // Les données arrivent déjà triées par created_time grâce à queryNotionDatabase,
+        // mais on s'assure avec lastModified comme fallback
+        const dateA = a.source?.lastModified || a.source?.pageId || '0';
+        const dateB = b.source?.lastModified || b.source?.pageId || '0';
+        return dateA.localeCompare(dateB);
+    });
+    
+    console.log(`✅ ${pieces.length} pièce(s) traitée(s) et triées par ordre de création`);
     return pieces;
 }
 

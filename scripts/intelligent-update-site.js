@@ -150,10 +150,19 @@ class IntelligentSiteUpdater {
             }
         });
         
-        // Statistiques
+        // Trier les pièces dans chaque section par date de création (ordre de Notion)
         Object.values(sections).forEach(section => {
             if (section.pieces.length > 0) {
-                console.log(`✅ ${section.title}: ${section.pieces.length} pièce(s)`);
+                section.pieces.sort((a, b) => {
+                    // Utiliser lastModified comme approximation de l'ordre de création
+                    // Si pas de lastModified, utiliser pageId comme fallback (plus ancien pageId = créé en premier)
+                    const dateA = a.source?.lastModified || a.source?.pageId || '0';
+                    const dateB = b.source?.lastModified || b.source?.pageId || '0';
+                    
+                    // Tri croissant (plus ancien d'abord = ordre de création dans Notion)
+                    return dateA.localeCompare(dateB);
+                });
+                console.log(`✅ ${section.title}: ${section.pieces.length} pièce(s) - triées par ordre de création`);
             }
         });
         
