@@ -15,15 +15,40 @@
     </style>
 </head>
 <body>
-    <div class="test-style">TEST: Si ce texte a un fond rouge, le CSS fonctionne</div>
-    <div class="header-content">TEST: Si ce texte a les styles du site, styles.css fonctionne</div>
+    <div class="test-style">✅ TEST: Si ce texte a un fond rouge, le CSS inline fonctionne</div>
+    <div class="header-content">❓ TEST: Si ce texte a les styles du site, styles.css fonctionne</div>
     
     <nav class="tab-navigation">
         <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button active" data-tab="programmes">📚 Test Tab</button>
+                <button class="tab-button active" data-tab="programmes">📚 Test Tab Navigation</button>
             </div>
         </div>
     </nav>
+    
+    <script>
+        // Test de chargement CSS
+        setTimeout(() => {
+            const headerContent = document.querySelector('.header-content');
+            const computedStyle = window.getComputedStyle(headerContent);
+            const fontSize = computedStyle.fontSize;
+            const fontFamily = computedStyle.fontFamily;
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.style.margin = '20px';
+            resultDiv.style.padding = '10px';
+            resultDiv.style.border = '2px solid black';
+            
+            if (fontFamily.includes('Inter') || fontSize !== '16px') {
+                resultDiv.innerHTML = '✅ styles.css SE CHARGE CORRECTEMENT<br>Font: ' + fontFamily + '<br>Size: ' + fontSize;
+                resultDiv.style.backgroundColor = 'lightgreen';
+            } else {
+                resultDiv.innerHTML = '❌ styles.css NE SE CHARGE PAS<br>Font: ' + fontFamily + '<br>Size: ' + fontSize;
+                resultDiv.style.backgroundColor = 'lightcoral';
+            }
+            
+            document.body.appendChild(resultDiv);
+        }, 1000);
+    </script>
 </body>
 </html>
