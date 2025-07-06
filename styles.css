@@ -79,15 +79,8 @@ header {
 
 /* Résumé des sections */
 .section-summary {
-    margin-top: 2rem;
-    padding-top: 1rem;
-}
-
-.summary-divider {
-    height: 2px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    border-radius: 1px;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
 }
 
 .summary-stats {

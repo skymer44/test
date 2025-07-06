@@ -393,7 +393,6 @@ class IntelligentSiteUpdater {
                 ${piecesHTML}
             </div>
             <div class="section-summary">
-                <div class="summary-divider"></div>
                 <div class="summary-stats">
                     <span class="stat-pieces">${section.pieces.length} pièce${section.pieces.length > 1 ? 's' : ''}</span>
                     ${totalTimeDisplay ? `<span class="stat-duration">${totalTimeDisplay}</span>` : ''}
