@@ -635,6 +635,176 @@ main {
     border-radius: 2px;
 }
 
+/* Section partitions */
+.partitions-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #9f7aea;
+}
+
+.partitions-section h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.partitions-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #9f7aea;
+    border-radius: 2px;
+}
+
+.partitions-content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.partitions-card {
+    background: #fff8e1;
+    border: 2px solid #ffc107;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.partitions-card h3 {
+    color: #d69e2e;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.warning-content p {
+    color: #2d3748;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.warning-content p:last-child {
+    margin-bottom: 0;
+}
+
+.download-section {
+    margin: 2rem 0;
+}
+
+.download-section h3 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.download-card {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.download-info h4 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.download-info p {
+    color: #4a5568;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.usage-tips {
+    margin-top: 2rem;
+}
+
+.usage-tips h3 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card h4 {
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tip-card p {
+    color: #4a5568;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
 /* Table */
 .funding-table {
     overflow-x: auto;
@@ -741,6 +911,30 @@ tbody tr:hover {
     th, td {
         padding: 0.5rem;
     }
+    
+    /* Responsive pour la section partitions */
+    .partitions-section {
+        padding: 1.5rem;
+    }
+    
+    .partitions-card {
+        padding: 1.5rem;
+    }
+    
+    .download-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .download-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -775,6 +969,37 @@ tbody tr:hover {
         font-size: 0.9rem;
         padding: 0.7rem 1.3rem;
         margin-top: 0;
+    }
+    
+    /* Responsive spécifique pour la section partitions */
+    .partitions-section {
+        padding: 1rem;
+    }
+    
+    .partitions-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .partitions-card {
+        padding: 1.2rem;
+    }
+    
+    .partitions-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .warning-content p {
+        font-size: 0.9rem;
+    }
+    
+    .download-section h3,
+    .usage-tips h3 {
+        font-size: 1.5rem;
+    }
+    
+    .download-btn {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
     }
     
     .piece-card {
