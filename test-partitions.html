@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Partitions Spécifique</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .debug-box {
+            background: yellow;
+            border: 3px solid red;
+            padding: 15px;
+            margin: 10px;
+        }
+        /* Force l'affichage pour diagnostic */
+        .tab-content {
+            display: none !important;
+        }
+        .tab-content.active {
+            display: block !important;
+            background: lightblue !important;
+            border: 3px solid blue !important;
+        }
+        .partitions-section {
+            background: lightgreen !important;
+            border: 3px solid green !important;
+            padding: 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-box">🔍 TEST PARTITIONS - Diagnostic spécifique</div>
+
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes</button>
+                <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div id="programmes" class="tab-content active">
+            <div class="debug-box">✅ Section PROGRAMMES - Si vous voyez ceci sur fond bleu, l'onglet fonctionne</div>
+            <h2>Test Section Programmes</h2>
+        </div>
+
+        <div id="partitions" class="tab-content">
+            <div class="debug-box">🎼 Section PARTITIONS - Si vous voyez ceci sur fond bleu après clic, l'onglet fonctionne</div>
+            <section class="partitions-section">
+                <h2>🎼 Partitions du Programme Musical 2026</h2>
+                <div class="partitions-content">
+                    <div class="partitions-intro">
+                        <p>Toutes les partitions sont disponibles en téléchargement libre pour les membres de l'orchestre.</p>
+                        <div class="google-drive-link">
+                            <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="drive-button">
+                                📁 Accéder au Drive des Partitions
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="copyright-notice">
+                        <h3>⚖️ Droits d'auteur et utilisation</h3>
+                        <p>Les partitions présentes dans ce drive sont protégées par le droit d'auteur. 
+                        Leur utilisation est strictement réservée aux membres de l'orchestre dans le cadre 
+                        des répétitions et concerts du programme 2026. Si je suis membre de l'orchestre, 
+                        je m'engage à respecter ces conditions d'utilisation.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="debug-box" id="js-status">JavaScript pas encore chargé</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('js-status').innerHTML = '✅ JavaScript chargé - Test des onglets...';
+            
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    console.log('Clic sur:', targetId);
+                    document.getElementById('js-status').innerHTML = '🔄 Clic sur: ' + targetId;
+                    
+                    // Masquer tous les contenus
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        console.log('Masqué:', content.id);
+                    });
+                    
+                    // Désactiver tous les boutons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activer le contenu ciblé
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                        console.log('Activé:', targetId);
+                        document.getElementById('js-status').innerHTML = '✅ ' + targetId + ' ACTIVÉ - Vérifiez l\'affichage';
+                    } else {
+                        console.error('Élément non trouvé:', targetId);
+                        document.getElementById('js-status').innerHTML = '❌ Élément ' + targetId + ' NON TROUVÉ';
+                    }
+                    
+                    // Activer le bouton
+                    this.classList.add('active');
+                });
+            });
+            
+            document.getElementById('js-status').innerHTML += '<br>✅ Listeners ajoutés sur ' + tabButtons.length + ' boutons';
+        });
+    </script>
+</body>
+</html>
