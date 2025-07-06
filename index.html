@@ -20,8 +20,7 @@
     <nav class="tab-navigation">
         <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button active" data-tab="prochains-evenements">🗓️ Prochains événements</button>
-                <button class="tab-button" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
                 <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
             </div>
             <div class="search-container">
@@ -31,56 +30,8 @@
     </nav>
 
     <main>
-        <!-- Section Prochains événements -->
-        <div id="prochains-evenements" class="tab-content active">
-            <section class="next-events-section">
-                <div class="next-events-header">
-                    <h2>🗓️ Prochains événements à venir</h2>
-                    <div class="sync-indicator-live">
-                        <div class="live-dot"></div>
-                        <span>Données mises à jour en temps réel</span>
-                    </div>
-                </div>
-                
-                <!-- Prochain événement principal -->
-                <div id="main-next-event" class="main-event-card">
-                    <!-- Contenu dynamique généré par JavaScript -->
-                    <div class="loading-placeholder">
-                        <div class="loading-spinner"></div>
-                        <p>Chargement du prochain événement...</p>
-                    </div>
-                </div>
-                
-                <!-- Événements suivants en aperçu -->
-                <div class="upcoming-events-preview">
-                    <div class="preview-header">
-                        <h3>Aperçu des événements suivants</h3>
-                        <button id="show-all-events-btn" class="show-all-btn">
-                            Voir tous les événements →
-                        </button>
-                    </div>
-                    <div id="upcoming-events-list" class="upcoming-events-grid">
-                        <!-- Contenu dynamique généré par JavaScript -->
-                    </div>
-                </div>
-                
-                <!-- Tous les événements (masqué par défaut) -->
-                <div id="all-events-section" class="all-events-section" style="display: none;">
-                    <div class="all-events-header">
-                        <h3>Tous les événements à venir</h3>
-                        <button id="hide-all-events-btn" class="hide-all-btn">
-                            ← Retour à l'aperçu
-                        </button>
-                    </div>
-                    <div id="all-events-list" class="all-events-grid">
-                        <!-- Contenu dynamique généré par JavaScript -->
-                    </div>
-                </div>
-            </section>
-        </div>
-
         <!-- Section Programmes -->
-        <div id="programmes" class="tab-content">
+        <div id="programmes" class="tab-content active">
             
         <!-- Ma région virtuose -->
         <section id="ma-region-virtuose" class="concert-section">
