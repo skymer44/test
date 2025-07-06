@@ -43,7 +43,7 @@
             </div>
             <div class="pieces-grid">
                 <div class="piece-card">
-                    <h3>Ammerland 20h</h3>
+                    <h3>Ammerland</h3>
                     <p><strong>Compositeur:</strong> Jacob de Haan</p>
                     <p><strong>Durée:</strong> 03:10</p>
                     <p><strong>Info:</strong> Très interessant pour le son mais assez chère</p>
@@ -265,22 +265,19 @@
             <section class="partitions-section">
                 <h2>🎼 Partitions du Programme Musical 2026</h2>
                 <div class="partitions-content">
-                    <div class="partitions-intro">
-                        <p>Toutes les partitions sont disponibles en téléchargement libre pour les membres de l'orchestre.</p>
-                        <div class="google-drive-link">
-                            <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="drive-button">
-                                📁 Accéder au Drive des Partitions
-                            </a>
-                        </div>
+                    
+                    <div class="partitions-main-text">
+                        <p><strong>ATTENTION</strong>, vous ne devez <strong>pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page</strong> (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
+                        
+                        <p><strong>Par exemple :</strong> si je suis <em>trompette 1</em> et que nous sommes <strong>deux</strong> à jouer cette partie, je lis en bas de page <span class="highlight">« 2 copies purchased »</span>, je ne peux en imprimer <strong>qu'une seule</strong> pour moi. Mais s'il est écrit <span class="highlight">« 6 copies purchased »</span>, vous pouvez en imprimer <strong>3</strong> (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue).</p>
                     </div>
                     
-                    <div class="copyright-notice">
-                        <h3>⚖️ Droits d'auteur et utilisation</h3>
-                        <p>Les partitions présentes dans ce drive sont protégées par le droit d'auteur. 
-                        Leur utilisation est strictement réservée aux membres de l'orchestre dans le cadre 
-                        des répétitions et concerts du programme 2026. Si je suis membre de l'orchestre, 
-                        je m'engage à respecter ces conditions d'utilisation.</p>
+                    <div class="download-section">
+                        <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="partitions-link">
+                            📁 Accéder aux partitions
+                        </a>
                     </div>
+                    
                 </div>
             </section>
         </div>
@@ -320,10 +317,46 @@
         </div>
     </div>
 
+    <!-- JavaScript simple pour les onglets qui fonctionne -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Programme Musical 2026 - Version simple chargée');
+            
+            // Initialiser seulement les onglets avec la logique qui marche
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    // Masquer tous les contenus
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Désactiver tous les boutons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activer le contenu et bouton ciblés
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    this.classList.add('active');
+                });
+            });
+            
+            console.log('✅ Onglets initialisés avec succès');
+        });
+    </script>
+
     <!-- Bibliothèque jsPDF pour la génération de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Script original pour les fonctionnalités -->
     <script src="script.js"></script>
 </body>
 </html>
