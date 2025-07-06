@@ -351,6 +351,35 @@ class IntelligentSiteUpdater {
     generateSectionHTML(section) {
         const piecesHTML = section.pieces.map(piece => this.generatePieceHTML(piece)).join('\n                ');
         
+        // Calculer la durée totale de cette section
+        let totalSeconds = 0;
+        section.pieces.forEach(piece => {
+            if (piece.duration) {
+                const timeComponents = piece.duration.split(':');
+                if (timeComponents.length >= 2) {
+                    const minutes = parseInt(timeComponents[0]) || 0;
+                    const seconds = parseInt(timeComponents[1]) || 0;
+                    totalSeconds += minutes * 60 + seconds;
+                }
+            }
+        });
+        
+        // Formater la durée
+        const formatTime = (seconds) => {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) {
+                return `${h}h ${m.toString().padStart(2, '0')}min`;
+            } else if (m > 0) {
+                return `${m}min ${s > 0 ? s.toString().padStart(2, '0') + 's' : ''}`;
+            } else {
+                return `${s}s`;
+            }
+        };
+        
+        const totalTimeDisplay = totalSeconds > 0 ? formatTime(totalSeconds) : '';
+        
         return `
         <!-- ${section.title} -->
         <section id="${section.id}" class="concert-section">
@@ -362,6 +391,13 @@ class IntelligentSiteUpdater {
             </div>
             <div class="pieces-grid">
                 ${piecesHTML}
+            </div>
+            <div class="section-summary">
+                <div class="summary-divider"></div>
+                <div class="summary-stats">
+                    <span class="stat-pieces">${section.pieces.length} pièce${section.pieces.length > 1 ? 's' : ''}</span>
+                    ${totalTimeDisplay ? `<span class="stat-duration">${totalTimeDisplay}</span>` : ''}
+                </div>
             </div>
         </section>
 `;
