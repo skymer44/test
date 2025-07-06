@@ -609,7 +609,7 @@ function generatePDF(sectionId) {
             currentY += 10;
             
             // Statistiques sous le divider - alignées à droite
-            doc.setFontSize(11);
+            doc.setFontSize(10);
             doc.setFont(undefined, 'normal');
             doc.text(`Nombre de pieces : ${realPieces.length}`, pageWidth - margin, currentY, { align: 'right' });
             currentY += 6;
