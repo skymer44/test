@@ -608,14 +608,14 @@ function generatePDF(sectionId) {
             doc.line(margin, currentY, pageWidth - margin, currentY);
             currentY += 10;
             
-            // Statistiques sous le divider
+            // Statistiques sous le divider - alignées à droite
             doc.setFontSize(11);
             doc.setFont(undefined, 'bold');
-            doc.text(`📊 Résumé du programme`, margin, currentY);
+            doc.text(`Resume du programme`, pageWidth - margin, currentY, { align: 'right' });
             currentY += 8;
             
             doc.setFont(undefined, 'normal');
-            doc.text(`🎵 Nombre de pièces : ${realPieces.length}`, margin, currentY);
+            doc.text(`Nombre de pieces : ${realPieces.length}`, pageWidth - margin, currentY, { align: 'right' });
             currentY += 6;
             
             if (sectionTotalSeconds > 0) {
@@ -624,7 +624,7 @@ function generatePDF(sectionId) {
                 const timeDisplay = totalMinutes > 0 ? 
                     `${totalMinutes}min ${remainingSeconds.toString().padStart(2, '0')}s` : 
                     `${remainingSeconds}s`;
-                doc.text(`⏱️ Durée totale estimée : ${timeDisplay}`, margin, currentY);
+                doc.text(`Duree totale estimee : ${timeDisplay}`, pageWidth - margin, currentY, { align: 'right' });
                 currentY += 6;
             }
         }
