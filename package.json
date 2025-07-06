@@ -15,6 +15,7 @@
     "auto-sync": "./scripts/sync-and-push-ultra.sh",
     "auto-sync-fixed": "./scripts/sync-and-push-fixed.sh",
     "auto-sync-old": "./scripts/sync-and-push.sh",
+    "quick-commit": "./scripts/quick-commit.sh",
     "start": "python3 -m http.server 8000"
   },
   "dependencies": {
