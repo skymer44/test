@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Onglets</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .debug {
+            background: yellow;
+            border: 2px solid red;
+            padding: 10px;
+            margin: 10px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block !important;
+            background: lightblue;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug">DEBUG: Page chargée</div>
+
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section Programmes -->
+        <div id="programmes" class="tab-content active">
+            <h2>Section Programmes</h2>
+            <p>Si vous voyez ce texte sur fond bleu clair, l'onglet Programmes fonctionne !</p>
+        </div>
+
+        <!-- Section Partitions -->
+        <div id="partitions" class="tab-content">
+            <h2>🎼 Section Partitions</h2>
+            <p>Si vous voyez ce texte sur fond bleu clair après avoir cliqué sur l'onglet Partitions, alors ça marche !</p>
+            <div class="partitions-section">
+                <h3>Test des styles de partitions</h3>
+                <p>Si je suis membre de l'orchestre, je peux voir cette section avec les bons styles.</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="debug" id="js-debug">DEBUG: JavaScript pas encore exécuté</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('js-debug').innerHTML = 'DEBUG: ✅ JavaScript DOMContentLoaded exécuté';
+            
+            try {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabContents = document.querySelectorAll('.tab-content');
+                
+                console.log('Boutons trouvés:', tabButtons.length);
+                console.log('Contenus trouvés:', tabContents.length);
+                
+                document.getElementById('js-debug').innerHTML += '<br>Boutons: ' + tabButtons.length + ', Contenus: ' + tabContents.length;
+                
+                tabButtons.forEach((button, index) => {
+                    console.log('Ajout listener sur bouton', index, button.getAttribute('data-tab'));
+                    
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Clic sur onglet:', this.getAttribute('data-tab'));
+                        
+                        const targetId = this.getAttribute('data-tab');
+                        
+                        // Debug
+                        document.getElementById('js-debug').innerHTML = 'DEBUG: Clic sur ' + targetId;
+                        
+                        // Masquer tous les contenus
+                        tabContents.forEach(content => {
+                            content.classList.remove('active');
+                            console.log('Masqué:', content.id);
+                        });
+                        
+                        // Désactiver tous les boutons
+                        tabButtons.forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        
+                        // Activer le contenu ciblé
+                        const targetContent = document.getElementById(targetId);
+                        if (targetContent) {
+                            targetContent.classList.add('active');
+                            console.log('Activé:', targetId);
+                            document.getElementById('js-debug').innerHTML += ' ✅ ACTIVÉ';
+                        } else {
+                            console.error('Contenu non trouvé pour:', targetId);
+                            document.getElementById('js-debug').innerHTML += ' ❌ CONTENU NON TROUVÉ';
+                        }
+                        
+                        // Activer le bouton
+                        this.classList.add('active');
+                    });
+                });
+                
+                document.getElementById('js-debug').innerHTML += '<br>✅ Listeners ajoutés';
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('js-debug').innerHTML = 'DEBUG: ❌ ERREUR - ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
