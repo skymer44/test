@@ -1,0 +1,99 @@
+name: 🎵 Notion Sync - Programme Musical 2026 (Nouvelle Architecture)
+
+on:
+  # Déclenchement manuel via l'interface GitHub
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Type de synchronisation'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - test
+      
+  # Déclenchement programmé (beaucoup moins fréquent)
+  schedule:
+    - cron: '0 8,18 * * *'     # Seulement 2x par jour : 8h et 18h
+
+  # Déclenchement sur push des scripts
+  push:
+    paths:
+      - 'scripts/notion-sync.js'
+      - 'scripts/site-builder.js'
+      - 'scripts/deploy.js'
+      - '.github/workflows/notion-sync-v2.yml'
+
+jobs:
+  sync-and-build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Nécessaire pour commit et push
+      
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: 📦 Install dependencies
+        run: |
+          npm ci || npm install
+          
+      - name: 🎯 Sync Notion data (Data Only)
+        env:
+          NOTION_TOKEN: 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
+          SYNC_TYPE: ${{ github.event.inputs.sync_type || 'full' }}
+        run: |
+          echo "🚀 Synchronisation des données Notion..."
+          echo "📊 Type de sync: $SYNC_TYPE"
+          node scripts/notion-sync.js
+          
+      - name: 🏗️ Build site with new architecture
+        run: |
+          echo "🔄 Construction du site avec nouvelle architecture..."
+          npm run build
+          echo "✅ Site construit dans /build/ avec séparation code/données"
+          
+      - name: 🚀 Deploy to production
+        run: |
+          echo "📁 Déploiement intelligent..."
+          npm run deploy
+          
+      - name: 📊 Summary Report
+        run: |
+          echo "📊 === RAPPORT DE SYNCHRONISATION V2 ==="
+          echo "📅 Date: $(TZ='Europe/Paris' date +'%Y-%m-%d %H:%M:%S')"
+          echo "🎯 Type: ${{ github.event.inputs.sync_type || 'full' }}"
+          echo "🏗️ Architecture: Code/Données séparées"
+          
+          # Vérifier si des changements ont été faits
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "✅ Synchronisation réussie avec changements"
+            
+            # Statistiques
+            if [ -f "data/pieces.json" ]; then
+              PIECES=$(jq '.pieces | length' data/pieces.json 2>/dev/null || echo "0")
+              echo "🎵 Pièces synchronisées: $PIECES"
+            fi
+            
+            echo "🔄 Fréquence réduite: 2x/jour au lieu de toutes les 10min"
+            echo "🛡️ Code protégé dans /src/ - jamais écrasé par Notion"
+          else
+            echo "ℹ️ Aucun changement détecté - données à jour"
+          fi
+          
+          echo "🌐 Site: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "📁 Structure:"
+          echo "  /src/     → Code source (protégé)"
+          echo "  /data/    → Données Notion (auto-sync)"
+          echo "  /build/   → Site généré (auto-build)"
+          echo "========================================="

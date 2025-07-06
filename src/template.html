@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme Musical 2026</title>
+    <link rel="stylesheet" href="styles.css?v=20250706-2" />
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Programme Musical 2026</h1>
+            <div id="site-stats" class="site-statistics">
+                <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section Programmes -->
+        <div id="programmes" class="tab-content active">
+            {{CONCERTS_CONTENT}}
+        </div>
+
+        <!-- Section Partitions -->
+        <div id="partitions" class="tab-content">
+            <section class="partitions-section-clean">
+                <div class="partitions-header">
+                    <h2>🎼 Partitions du Programme Musical 2026</h2>
+                </div>
+                
+                <div class="partitions-content-clean">
+                    
+                    <!-- Message d'avertissement principal -->
+                    <div class="warning-section">
+                        <div class="warning-header">
+                            <span class="warning-icon">⚠️</span>
+                            <h3>Règles d'impression des partitions</h3>
+                        </div>
+                        <div class="warning-text">
+                            <p>ATTENTION, vous ne devez pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Exemples pratiques -->
+                    <div class="examples-section-clean">
+                        <h4>Exemples pratiques :</h4>
+                        
+                        <div class="example-item">
+                            <p>• Si je suis <strong>trompette 1</strong> et que nous sommes <strong>deux à jouer cette partie</strong>, je lis en bas de page : <strong>« 2 copies purchased »</strong> → je ne peux en imprimer <strong>qu'une seule</strong> pour moi</p>
+                        </div>
+                        
+                        <div class="example-item">
+                            <p>• Mais s'il est écrit : <strong>« 6 copies purchased »</strong> → vous pouvez en imprimer <strong>3</strong> (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Accès aux partitions -->
+                    <div class="access-section">
+                        <div class="access-card">
+                            <div class="access-info">
+                                <span class="folder-icon">📁</span>
+                                <div class="access-text">
+                                    <h4>Dossier des partitions</h4>
+                                    <p>Accédez à toutes les partitions du programme 2026</p>
+                                </div>
+                            </div>
+                            <a href="https://drive.google.com/drive/folders/1CXdB2LQvuqJ_F6WX-CYrf9DtB3hJgppH" target="_blank" class="access-button">
+                                Ouvrir le Drive →
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modale vidéo YouTube -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-modal-wrapper">
+            <div class="video-controls">
+                <button id="audio-mode-btn" class="control-btn" title="Mode audio uniquement">🎧</button>
+                <button id="close-modal-btn" class="control-btn" title="Fermer">✕</button>
+            </div>
+            <div class="video-modal-content">
+                <div class="video-container">
+                    <iframe id="youtube-player" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-lecteur audio en bas -->
+    <div id="audio-player" class="audio-player">
+        <div class="audio-player-content">
+            <div class="audio-info">
+                <span id="audio-title">Titre de la pièce</span>
+            </div>
+            <div class="audio-controls">
+                <button id="show-video-btn" class="audio-control-btn" title="Afficher la vidéo">▶</button>
+                <button id="stop-audio-btn" class="audio-control-btn" title="Arrêter">⏹</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bibliothèque jsPDF pour la génération de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Script original pour les fonctionnalités -->
+    <script src="script.js"></script>
+</body>
+</html>

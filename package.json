@@ -16,7 +16,11 @@
     "auto-sync-fixed": "./scripts/sync-and-push-fixed.sh",
     "auto-sync-old": "./scripts/sync-and-push.sh",
     "quick-commit": "./scripts/quick-commit.sh",
-    "start": "python3 -m http.server 8000"
+    "start": "python3 -m http.server 8000",
+    "build": "node scripts/site-builder.js",
+    "deploy": "node scripts/deploy.js",
+    "dev": "npm run build && npm run start",
+    "new-sync": "npm run sync && npm run build && npm run deploy"
   },
   "dependencies": {
     "@notionhq/client": "^4.0.0"

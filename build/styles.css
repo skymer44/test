@@ -1,0 +1,1910 @@
+/* Reset et base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    color: #1a202c;
+    background-color: #f7fafc;
+}
+
+/* Header */
+header {
+    background: #ffffff;
+    color: #1a202c;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Statistiques du site */
+.site-statistics {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    transition: transform 0.2s ease;
+    min-width: 80px;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Durée des sections */
+.section-duration {
+    color: #666;
+    font-weight: normal;
+    font-size: 0.9em;
+}
+
+/* Résumé des sections */
+.section-summary {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+}
+
+.summary-stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.stat-pieces,
+.stat-duration {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.stat-pieces::before {
+    content: "🎵";
+    font-size: 1.1em;
+}
+
+.stat-duration::before {
+    content: "⏱️";
+    font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+    .summary-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.admin-link {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2d3748;
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+/* Navigation par onglets */
+.tab-navigation {
+    background: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0;
+}
+
+.tab-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 2rem;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 0;
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+    position: relative;
+}
+
+.tab-button:hover {
+    background: #edf2f7;
+    color: #2d3748;
+}
+
+.tab-button.active {
+    color: #4299e1;
+    border-bottom-color: #4299e1;
+    background: #ffffff;
+}
+
+/* Barre de recherche */
+.search-container {
+    flex-shrink: 0;
+}
+
+.search-input {
+    width: 300px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #ffffff;
+    color: #4a5568;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.search-input::placeholder {
+    color: #a0aec0;
+}
+
+/* Main content */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 2rem;
+}
+
+/* Modale vidéo YouTube */
+.video-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1000;
+    padding: 2rem;
+    box-sizing: border-box;
+    /* Toujours centré quand affiché */
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal.active {
+    display: flex;
+}
+
+.video-modal-wrapper {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+}
+
+.video-modal-content {
+    background: #000000;
+    border-radius: 12px;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.video-modal-header {
+    display: none; /* Supprimé complètement */
+}
+
+.video-controls {
+    position: absolute;
+    top: -60px;
+    right: 0;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 1001;
+}
+
+.control-btn {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.control-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    background: #000000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Mini-lecteur audio */
+.audio-player {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 6rem; /* Décalé vers la gauche pour éviter le bouton retour en haut */
+    background: rgba(45, 55, 72, 0.95);
+    color: white;
+    z-index: 100; /* Réduit pour ne pas interférer avec le scroll */
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    max-width: 300px;
+    /* Retirer backdrop-filter qui peut causer des problèmes de scroll */
+    /* backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: auto; /* S'assurer que les événements de pointeur fonctionnent */
+    /* Assurer que l'élément ne bloque pas le scroll */
+    will-change: transform;
+    transform: translateZ(0); /* Forcer l'accélération matérielle */
+}
+
+.audio-player.active {
+    display: flex;
+    animation: slideInUp 0.3s ease;
+}
+
+.audio-player-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+}
+
+.audio-info {
+    text-align: center;
+}
+
+.audio-info span {
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 0.95rem;
+    display: block;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.audio-control-btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+.audio-control-btn:hover {
+    background: #3182ce;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(66, 153, 225, 0.4);
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Gestion des onglets */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Sections vides */
+.empty-section {
+    background: #f7fafc;
+    border: 2px dashed #cbd5e0;
+    text-align: center;
+}
+
+.empty-content {
+    padding: 2rem;
+}
+
+.empty-content p {
+    margin: 0.5rem 0;
+    color: #718096;
+}
+
+.empty-content p:first-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* Sections */
+.concert-section {
+    margin-bottom: 4rem;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* En-tête de section avec bouton PDF */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.section-header h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    margin: 0;
+    text-align: left;
+    position: relative;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    flex: 1;
+    line-height: 1.2;
+    padding-top: 0.1rem;
+}
+
+/* Bouton de téléchargement PDF */
+.pdf-download-btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+    white-space: nowrap;
+    height: fit-content;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.pdf-download-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+.pdf-download-btn:active {
+    transform: translateY(0);
+}
+
+/* Anciens styles pour h2 dans les sections sans header */
+.concert-section h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.concert-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #4299e1;
+    border-radius: 2px;
+}
+
+/* Grid des pièces */
+.pieces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* Cartes des pièces */
+.piece-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.piece-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #4299e1;
+}
+
+.piece-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e0;
+}
+
+.piece-card h3 {
+    color: #2d3748;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.piece-card p {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.piece-card strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+/* Liens */
+.links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #4299e1;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.links a:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+}
+
+/* Section financement */
+.funding-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #48bb78;
+}
+
+.funding-section h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.funding-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #48bb78;
+    border-radius: 2px;
+}
+
+/* Styles sobres et élégants pour l'onglet Partitions */
+
+/* Message principal d'avertissement */
+.main-notice {
+    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    border-left: 4px solid #e53e3e;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0 3rem 0;
+    box-shadow: 0 4px 15px rgba(229, 62, 62, 0.1);
+}
+
+.notice-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.notice-icon {
+    font-size: 1.8rem;
+}
+
+.notice-header h3 {
+    color: #c53030;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.notice-text p {
+    color: #742a2a;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Section des exemples */
+.examples-section {
+    margin: 3rem 0;
+}
+
+.examples-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #2d3748;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 2rem 0;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.examples-icon {
+    font-size: 1.5rem;
+}
+
+/* Cartes d'exemples */
+.example-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.example-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.restrictive {
+    border-color: #fed7d7;
+    background: linear-gradient(135deg, #fff5f5 0%, #fffbfb 100%);
+}
+
+.flexible {
+    border-color: #c6f6d5;
+    background: linear-gradient(135deg, #f0fff4 0%, #fafffe 100%);
+}
+
+.example-content p {
+    color: #2d3748;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+}
+
+/* Affichage des formules */
+.formula-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.copies-info {
+    background: #4a5568;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 10px rgba(74, 85, 104, 0.2);
+}
+
+.arrow {
+    font-size: 1.5rem;
+    color: #4a5568;
+    font-weight: bold;
+}
+
+.result {
+    background: #667eea;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+    flex: 1;
+    min-width: 220px;
+}
+
+/* Détails d'usage */
+.usage-details {
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    border-left: 3px solid #48bb78;
+}
+
+.usage-details p {
+    color: #2d3748;
+    font-style: italic;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Section téléchargement (conservée) */
+.download-section {
+    margin: 3rem 0;
+}
+
+.download-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.download-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+    pointer-events: none;
+}
+
+.download-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.download-icon {
+    font-size: 3rem;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+.download-text h4 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.download-text p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.partitions-button {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.partitions-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: white;
+}
+
+.button-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.partitions-button:hover .button-arrow {
+    transform: translateX(5px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .main-notice, .example-card {
+        padding: 1.5rem;
+    }
+    
+    .formula-display {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .examples-title {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .download-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+}
+.partitions-main-text {
+    background: #fff5f5;
+    border-left: 4px solid #e53e3e;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.partitions-main-text p {
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+}
+
+.partitions-main-text p:last-child {
+    margin-bottom: 0;
+}
+
+.highlight {
+    background: #fed7aa;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #c05621;
+}
+
+.download-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.partitions-link {
+    display: inline-block;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.partitions-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+/* Section partitions existante - nettoyage */
+.download-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.download-button-container {
+    margin: 2rem 0;
+}
+
+.partitions-download-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    padding: 1.2rem 2.5rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.partitions-download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.instructions-section {
+    background: #fff5f5;
+    border: 2px solid #fc8181;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-left: 5px solid #e53e3e;
+}
+
+.instructions-section h3 {
+    color: #c53030;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.instruction-text p {
+    color: #2d3748;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.instruction-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Section partitions - Version sobre et élégante */
+.partitions-section-clean {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.partitions-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #f7fafc;
+}
+
+.partitions-header h2 {
+    color: #2d3748;
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+.partitions-content-clean {
+    line-height: 1.7;
+}
+
+/* Section d'avertissement */
+.warning-section {
+    background: #fff5f5;
+    border: 1px solid #fed7d7;
+    border-left: 4px solid #e53e3e;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.warning-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.warning-icon {
+    font-size: 1.5rem;
+}
+
+.warning-header h3 {
+    color: #c53030;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.warning-text p {
+    color: #742a2a;
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Section des exemples */
+.examples-section-clean {
+    margin-bottom: 2.5rem;
+}
+
+.examples-section-clean h4 {
+    color: #2d3748;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.example-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.example-item:last-child {
+    margin-bottom: 0;
+}
+
+.example-item p {
+    color: #2d3748;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.example-item strong {
+    color: #1a202c;
+    font-weight: 600;
+}
+
+/* Section d'accès */
+.access-section {
+    margin-top: 2.5rem;
+}
+
+.access-card {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    transition: all 0.2s ease;
+}
+
+.access-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e0;
+}
+
+.access-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.folder-icon {
+    font-size: 2.5rem;
+}
+
+.access-text h4 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.access-text p {
+    color: #4a5568;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.access-button {
+    background: #4299e1;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.access-button:hover {
+    background: #3182ce;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.25);
+}
+
+/* Responsive pour la section partitions clean */
+@media (max-width: 768px) {
+    .partitions-section-clean {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+    
+    .partitions-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .access-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .access-info {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .partitions-section-clean {
+        padding: 1.5rem;
+    }
+    
+    .partitions-header {
+        margin-bottom: 2rem;
+    }
+    
+    .partitions-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .warning-section {
+        padding: 1.5rem;
+    }
+    
+    .warning-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .warning-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .warning-text p {
+        font-size: 1rem;
+    }
+    
+    .example-item {
+        padding: 1.2rem;
+    }
+    
+    .example-item p {
+        font-size: 0.95rem;
+    }
+    
+    .access-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+.partitions-card {
+    background: #fff8e1;
+    border: 2px solid #ffc107;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.partitions-card h3 {
+    color: #d69e2e;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.warning-content p {
+    color: #2d3748;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.warning-content p:last-child {
+    margin-bottom: 0;
+}
+
+.download-section {
+    margin: 2rem 0;
+}
+
+.download-section h3 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.download-card {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.download-info h4 {
+    color: #2d3748;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.download-info p {
+    color: #4a5568;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+/* Nouveaux styles pour les instructions d'impression */
+.partitions-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.partitions-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    font-style: italic;
+}
+
+.partitions-access-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    border: 2px solid #e2e8f0;
+}
+
+.access-card-icon .icon-large {
+    font-size: 3rem;
+}
+
+.access-card-content h3 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.access-card-content p {
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.drive-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+.drive-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.button-icon {
+    font-size: 1.2rem;
+}
+
+.button-arrow {
+    transition: transform 0.3s ease;
+}
+
+.drive-button:hover .button-arrow {
+    transform: translateX(3px);
+}
+
+.printing-instructions {
+    background: #fff5f5;
+    border: 2px solid #fc8181;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.instruction-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.warning-icon {
+    font-size: 2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.instruction-header h3 {
+    color: #c53030;
+    font-size: 1.6rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.main-rule {
+    background: #fed7d7;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border-left: 5px solid #e53e3e;
+}
+
+.main-rule p {
+    color: #742a2a;
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.examples-section h4 {
+    color: #2d3748;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.example-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.example-scenario {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.scenario-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.scenario-text p {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.scenario-text ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.scenario-text li {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.highlight {
+    background: #fed7aa;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #c05621;
+}
+
+.copyright-notice-modern {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    border-left: 4px solid #805ad5;
+}
+
+.copyright-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.copyright-icon {
+    font-size: 1.8rem;
+}
+
+.copyright-header h3 {
+    color: #2d3748;
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.copyright-text p {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.engagement-section {
+    background: #e6fffa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #81e6d9;
+}
+
+.engagement-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.engagement-section p {
+    margin: 0;
+    color: #234e52;
+    font-weight: 500;
+}
+
+.usage-tips {
+    margin-top: 2rem;
+}
+
+.usage-tips h3 {
+    color: #2d3748;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tip-card h4 {
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tip-card p {
+    color: #4a5568;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Table */
+.funding-table {
+    overflow-x: auto;
+    margin-top: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+thead {
+    background: #48bb78;
+    color: white;
+}
+
+th {
+    padding: 1.2rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.025em;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+tbody tr:hover {
+    background-color: #edf2f7;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 1rem;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .tab-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .tab-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .tab-button {
+        text-align: center;
+        border-bottom: none;
+        border-right: 3px solid transparent;
+    }
+    
+    .tab-button.active {
+        border-right-color: #4299e1;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .pieces-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    main {
+        padding: 0 1rem 2rem;
+    }
+    
+    .concert-section {
+        padding: 1.5rem;
+    }
+    
+    .links {
+        justify-content: center;
+    }
+    
+    table {
+        font-size: 0.8rem;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+    }
+    
+    /* Responsive pour la section partitions */
+    .partitions-section {
+        padding: 1.5rem;
+    }
+    
+    .partitions-card {
+        padding: 1.5rem;
+    }
+    
+    .download-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .download-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .tab-button {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .concert-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    /* Responsive pour les en-têtes de section avec boutons PDF */
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+    
+    .section-header h2 {
+        text-align: center;
+        font-size: 1.5rem;
+        padding-top: 0;
+    }
+    
+    .pdf-download-btn {
+        align-self: center;
+        font-size: 0.9rem;
+        padding: 0.7rem 1.3rem;
+        margin-top: 0;
+    }
+    
+    /* Responsive spécifique pour la section partitions */
+    .partitions-section {
+        padding: 1rem;
+    }
+    
+    .partitions-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .partitions-card {
+        padding: 1.2rem;
+    }
+    
+    .partitions-card h3 {
+        font-size: 1.2rem;
+    }
+    
+    .warning-content p {
+        font-size: 0.9rem;
+    }
+    
+    .download-section h3,
+    .usage-tips h3 {
+        font-size: 1.5rem;
+    }
+    
+    .download-btn {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .piece-card {
+        padding: 1rem;
+    }
+    
+    .links a {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    /* Responsive pour la modale vidéo */
+    .video-modal {
+        padding: 1rem;
+    }
+    
+    .video-modal-content {
+        max-height: 90vh;
+    }
+    
+    .video-controls {
+        top: -50px;
+        right: 0;
+        gap: 0.5rem;
+    }
+    
+    .control-btn {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+    }
+    
+    .video-container {
+        height: 250px;
+    }
+    
+    /* Responsive pour le mini-lecteur */
+    .audio-player {
+        bottom: 1rem;
+        right: 1rem; /* Sur mobile, on garde la position normale car moins de place */
+        max-width: 260px;
+    }
+    
+    .audio-player-content {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+    
+    .audio-info span {
+        font-size: 0.85rem;
+        max-width: 180px;
+    }
+    
+    .audio-control-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.concert-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Highlight effect for sections */
+section:target {
+    animation: highlight 2s ease-in-out;
+}
+
+@keyframes highlight {
+    0% { background-color: rgba(66, 153, 225, 0.1); }
+    50% { background-color: rgba(66, 153, 225, 0.05); }
+    100% { background-color: transparent; }
+}
+
+/* Styles pour la recherche */
+.piece-card.search-match {
+    /* Pas de bordure bleue, juste un léger effet de mise en valeur */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
