@@ -305,14 +305,42 @@ async function synchronizeData(databases) {
  */
 async function queryNotionDatabase(databaseId) {
     try {
-        const response = await notion.databases.query({
-            database_id: databaseId,
-            sorts: [
+        // D'abord, récupérer les métadonnées de la base pour détecter la colonne "Ordre"
+        const database = await notion.databases.retrieve({ database_id: databaseId });
+        const properties = database.properties;
+        
+        // Chercher une propriété "Ordre" (différentes variantes possibles)
+        const orderProperty = Object.keys(properties).find(key => 
+            key.toLowerCase().includes('ordre') || 
+            key.toLowerCase().includes('order') ||
+            key.toLowerCase() === 'ordre'
+        );
+        
+        let sorts = [];
+        
+        if (orderProperty && properties[orderProperty].type === 'number') {
+            // Utiliser la colonne Ordre si elle existe et est numérique
+            console.log(`📊 Tri par colonne "${orderProperty}" détectée`);
+            sorts = [
+                {
+                    property: orderProperty,
+                    direction: 'ascending'
+                }
+            ];
+        } else {
+            // Fallback sur created_time si pas de colonne Ordre
+            console.log(`⚠️ Pas de colonne "Ordre" trouvée, tri par created_time`);
+            sorts = [
                 {
                     timestamp: 'created_time',
                     direction: 'ascending'
                 }
-            ]
+            ];
+        }
+        
+        const response = await notion.databases.query({
+            database_id: databaseId,
+            sorts: sorts
         });
         
         return response.results;
@@ -401,10 +429,26 @@ async function processPieceData(pages, database) {
     const pieces = [];
     const analysis = mapper.analyzeDatabaseStructure(database);
     
+    // Détecter la colonne "Ordre" dans la base
+    const orderProperty = Object.keys(database.properties).find(key => 
+        key.toLowerCase().includes('ordre') || 
+        key.toLowerCase().includes('order') ||
+        key.toLowerCase() === 'ordre'
+    );
+    
     for (const page of pages) {
         try {
             // Utiliser le smart mapper pour extraire les données
             const mappedData = mapper.mapNotionPage(page, analysis.detectedType);
+            
+            // Extraire la valeur de la colonne "Ordre" si elle existe
+            let order = null;
+            if (orderProperty && page.properties[orderProperty]) {
+                const orderValue = getPropertyValue(page, orderProperty);
+                if (orderValue !== null && orderValue !== undefined && orderValue !== '') {
+                    order = typeof orderValue === 'number' ? orderValue : (parseInt(orderValue) || null);
+                }
+            }
             
             const piece = {
                 title: mappedData.title,
@@ -417,7 +461,8 @@ async function processPieceData(pages, database) {
                     notion: true,
                     database: database.title, // Utiliser le titre complet de la base
                     pageId: page.id,
-                    lastModified: page.last_edited_time
+                    lastModified: page.last_edited_time,
+                    order: order // Ajouter l'ordre
                 }
             };
             
@@ -450,16 +495,34 @@ async function processPieceData(pages, database) {
         }
     }
     
-    // Trier les pièces par date de création (order de Notion)
+    // Trier les pièces par ordre défini dans Notion (colonne "Ordre") puis par date si pas d'ordre
     pieces.sort((a, b) => {
-        // Les données arrivent déjà triées par created_time grâce à queryNotionDatabase,
-        // mais on s'assure avec lastModified comme fallback
+        const orderA = a.source?.order;
+        const orderB = b.source?.order;
+        
+        // Si les deux ont un ordre défini, trier par ordre
+        if (orderA !== null && orderA !== undefined && orderB !== null && orderB !== undefined) {
+            return orderA - orderB;
+        }
+        
+        // Si seul A a un ordre, A vient en premier
+        if (orderA !== null && orderA !== undefined) {
+            return -1;
+        }
+        
+        // Si seul B a un ordre, B vient en premier
+        if (orderB !== null && orderB !== undefined) {
+            return 1;
+        }
+        
+        // Si aucun n'a d'ordre, fallback sur date de modification
         const dateA = a.source?.lastModified || a.source?.pageId || '0';
         const dateB = b.source?.lastModified || b.source?.pageId || '0';
         return dateA.localeCompare(dateB);
     });
     
-    console.log(`✅ ${pieces.length} pièce(s) traitée(s) et triées par ordre de création`);
+    const orderedCount = pieces.filter(p => p.source?.order !== null && p.source?.order !== undefined).length;
+    console.log(`✅ ${pieces.length} pièce(s) traitée(s) - ${orderedCount} avec ordre personnalisé`);
     return pieces;
 }
 
@@ -561,7 +624,7 @@ function getPropertyValue(page, propertyName) {
         case 'url':
             return property.url || '';
         case 'number':
-            return property.number ? property.number.toString() : '';
+            return property.number !== null && property.number !== undefined ? property.number : null;
         default:
             return '';
     }

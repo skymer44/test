@@ -150,19 +150,36 @@ class IntelligentSiteUpdater {
             }
         });
         
-        // Trier les pièces dans chaque section par date de création (ordre de Notion)
+        // Trier les pièces dans chaque section par ordre défini dans Notion (colonne "Ordre")
         Object.values(sections).forEach(section => {
             if (section.pieces.length > 0) {
                 section.pieces.sort((a, b) => {
-                    // Utiliser lastModified comme approximation de l'ordre de création
-                    // Si pas de lastModified, utiliser pageId comme fallback (plus ancien pageId = créé en premier)
+                    const orderA = a.source?.order;
+                    const orderB = b.source?.order;
+                    
+                    // Si les deux ont un ordre défini, trier par ordre
+                    if (orderA !== null && orderA !== undefined && orderB !== null && orderB !== undefined) {
+                        return orderA - orderB;
+                    }
+                    
+                    // Si seul A a un ordre, A vient en premier
+                    if (orderA !== null && orderA !== undefined) {
+                        return -1;
+                    }
+                    
+                    // Si seul B a un ordre, B vient en premier
+                    if (orderB !== null && orderB !== undefined) {
+                        return 1;
+                    }
+                    
+                    // Si aucun n'a d'ordre, fallback sur date de modification
                     const dateA = a.source?.lastModified || a.source?.pageId || '0';
                     const dateB = b.source?.lastModified || b.source?.pageId || '0';
-                    
-                    // Tri croissant (plus ancien d'abord = ordre de création dans Notion)
                     return dateA.localeCompare(dateB);
                 });
-                console.log(`✅ ${section.title}: ${section.pieces.length} pièce(s) - triées par ordre de création`);
+                
+                const orderedCount = section.pieces.filter(p => p.source?.order !== null && p.source?.order !== undefined).length;
+                console.log(`✅ ${section.title}: ${section.pieces.length} pièce(s) - ${orderedCount} avec ordre personnalisé`);
             }
         });
         

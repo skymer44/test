@@ -1,118 +1,65 @@
 {
   "pieces": [
     {
-      "title": "Music from How To Train Your Dragon",
-      "composer": "John Powell/arr. Sean O'Loughlin",
-      "duration": "04:50",
-      "info": "Marche très bien, joviale",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=FfOuif5v554&list=RDFfOuif5v554&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Music from How To Train Your Dragon - 02501568&utm_source=youtube&utm_medium=band-orch-scoreplay"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80cd-9f3b-e2ad6dd48f98",
-        "lastModified": "2025-07-04T08:56:00.000Z"
-      }
-    },
-    {
-      "title": "The Lion King",
-      "composer": "John Higgins",
-      "duration": "08:40",
-      "info": "Super pièce",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=WEEDErl0wlI&list=RDWEEDErl0wlI&start_radio=1",
-        "purchase": "https://www.halleonard.com/product/viewproduct.action?itemid=20523032&subsiteid=1"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
-        "lastModified": "2025-07-04T08:57:00.000Z"
-      }
-    },
-    {
-      "title": "Selections from The Nightmare Before Christmas",
-      "composer": "Elfman/arr. Brown",
-      "duration": "05:12",
-      "info": "Excellent",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=294MV8S7dU4",
-        "original": "https://www.youtube.com/watch?v=SAfmjPwxspI&list=RDSAfmjPwxspI&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Selections from Nightmare Before Christmas – Michael Brown&utm_source=youtube&utm_medium=band-orch-scoreplay"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-8052-94c2-d3c8ddadf9b0",
-        "lastModified": "2025-07-04T08:57:00.000Z"
-      }
-    },
-    {
-      "title": "Allegretto from Symphony No. 7",
-      "composer": "Beethoven/arr. Longfield",
-      "duration": "03:00",
-      "info": "Bien arrangée, bien gérer la répartition",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
-        "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/se/ID_No/347710/Product.aspx"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
-        "lastModified": "2025-07-06T09:26:00.000Z"
-      }
-    },
-    {
-      "title": "Ammerland",
+      "title": "Oregon",
       "composer": "Jacob de Haan",
-      "duration": "03:10",
-      "info": "Très interessant pour le son mais assez chère",
+      "duration": "09:09",
+      "info": "Vérifier le niveau et l'intérêt",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=y5GQ0we6dOc",
-        "purchase": "https://www.laflutedepan.com/partition/10102812/de-haan-jacob-ammerland-concert-bandharmonie.html"
+        "audio": "https://www.youtube.com/watch?v=to3gePlszMY&list=RDto3gePlszMY&start_radio=1",
+        "purchase": "https://www.rundel.de/fr/artikel/oregon/DH890139"
       },
       "source": {
         "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-06T12:13:00.000Z"
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Allegretto from Symphony No. 7 (1)",
-      "composer": "Beethoven/arr. Longfield",
-      "duration": "09:00",
-      "info": "Bien arrangée, bien gérer la répartition",
+      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
+      "composer": "Camille Saint-Saëns / arr. L. Steiger",
+      "duration": "07:20",
+      "info": "La pièce est peut-être trop dure. ",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
-        "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/se/ID_No/347710/Product.aspx"
+        "audio": "https://www.youtube.com/watch?v=1VuTNuH6Oio&list=RD1VuTNuH6Oio&start_radio=1",
+        "purchase": "https://www.hebu-music.com/en/article/camille-saint-saens/neil-a-kjos-music-company/danse-bacchanale-samson-and-delilah.150183/"
       },
       "source": {
         "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "228fcf9e-3abc-80df-8fac-ff97811579b9",
-        "lastModified": "2025-07-06T12:37:00.000Z"
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-806b-b57f-e10a1bd9d36a",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "The Mandalorian",
-      "composer": "Ludwig Göransson/arr. Paul Murtha",
-      "duration": "02:34",
-      "info": "Pièce courte",
+      "title": "Begegnung",
+      "composer": "Kurt Gäble",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=nkKBElbZZ8o&list=RDnkKBElbZZ8o&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=The Mandalorian – Murtha – 04006608&utm_source=youtube&utm_medium=band-orch-scoreplay"
+        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril avec Eric Aubier",
-        "pageId": "223fcf9e-3abc-80c7-889a-fd58b3d6c56a",
-        "lastModified": "2025-07-04T08:51:00.000Z"
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "Libertango",
+      "composer": "Astor Piazzola / arr. Tony Cheseaux",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
@@ -129,24 +76,8 @@
         "notion": true,
         "database": "Concert du 11 d’avril avec Eric Aubier",
         "pageId": "21efcf9e-3abc-8032-ac5d-ece973cb7d21",
-        "lastModified": "2025-07-04T09:10:00.000Z"
-      }
-    },
-    {
-      "title": "Napoli",
-      "composer": "Hermann Bellstedt / arr. Donald Hunsberger",
-      "duration": "6:00",
-      "info": "Impressionnant et élégant ",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=I2sj0poJF-o&t=4s",
-        "original": "https://www.youtube.com/watch?v=elo0SPMo6qg&list=RDelo0SPMo6qg&start_radio=1",
-        "purchase": "https://www.alfred.com/napoli/p/00-38388/?utm_source=YouTube&utm_medium=social&utm_campaign=Score_Sound&utm_content=ConcertBand"
-      },
-      "source": {
-        "notion": true,
-        "database": "Concert du 11 d’avril avec Eric Aubier",
-        "pageId": "21efcf9e-3abc-80b4-9c8f-da5500be62e4",
-        "lastModified": "2025-07-04T09:13:00.000Z"
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
@@ -163,23 +94,26 @@
         "notion": true,
         "database": "Concert du 11 d’avril avec Eric Aubier",
         "pageId": "21efcf9e-3abc-80ff-8be2-ecaf7bba954d",
-        "lastModified": "2025-07-04T09:13:00.000Z"
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Eldorado",
-      "composer": "Thierry Deleruyelle",
-      "duration": "10:20",
-      "info": "Challenge accessible",
+      "title": "Napoli",
+      "composer": "Hermann Bellstedt / arr. Donald Hunsberger",
+      "duration": "6:00",
+      "info": "Impressionnant et élégant ",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=skTOXVCcER4&list=RDskTOXVCcER4&start_radio=1",
-        "purchase": "https://www.partitions-musicales.net/Harmonie/Eldorado-nr-1.html"
+        "audio": "https://www.youtube.com/watch?v=I2sj0poJF-o&t=4s",
+        "original": "https://www.youtube.com/watch?v=elo0SPMo6qg&list=RDelo0SPMo6qg&start_radio=1",
+        "purchase": "https://www.alfred.com/napoli/p/00-38388/?utm_source=YouTube&utm_medium=social&utm_campaign=Score_Sound&utm_content=ConcertBand"
       },
       "source": {
         "notion": true,
         "database": "Concert du 11 d’avril avec Eric Aubier",
-        "pageId": "223fcf9e-3abc-8097-ae0d-e1ae4e40c75c",
-        "lastModified": "2025-07-04T09:15:00.000Z"
+        "pageId": "21efcf9e-3abc-80b4-9c8f-da5500be62e4",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
@@ -195,71 +129,135 @@
         "notion": true,
         "database": "Concert du 11 d’avril avec Eric Aubier",
         "pageId": "21efcf9e-3abc-80e5-b655-df80bdf99c82",
-        "lastModified": "2025-07-04T09:16:00.000Z"
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Begegnung",
-      "composer": "Kurt Gäble",
+      "title": "The Mandalorian",
+      "composer": "Ludwig Göransson/arr. Paul Murtha",
+      "duration": "02:34",
+      "info": "Pièce courte",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
+        "audio": "https://www.youtube.com/watch?v=nkKBElbZZ8o&list=RDnkKBElbZZ8o&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=The Mandalorian – Murtha – 04006608&utm_source=youtube&utm_medium=band-orch-scoreplay"
       },
       "source": {
         "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
-        "lastModified": "2025-07-04T08:28:00.000Z"
+        "database": "Concert du 11 d’avril avec Eric Aubier",
+        "pageId": "223fcf9e-3abc-80c7-889a-fd58b3d6c56a",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Libertango",
-      "composer": "Astor Piazzola / arr. Tony Cheseaux",
+      "title": "Eldorado",
+      "composer": "Thierry Deleruyelle",
+      "duration": "10:20",
+      "info": "Challenge accessible",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
+        "audio": "https://www.youtube.com/watch?v=skTOXVCcER4&list=RDskTOXVCcER4&start_radio=1",
+        "purchase": "https://www.partitions-musicales.net/Harmonie/Eldorado-nr-1.html"
       },
       "source": {
         "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
-        "lastModified": "2025-07-04T08:31:00.000Z"
+        "database": "Concert du 11 d’avril avec Eric Aubier",
+        "pageId": "223fcf9e-3abc-8097-ae0d-e1ae4e40c75c",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Oregon",
+      "title": "Ammerland",
       "composer": "Jacob de Haan",
-      "duration": "09:09",
-      "info": "Vérifier le niveau et l'intérêt",
+      "duration": "03:10",
+      "info": "Très interessant pour le son mais assez chère",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=to3gePlszMY&list=RDto3gePlszMY&start_radio=1",
-        "purchase": "https://www.rundel.de/fr/artikel/oregon/DH890139"
+        "audio": "https://www.youtube.com/watch?v=y5GQ0we6dOc",
+        "purchase": "https://www.laflutedepan.com/partition/10102812/de-haan-jacob-ammerland-concert-bandharmonie.html"
       },
       "source": {
         "notion": true,
-        "database": "Pièces qui n’ont pas trouvé leur concert",
-        "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
-        "lastModified": "2025-07-04T09:15:00.000Z"
+        "database": "Ma région virtuose",
+        "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": null
       }
     },
     {
-      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
-      "composer": "Camille Saint-Saëns / arr. L. Steiger",
-      "duration": "07:20",
-      "info": "La pièce est peut-être trop dure. ",
+      "title": "Music from How To Train Your Dragon",
+      "composer": "John Powell/arr. Sean O'Loughlin",
+      "duration": "04:50",
+      "info": "Marche très bien, joviale",
       "links": {
-        "audio": "https://www.youtube.com/watch?v=1VuTNuH6Oio&list=RD1VuTNuH6Oio&start_radio=1",
-        "purchase": "https://www.hebu-music.com/en/article/camille-saint-saens/neil-a-kjos-music-company/danse-bacchanale-samson-and-delilah.150183/"
+        "audio": "https://www.youtube.com/watch?v=FfOuif5v554&list=RDFfOuif5v554&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Music from How To Train Your Dragon - 02501568&utm_source=youtube&utm_medium=band-orch-scoreplay"
       },
       "source": {
         "notion": true,
-        "database": "Pièces qui n’ont pas trouvé leur concert",
-        "pageId": "223fcf9e-3abc-806b-b57f-e10a1bd9d36a",
-        "lastModified": "2025-07-04T09:15:00.000Z"
+        "database": "Ma région virtuose",
+        "pageId": "223fcf9e-3abc-80cd-9f3b-e2ad6dd48f98",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "The Lion King",
+      "composer": "John Higgins",
+      "duration": "08:40",
+      "info": "Super pièce",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=WEEDErl0wlI&list=RDWEEDErl0wlI&start_radio=1",
+        "purchase": "https://www.halleonard.com/product/viewproduct.action?itemid=20523032&subsiteid=1"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose",
+        "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "Selections from The Nightmare Before Christmas",
+      "composer": "Elfman/arr. Brown",
+      "duration": "05:12",
+      "info": "Excellent",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=294MV8S7dU4",
+        "original": "https://www.youtube.com/watch?v=SAfmjPwxspI&list=RDSAfmjPwxspI&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Selections from Nightmare Before Christmas – Michael Brown&utm_source=youtube&utm_medium=band-orch-scoreplay"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose",
+        "pageId": "223fcf9e-3abc-8052-94c2-d3c8ddadf9b0",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "Allegretto from Symphony No. 7",
+      "composer": "Beethoven/arr. Longfield",
+      "duration": "03:00",
+      "info": "Bien arrangée, bien gérer la répartition",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
+        "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/se/ID_No/347710/Product.aspx"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose",
+        "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
+        "lastModified": "2025-07-06T12:48:00.000Z",
+        "order": null
       }
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T12:44:18.340Z",
+    "syncDate": "2025-07-06T12:53:08.054Z",
     "source": "notion",
-    "totalPieces": 16
+    "totalPieces": 15
   }
 }
