@@ -97,8 +97,8 @@ class IntelligentDeployer {
         try {
             const timestamp = new Date().toLocaleString('fr-FR');
             
-            // Git add
-            execSync('git add index.html data/', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+            // Git add - ajouter tous les fichiers nécessaires
+            execSync('git add index.html script.js styles.css data/ src/ build/', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
             
             // Vérifier s'il y a quelque chose à commiter
             try {

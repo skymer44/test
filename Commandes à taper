@@ -1,1 +1,5 @@
+Quand je ne veux pas tout casser et simplement faire une petite mise à jour (avec push automatique vers GitHub)
 npm run new-sync
+
+Alternative explicite (même résultat)
+npm run update-and-push

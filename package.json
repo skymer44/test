@@ -19,6 +19,7 @@
     "start": "python3 -m http.server 8000",
     "build": "node scripts/site-builder.js",
     "deploy": "node scripts/deploy.js",
+    "update-and-push": "npm run sync && npm run build && npm run deploy",
     "dev": "npm run build && npm run start",
     "new-sync": "npm run sync && npm run build && npm run deploy"
   },

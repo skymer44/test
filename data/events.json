@@ -13,12 +13,12 @@
         "The Lion King",
         "Allegretto from Symphony No. 7"
       ],
-      "notes": "Première répétition de l’année. Première lecture des pièces je fais un test 2",
+      "notes": "Première répétition de l’année. Première lecture des pièces",
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-811a-b5c1-f430e527b949",
-        "lastModified": "2025-07-06T19:58:00.000Z"
+        "lastModified": "2025-07-06T20:01:00.000Z"
       }
     },
     {
@@ -814,7 +814,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-06T19:59:18.846Z",
+    "syncDate": "2025-07-06T20:35:32.408Z",
     "source": "notion",
     "totalEvents": 47
   }
