@@ -8,15 +8,7 @@
 </head>
 <body>
     <header>
-        <div class=                            <h3>Accès aux Partitions</h3>
-                            <p>Téléchargez vos partitions depuis notre drive partagé en respectant les règles d'impression ci-dessous.</p>
-                            <div class="google-drive-link">
-                                <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="drive-button">
-                                    <span class="button-icon">📥</span>
-                                    Télécharger mes partitions
-                                    <span class="button-arrow">→</span>
-                                </a>
-                            </div>ontent">
+        <div class="header-content">
             <h1>Programme Musical 2026</h1>
             <div id="site-stats" class="site-statistics">
                 <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
@@ -270,95 +262,35 @@
 
         <!-- Section Partitions -->
         <div id="partitions" class="tab-content">
-            <div class="partitions-section">
-                <div class="partitions-header">
-                    <h2>🎼 Partitions du Programme Musical 2026</h2>
-                    <p class="partitions-subtitle">Instructions importantes pour l'impression et l'utilisation</p>
-                </div>
-                
+            <section class="partitions-section">
+                <h2>🎼 Partitions du Programme Musical 2026</h2>
                 <div class="partitions-content">
-                    <!-- Carte principale d'accès -->
-                    <div class="partitions-access-card">
-                        <div class="access-card-icon">
-                            <span class="icon-large">📁</span>
-                        </div>
-                        <div class="access-card-content">
-                            <h3>Dossier des Partitions</h3>
-                            <p>Toutes les partitions du programme 2026 sont disponibles en téléchargement libre pour les membres de l'orchestre.</p>
-                            <div class="google-drive-link">
-                                <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="drive-button">
-                                    <span class="button-icon">�</span>
-                                    Accéder au Drive des Partitions
-                                    <span class="button-arrow">→</span>
-                                </a>
-                            </div>
+                    <div class="download-section">
+                        <div class="download-button-container">
+                            <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="partitions-download-btn">
+                                📁 Télécharger les partitions
+                            </a>
                         </div>
                     </div>
                     
-                    <!-- Instructions d'impression -->
-                    <div class="printing-instructions">
-                        <div class="instruction-header">
-                            <span class="warning-icon">⚠️</span>
-                            <h3>ATTENTION - Règles d'impression obligatoires</h3>
-                        </div>
-                        
-                        <div class="instruction-content">
-                            <div class="main-rule">
-                                <p><strong>Vous ne devez pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page</strong> (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
-                            </div>
+                    <div class="instructions-section">
+                        <h3>⚠️ Instructions importantes</h3>
+                        <div class="instruction-text">
+                            <p><strong>ATTENTION, vous ne devez pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page</strong> (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
                             
-                            <div class="examples-section">
-                                <h4>📋 Exemples pratiques :</h4>
-                                
-                                <div class="example-card">
-                                    <div class="example-scenario">
-                                        <div class="scenario-icon">🎺</div>
-                                        <div class="scenario-text">
-                                            <p><strong>Si je suis trompette 1</strong> et que nous sommes <strong>deux</strong> à jouer cette partie :</p>
-                                            <ul>
-                                                <li>Je lis en bas de page <span class="highlight">"2 copies purchased"</span></li>
-                                                <li>📝 <strong>Je ne peux en imprimer qu'une seule pour moi</strong></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="example-card">
-                                    <div class="example-scenario">
-                                        <div class="scenario-icon">🎵</div>
-                                        <div class="scenario-text">
-                                            <p><strong>Si il est écrit</strong> <span class="highlight">"6 copies purchased"</span> :</p>
-                                            <ul>
-                                                <li>📝 <strong>Vous pouvez en imprimer 3</strong> :</li>
-                                                <li>• Une pour l'orchestre</li>
-                                                <li>• Une pour chez vous sur votre pupitre</li>
-                                                <li>• Une pour allumer le barbecue 😄</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <p><strong>Par exemple :</strong> si je suis trompette 1 et que nous sommes deux à jouer cette partie, je lis en bas de page « 2 copies purchased », je ne peux en imprimer qu'une seule pour moi. Mais s'il est écrit « 6 copies purchased », vous pouvez en imprimer 3 (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue).</p>
                         </div>
                     </div>
                     
-                    <!-- Notice de droits d'auteur moderne -->
-                    <div class="copyright-notice-modern">
-                        <div class="copyright-header">
-                            <span class="copyright-icon">⚖️</span>
-                            <h3>Droits d'auteur et utilisation</h3>
-                        </div>
-                        <div class="copyright-content">
-                            <div class="copyright-text">
-                                <p>Les partitions sont protégées par le droit d'auteur. Leur utilisation est strictement réservée aux membres de l'orchestre dans le cadre des répétitions et concerts du programme 2026.</p>
-                                <div class="engagement-section">
-                                    <div class="engagement-icon">✋</div>
-                                    <p><strong>Si je suis membre de l'orchestre, je m'engage à respecter ces conditions d'utilisation et les règles d'impression.</strong></p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="copyright-notice">
+                        <h3>⚖️ Droits d'auteur et utilisation</h3>
+                        <p>Les partitions présentes dans ce drive sont protégées par le droit d'auteur. 
+                        Leur utilisation est strictement réservée aux membres de l'orchestre dans le cadre 
+                        des répétitions et concerts du programme 2026. Si je suis membre de l'orchestre, 
+                        je m'engage à respecter ces conditions d'utilisation.</p>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
@@ -396,10 +328,46 @@
         </div>
     </div>
 
+    <!-- JavaScript simple pour les onglets qui fonctionne -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Programme Musical 2026 - Version simple chargée');
+            
+            // Initialiser seulement les onglets avec la logique qui marche
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    // Masquer tous les contenus
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Désactiver tous les boutons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activer le contenu et bouton ciblés
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    this.classList.add('active');
+                });
+            });
+            
+            console.log('✅ Onglets initialisés avec succès');
+        });
+    </script>
+
     <!-- Bibliothèque jsPDF pour la génération de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Script original pour les fonctionnalités -->
     <script src="script.js"></script>
 </body>
 </html>
