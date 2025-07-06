@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programme Musical 2026</title>
-    <link rel="stylesheet" href="styles.css?v=20250706-2" />
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -43,7 +43,7 @@
             </div>
             <div class="pieces-grid">
                 <div class="piece-card">
-                    <h3>Ammerland 20h</h3>
+                    <h3>Ammerland</h3>
                     <p><strong>Compositeur:</strong> Jacob de Haan</p>
                     <p><strong>Durée:</strong> 03:10</p>
                     <p><strong>Info:</strong> Très interessant pour le son mais assez chère</p>
@@ -262,51 +262,20 @@
 
         <!-- Section Partitions -->
         <div id="partitions" class="tab-content">
-            <section class="partitions-section-clean">
-                <div class="partitions-header">
-                    <h2>🎼 Partitions du Programme Musical 2026</h2>
-                </div>
-                
-                <div class="partitions-content-clean">
+            <section class="partitions-section">
+                <h2>🎼 Partitions du Programme Musical 2026</h2>
+                <div class="partitions-content">
                     
-                    <!-- Message d'avertissement principal -->
-                    <div class="warning-section">
-                        <div class="warning-header">
-                            <span class="warning-icon">⚠️</span>
-                            <h3>Règles d'impression des partitions</h3>
-                        </div>
-                        <div class="warning-text">
-                            <p>ATTENTION, vous ne devez pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
-                        </div>
+                    <div class="partitions-main-text">
+                        <p><strong>ATTENTION</strong>, vous ne devez <strong>pas imprimer les partitions en plus d'exemplaires qu'indiqué en bas de page</strong> (normalement, aucun souci, vous avez au moins un exemplaire chacun).</p>
+                        
+                        <p><strong>Par exemple :</strong> si je suis <em>trompette 1</em> et que nous sommes <strong>deux</strong> à jouer cette partie, je lis en bas de page <span class="highlight">« 2 copies purchased »</span>, je ne peux en imprimer <strong>qu'une seule</strong> pour moi. Mais s'il est écrit <span class="highlight">« 6 copies purchased »</span>, vous pouvez en imprimer <strong>3</strong> (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue).</p>
                     </div>
                     
-                    <!-- Exemples pratiques -->
-                    <div class="examples-section-clean">
-                        <h4>Exemples pratiques :</h4>
-                        
-                        <div class="example-item">
-                            <p>• Si je suis <strong>trompette 1</strong> et que nous sommes <strong>deux à jouer cette partie</strong>, je lis en bas de page : <strong>« 2 copies purchased »</strong> → je ne peux en imprimer <strong>qu'une seule</strong> pour moi</p>
-                        </div>
-                        
-                        <div class="example-item">
-                            <p>• Mais s'il est écrit : <strong>« 6 copies purchased »</strong> → vous pouvez en imprimer <strong>3</strong> (une pour l'orchestre, une pour chez vous sur votre pupitre et une pour allumer le barbecue)</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Accès aux partitions -->
-                    <div class="access-section">
-                        <div class="access-card">
-                            <div class="access-info">
-                                <span class="folder-icon">📁</span>
-                                <div class="access-text">
-                                    <h4>Dossier des partitions</h4>
-                                    <p>Accédez à toutes les partitions du programme 2026</p>
-                                </div>
-                            </div>
-                            <a href="https://drive.google.com/drive/folders/1CXdB2LQvuqJ_F6WX-CYrf9DtB3hJgppH" target="_blank" class="access-button">
-                                Ouvrir le Drive →
-                            </a>
-                        </div>
+                    <div class="download-section">
+                        <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="partitions-link">
+                            📁 Accéder aux partitions
+                        </a>
                     </div>
                     
                 </div>
@@ -348,10 +317,46 @@
         </div>
     </div>
 
+    <!-- JavaScript simple pour les onglets qui fonctionne -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Programme Musical 2026 - Version simple chargée');
+            
+            // Initialiser seulement les onglets avec la logique qui marche
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    // Masquer tous les contenus
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Désactiver tous les boutons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activer le contenu et bouton ciblés
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    this.classList.add('active');
+                });
+            });
+            
+            console.log('✅ Onglets initialisés avec succès');
+        });
+    </script>
+
     <!-- Bibliothèque jsPDF pour la génération de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
-    <!-- Script original pour les fonctionnalités -->
     <script src="script.js"></script>
 </body>
 </html>
