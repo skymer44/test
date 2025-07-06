@@ -1,5 +1,15 @@
-Quand je ne veux pas tout casser et simplement faire une petite mise à jour (avec push automatique vers GitHub)
+✅ COMMANDE MAGIQUE - FAIT TOUT EN UNE FOIS :
 npm run new-sync
 
-Alternative explicite (même résultat)
+🎯 Cette commande fait maintenant TOUT automatiquement :
+   - Synchronise Notion → JSON  
+   - Construit le site
+   - Déploie les fichiers
+   - Commit automatique
+   - PUSH automatique vers GitHub
+   - Site mis à jour en production !
+
+Alternative explicite (même résultat):
 npm run update-and-push
+
+🚀 Plus besoin de commandes manuelles !
