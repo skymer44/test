@@ -49,6 +49,29 @@
             
             document.body.appendChild(resultDiv);
         }, 1000);
+        
+        // Test de chargement script.js
+        setTimeout(() => {
+            const scriptDiv = document.createElement('div');
+            scriptDiv.style.margin = '20px';
+            scriptDiv.style.padding = '10px';
+            scriptDiv.style.border = '2px solid black';
+            
+            // Vérifier si script.js se charge
+            const scriptElement = document.createElement('script');
+            scriptElement.src = 'script.js';
+            scriptElement.onload = () => {
+                scriptDiv.innerHTML = '✅ script.js SE CHARGE CORRECTEMENT';
+                scriptDiv.style.backgroundColor = 'lightgreen';
+            };
+            scriptElement.onerror = () => {
+                scriptDiv.innerHTML = '❌ script.js NE SE CHARGE PAS';
+                scriptDiv.style.backgroundColor = 'lightcoral';
+            };
+            
+            document.body.appendChild(scriptDiv);
+            document.head.appendChild(scriptElement);
+        }, 2000);
     </script>
 </body>
 </html>

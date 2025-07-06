@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme Musical 2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Programme Musical 2026</h1>
+            <div id="site-stats" class="site-statistics">
+                <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation par onglets -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section Programmes -->
+        <div id="programmes" class="tab-content active">
+            <h2>Test : Section Programmes</h2>
+            <p>Si vous voyez ce texte avec les bons styles, alors le CSS fonctionne !</p>
+        </div>
+
+        <!-- Section Partitions -->
+        <div id="partitions" class="tab-content">
+            <section class="partitions-section">
+                <h2>🎼 Partitions du Programme Musical 2026</h2>
+                <div class="partitions-content">
+                    <div class="partitions-intro">
+                        <p>Toutes les partitions sont disponibles en téléchargement libre pour les membres de l'orchestre.</p>
+                        <div class="google-drive-link">
+                            <a href="https://drive.google.com/drive/folders/1example" target="_blank" class="drive-button">
+                                📁 Accéder au Drive des Partitions
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="copyright-notice">
+                        <h3>⚖️ Droits d'auteur et utilisation</h3>
+                        <p>Les partitions présentes dans ce drive sont protégées par le droit d'auteur. 
+                        Leur utilisation est strictement réservée aux membres de l'orchestre dans le cadre 
+                        des répétitions et concerts du programme 2026. Si je suis membre de l'orchestre, 
+                        je m'engage à respecter ces conditions d'utilisation.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript simple pour les onglets SEULEMENT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Version simple chargée');
+            
+            // Initialiser seulement les onglets
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-tab');
+                    
+                    // Masquer tous les contenus
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Désactiver tous les boutons
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Activer le contenu et bouton ciblés
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
