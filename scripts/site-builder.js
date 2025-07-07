@@ -292,17 +292,23 @@ class IntelligentSiteBuilder {
 
     async copyAssets() {
         try {
-            // Copier CSS
+            // Copier CSS vers build/
             const cssSource = path.join(this.srcDir, 'styles.css');
             const cssTarget = path.join(this.buildDir, 'styles.css');
             await fs.copyFile(cssSource, cssTarget);
             
-            // Copier JS
+            // Copier JS vers build/
             const jsSource = path.join(this.srcDir, 'script.js');
             const jsTarget = path.join(this.buildDir, 'script.js');
             await fs.copyFile(jsSource, jsTarget);
             
-            console.log('📁 Assets copiés (CSS + JS)');
+            // Copier aussi vers la racine pour GitHub Pages
+            const rootCssTarget = path.join(__dirname, '..', 'styles.css');
+            const rootJsTarget = path.join(__dirname, '..', 'script.js');
+            await fs.copyFile(cssSource, rootCssTarget);
+            await fs.copyFile(jsSource, rootJsTarget);
+            
+            console.log('📁 Assets copiés (CSS + JS) vers /build/ et racine');
         } catch (error) {
             console.warn('⚠️ Erreur lors de la copie des assets:', error.message);
         }
