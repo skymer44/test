@@ -194,6 +194,12 @@ class IntelligentSiteUpdater {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programme Musical 2026</title>
+    <!-- CSS critique pour éviter le flash des liens d'achat -->
+    <style>
+        .links a[title="Lien d'achat"] {
+            display: none !important;
+        }
+    </style>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -210,7 +216,8 @@ class IntelligentSiteUpdater {
     <nav class="tab-navigation">
         <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button active" data-tab="programmes">📚 Programmes Musicaux</button>
+                <button class="tab-button active" data-tab="prochains-evenements">🗓️ Prochains événements à venir</button>
+                <button class="tab-button" data-tab="programmes">📚 Programmes Musicaux</button>
                 <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
             </div>
             <div class="search-container">
@@ -220,8 +227,33 @@ class IntelligentSiteUpdater {
     </nav>
 
     <main>
+        <!-- Section Prochains événements à venir -->
+        <div id="prochains-evenements" class="tab-content active">
+            <section class="next-events-section">
+                <!-- Événement principal suivant -->
+                <div class="main-next-event" id="main-next-event">
+                    <div class="loading-placeholder">
+                        <p>Chargement des événements...</p>
+                    </div>
+                </div>
+                
+                <!-- Aperçu des événements suivants -->
+                <div class="upcoming-events-preview">
+                    <h3>Événements suivants</h3>
+                    <div class="upcoming-events-list" id="upcoming-events-list">
+                        <div class="loading-placeholder">
+                            <p>Chargement...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Zone pour charger plus d'événements automatiquement -->
+                    <div id="events-load-more-trigger" class="events-load-more-trigger"></div>
+                </div>
+            </section>
+        </div>
+
         <!-- Section Programmes -->
-        <div id="programmes" class="tab-content active">
+        <div id="programmes" class="tab-content">
             {{SECTIONS_CONTENT}}
         </div>
 
