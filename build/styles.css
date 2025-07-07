@@ -1955,6 +1955,13 @@ section:target {
     margin-bottom: 1rem;
 }
 
+/* Container pour la partie droite du header */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 /* Indicateur "Live" déplacé en haut à droite */
 .live-indicator {
     display: inline-flex;
@@ -1967,6 +1974,29 @@ section:target {
     font-size: 0.75rem;
     color: #4a5568;
     flex-shrink: 0;
+}
+
+/* Bouton d'ajout au calendrier principal */
+.add-to-calendar-btn {
+    background: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+}
+
+.add-to-calendar-btn:hover {
+    background: #3182ce;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
 }
 
 .live-dot {
@@ -2157,6 +2187,13 @@ section:target {
     gap: 0.25rem;
 }
 
+/* Container pour actions à droite des mini-cartes */
+.mini-event-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .mini-event-countdown {
     font-size: 0.7rem;
     color: #718096;
@@ -2164,6 +2201,29 @@ section:target {
     padding: 0.2rem 0.5rem;
     border-radius: 6px;
     font-weight: 500;
+}
+
+/* Bouton calendrier pour mini-cartes */
+.mini-add-to-calendar-btn {
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(72, 187, 120, 0.2);
+}
+
+.mini-add-to-calendar-btn:hover {
+    background: #38a169;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(72, 187, 120, 0.3);
 }
 
 .mini-event-date {

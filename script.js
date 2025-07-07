@@ -262,9 +262,14 @@ function displayMainEvent(event) {
                 <div class="event-type-badge ${eventTypeClass}">
                     ${eventTypeEmoji} ${eventType}
                 </div>
-                <div class="live-indicator">
-                    <span class="live-dot"></span>
-                    <span>Mis à jour automatiquement</span>
+                <div class="header-right">
+                    <div class="live-indicator">
+                        <span class="live-dot"></span>
+                        <span>Mis à jour automatiquement</span>
+                    </div>
+                    <button class="add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')">
+                        📅
+                    </button>
                 </div>
             </div>
             
@@ -445,7 +450,12 @@ function generateMiniEventCard(event) {
         <div class="mini-event-card ${eventTypeClass}">
             <div class="mini-event-header">
                 <div class="mini-event-type">${eventTypeEmoji} ${eventType}</div>
-                <div class="mini-event-countdown">${countdownText}</div>
+                <div class="mini-event-actions">
+                    <div class="mini-event-countdown">${countdownText}</div>
+                    <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
+                        📅
+                    </button>
+                </div>
             </div>
             
             <div class="mini-event-date">${formatEventDate(event.date)}</div>
@@ -471,6 +481,134 @@ function displayEventError() {
             </div>
         </div>
     `;
+}
+
+// Fonction pour ajouter un événement au calendrier
+function addEventToCalendar(date, type, title, pieces, notes) {
+    try {
+        // Créer la date de l'événement
+        const eventDate = new Date(date);
+        
+        // Déterminer les heures selon le type d'événement
+        let startTime, endTime, isAllDay = false;
+        
+        const lowerType = type.toLowerCase();
+        if (lowerType.includes('répétition')) {
+            // Répétitions : toujours 20h-22h
+            startTime = new Date(eventDate);
+            startTime.setHours(20, 0, 0);
+            endTime = new Date(eventDate);
+            endTime.setHours(22, 0, 0);
+        } else {
+            // Concerts et autres événements : toute la journée
+            startTime = new Date(eventDate);
+            startTime.setHours(0, 0, 0);
+            endTime = new Date(eventDate);
+            endTime.setHours(23, 59, 59);
+            isAllDay = true;
+        }
+        
+        // Formater les dates pour le fichier ICS
+        function formatICSDate(date, allDay = false) {
+            if (allDay) {
+                return date.toISOString().split('T')[0].replace(/-/g, '');
+            } else {
+                return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+            }
+        }
+        
+        // Créer la description avec les pièces
+        let description = `${title}\\n\\n`;
+        if (pieces && pieces.length > 0) {
+            description += `Programme :\\n`;
+            pieces.forEach(piece => {
+                description += `• ${piece}\\n`;
+            });
+        }
+        if (notes) {
+            description += `\\nInformations : ${notes}`;
+        }
+        
+        // Générer le contenu du fichier ICS
+        const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Programme Musical 2026//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${Date.now()}@programme-musical-2026.com
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART${isAllDay ? ';VALUE=DATE:' + formatICSDate(startTime, true) : ':' + formatICSDate(startTime)}
+DTEND${isAllDay ? ';VALUE=DATE:' + formatICSDate(new Date(endTime.getTime() + 24*60*60*1000), true) : ':' + formatICSDate(endTime)}
+SUMMARY:${title}
+DESCRIPTION:${description}
+LOCATION:Lieu de répétition/concert
+CATEGORIES:MUSIC,REHEARSAL
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+        
+        // Créer et télécharger le fichier
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_${eventDate.toISOString().split('T')[0]}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        // Notification de succès
+        showCalendarNotification('📅 Événement ajouté au calendrier !', 'success');
+        
+    } catch (error) {
+        console.error('❌ Erreur lors de la création du calendrier:', error);
+        showCalendarNotification('❌ Erreur lors de l\'ajout au calendrier', 'error');
+    }
+}
+
+// Fonction pour afficher une notification de calendrier
+function showCalendarNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `calendar-notification ${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: ${type === 'error' ? '#fed7d7' : '#e6fffa'};
+        color: ${type === 'error' ? '#c53030' : '#234e52'};
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-size: 0.875rem;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'apparition
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Disparition automatique après 3 secondes
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // Animations de défilement
@@ -1488,7 +1626,7 @@ console.log('🔄 Synchronisation Notion configurée!');
 
 // Système de vérification automatique des versions
 (function() {
-    const CURRENT_VERSION = 'v20250707_172bb17e';
+    const CURRENT_VERSION = 'v20250707_766e5fa8';
     const CHECK_INTERVAL = 30000; // 30 secondes
     
     let isCheckingVersion = false;
