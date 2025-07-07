@@ -164,6 +164,16 @@ class NotionContentInjector {
     }
 
     async injectContentIntoTarget(htmlContent, sections) {
+        // Vérification préliminaire: s'assurer qu'il n'y a pas déjà de duplication
+        const initialCardCount = (htmlContent.match(/class="piece-card"/g) || []).length;
+        if (initialCardCount > 20) {
+            console.log(`⚠️ ALERTE: ${initialCardCount} cartes détectées dans le HTML initial (probable duplication)`);
+            console.log('🧹 Nettoyage automatique activé...');
+            
+            // Nettoyer complètement la zone programmes-content
+            htmlContent = htmlContent.replace(/(<div[^>]*id=["\']programmes-content["\'][^>]*>)[\s\S]*?(<\/div>)/, '$1\n        <!-- Zone nettoyée -->\n        $2');
+        }
+        
         // Générer le contenu des sections EN RESPECTANT L'ORDRE DÉFINI
         const sectionsHTML = this.sectionOrder
             .map(sectionId => sections[sectionId])
@@ -172,13 +182,20 @@ class NotionContentInjector {
             .join('\n        ');
         
         // Utiliser une regex pour cibler spécifiquement la zone programmes-content
-        const targetPattern = /(<div[^>]*id=["\']programmes-content["\'][^>]*>)(.*?)(<\/div>)/s;
+        // Cette regex capture TOUT le contenu entre les balises <div id="programmes-content"> et </div>
+        const targetPattern = /(<div[^>]*id=["\']programmes-content["\'][^>]*>)([\s\S]*?)(<\/div>)/;
         
         const replacement = `$1\n        ${sectionsHTML}\n        $3`;
         
         if (targetPattern.test(htmlContent)) {
             console.log('🎯 Zone #programmes-content trouvée et mise à jour');
-            return htmlContent.replace(targetPattern, replacement);
+            const updatedContent = htmlContent.replace(targetPattern, replacement);
+            
+            // Validation: vérifier qu'il n'y a pas de contenu dupliqué
+            const pieceCardCount = (updatedContent.match(/class="piece-card"/g) || []).length;
+            console.log(`🔍 Validation: ${pieceCardCount} cartes détectées dans le HTML final`);
+            
+            return updatedContent;
         } else {
             console.log('⚠️ Zone #programmes-content non trouvée, recherche alternative...');
             
