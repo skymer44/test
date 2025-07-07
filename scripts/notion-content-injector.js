@@ -22,6 +22,19 @@ class NotionContentInjector {
         // Zone cible pour l'injection Notion (UNIQUEMENT cette zone)
         this.targetSelector = '#programmes-content';
         
+        // Ordre des sections (comme défini dans votre Notion)
+        this.sectionOrder = [
+            'concert-eric-aubier',        // Concert du 11 d'avril avec Eric Aubier
+            'pieces-orphelines',          // Pièces qui n'ont pas trouvé leur concert  
+            'fete-musique',              // Programme fête de la musique
+            'ma-region-virtuose',        // Ma région virtuose
+            'conservatoire-60-ans',      // Insertion dans les 60 ans du Conservatoire
+            'retour-karaoke',           // Retour Karaoké
+            'loto',                     // Loto
+            'pieces-ajout',             // Pièces d'ajout sans direction
+            'nouvelles-pieces'          // Nouvelles pièces (fallback)
+        ];
+        
         // Mapping des bases de données Notion vers les sections du site
         this.sectionMapping = {
             'Ma région virtuose': 'ma-region-virtuose',
@@ -151,9 +164,10 @@ class NotionContentInjector {
     }
 
     async injectContentIntoTarget(htmlContent, sections) {
-        // Générer le contenu des sections
-        const sectionsHTML = Object.values(sections)
-            .filter(section => section.pieces.length > 0)
+        // Générer le contenu des sections EN RESPECTANT L'ORDRE DÉFINI
+        const sectionsHTML = this.sectionOrder
+            .map(sectionId => sections[sectionId])
+            .filter(section => section && section.pieces.length > 0)
             .map(section => this.generateSectionHTML(section))
             .join('\n        ');
         
@@ -265,8 +279,10 @@ class NotionContentInjector {
         let totalPieces = 0;
         let sectionsWithData = 0;
         
-        Object.values(sections).forEach(section => {
-            if (section.pieces.length > 0) {
+        // Afficher le rapport en respectant l'ordre défini
+        this.sectionOrder.forEach(sectionId => {
+            const section = sections[sectionId];
+            if (section && section.pieces.length > 0) {
                 console.log(`🎭 ${section.title}: ${section.pieces.length} pièce(s)`);
                 totalPieces += section.pieces.length;
                 sectionsWithData++;
