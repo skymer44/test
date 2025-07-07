@@ -371,15 +371,13 @@ async function loadAndDisplayEvents() {
         window.currentNextEvent = nextEvent;
         window.currentUpcomingEvents = upcomingEvents;
         window.currentAllEvents = allEvents;
+        window.displayedEventsCount = 0; // Compteur pour le scroll infini
         
         // Afficher le prochain événement principal
         displayMainEvent(nextEvent);
         
-        // Afficher l'aperçu des événements suivants
-        displayUpcomingEventsPreview(upcomingEvents.slice(0, 3));
-        
-        // Préparer la liste complète (cachée)
-        prepareAllEventsList(allEvents);
+        // Initialiser l'affichage progressif des événements
+        initProgressiveEventDisplay(upcomingEvents);
         
     } catch (error) {
         console.error('❌ Erreur lors du chargement des événements:', error);
@@ -563,9 +561,17 @@ function displayMainEvent(event) {
 }
 
 /**
- * Affiche l'aperçu des événements suivants
+ * Configuration du scroll infini pour les événements (fonction de compatibilité)
  */
 function displayUpcomingEventsPreview(events, selectedEvent = null) {
+    // Réinitialiser l'affichage progressif avec mise en évidence
+    initProgressiveEventDisplay(events, selectedEvent);
+}
+
+/**
+ * Initialise l'affichage progressif des événements - STYLE PROGRAMMES MUSICAUX
+ */
+function initProgressiveEventDisplay(events, selectedEvent = null) {
     const upcomingContainer = document.getElementById('upcoming-events-list');
     
     if (!events || events.length === 0) {
@@ -577,53 +583,86 @@ function displayUpcomingEventsPreview(events, selectedEvent = null) {
         return;
     }
     
-    const eventsHtml = events.map(event => generateMiniEventCard(event, selectedEvent)).join('');
-    upcomingContainer.innerHTML = eventsHtml;
+    console.log(`🎯 Affichage style "Programmes Musicaux" pour ${events.length} événements`);
+    
+    // Vider le conteneur
+    upcomingContainer.innerHTML = '';
+    
+    // 🚀 NOUVEAU SYSTÈME INSPIRÉ DE "PROGRAMMES MUSICAUX" :
+    // Créer TOUS les événements d'un coup, mais avec animation au scroll comme les piece-cards
+    
+    events.forEach((event, index) => {
+        const eventCard = createEventCardElement(event, selectedEvent);
+        
+        // Préparer l'animation (comme dans initScrollAnimations)
+        eventCard.style.opacity = '0';
+        eventCard.style.transform = 'translateY(20px)';
+        eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        
+        upcomingContainer.appendChild(eventCard);
+    });
+    
+    console.log(`📊 ${events.length} événements créés avec animation scroll`);
+    
+    // Configurer l'observateur comme dans "Programmes Musicaux"
+    setupEventScrollAnimations();
+    
+    window.displayedEventsCount = events.length; // Pour compatibilité
 }
 
 /**
- * Prépare la liste complète des événements
+ * Crée un élément de carte d'événement
  */
-function prepareAllEventsList(events) {
-    const allEventsContainer = document.getElementById('all-events-list');
-    
-    if (!events || events.length === 0) {
-        allEventsContainer.innerHTML = `
-            <div class="no-events-message">
-                <p>Aucun événement à venir</p>
-            </div>
-        `;
-        return;
-    }
-    
-    const eventsHtml = events.map(event => generateMiniEventCard(event)).join('');
-    allEventsContainer.innerHTML = eventsHtml;
+function createEventCardElement(event, selectedEvent = null) {
+    const div = document.createElement('div');
+    div.innerHTML = generateMiniEventCard(event, selectedEvent);
+    return div.firstElementChild;
 }
 
 /**
- * Configure les interactions des boutons
+ * Configure les animations au scroll pour les événements - STYLE PROGRAMMES MUSICAUX
+ */
+function setupEventScrollAnimations() {
+    console.log('🎯 Configuration des animations scroll style "Programmes Musicaux"');
+    
+    // Options identiques à celles des Programmes Musicaux
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Animation identique aux piece-cards
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                
+                console.log('✨ Événement révélé au scroll');
+            }
+        });
+    }, observerOptions);
+    
+    // Observer tous les événements (comme pour les piece-cards)
+    const eventCards = document.querySelectorAll('#upcoming-events-list .mini-event-card');
+    console.log(`🔍 Observation de ${eventCards.length} cartes d'événements`);
+    
+    eventCards.forEach(card => {
+        observer.observe(card);
+    });
+    
+    // Sauvegarder l'observateur
+    window.eventsScrollObserver = observer;
+}
+
+
+
+/**
+ * Configure les interactions des événements (scroll infini)
  */
 function setupEventInteractions() {
-    const showAllBtn = document.getElementById('show-all-events-btn');
-    const hideAllBtn = document.getElementById('hide-all-events-btn');
-    const allEventsSection = document.getElementById('all-events-section');
-    const upcomingPreview = document.querySelector('.upcoming-events-preview');
-    
-    if (showAllBtn) {
-        showAllBtn.addEventListener('click', () => {
-            allEventsSection.style.display = 'block';
-            upcomingPreview.style.display = 'none';
-            showAllBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-    }
-    
-    if (hideAllBtn) {
-        hideAllBtn.addEventListener('click', () => {
-            allEventsSection.style.display = 'none';
-            upcomingPreview.style.display = 'block';
-            upcomingPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-    }
+    // Plus besoin de boutons - tout est géré par le scroll infini
+    console.log('✅ Interactions d\'événements configurées (scroll infini)');
 }
 
 /**
@@ -852,28 +891,6 @@ function displayEventError() {
 /**
  * Affiche un événement spécifique en tant qu'événement principal
  */
-// Ajouter un bouton de retour discret
-function addDiscreteBackButton() {
-    // Supprimer le bouton existant s'il y en a un
-    const existingButton = document.querySelector('.discrete-back-button');
-    if (existingButton) {
-        existingButton.remove();
-    }
-    
-    // Créer le nouveau bouton
-    const backButton = document.createElement('button');
-    backButton.className = 'discrete-back-button';
-    backButton.innerHTML = '←';
-    backButton.title = 'Revenir aux événements à venir';
-    backButton.onclick = () => {
-        hideSpecificEvent();
-        backButton.remove();
-    };
-    
-    // L'ajouter au body
-    document.body.appendChild(backButton);
-}
-
 function displaySpecificEvent(eventData) {
     // Sauvegarder l'événement sélectionné pour la mise en évidence
     window.selectedEventForHighlight = eventData;
@@ -884,9 +901,6 @@ function displaySpecificEvent(eventData) {
     // Régénérer les mini-cartes SANS changer l'ordre, juste avec la mise en évidence
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
     displayUpcomingEventsPreview(currentUpcomingEvents, eventData);
-    
-    // Ajouter le bouton discret de retour
-    addDiscreteBackButton();
     
     // Scroller vers le haut seulement si l'événement principal n'est pas visible
     const mainEventContainer = document.getElementById('main-next-event');
@@ -915,9 +929,9 @@ function hideSpecificEvent() {
         displayMainEvent(window.currentNextEvent);
     }
     
-    // Régénérer les mini-cartes sans sélection
+    // Réinitialiser l'affichage progressif sans sélection
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
-    displayUpcomingEventsPreview(currentUpcomingEvents, null);
+    initProgressiveEventDisplay(currentUpcomingEvents, null);
 }
 
 /**

@@ -2401,29 +2401,6 @@ section:target {
     line-height: 1.4;
 }
 
-/* Boutons */
-.show-all-events-container {
-    text-align: center;
-    margin-top: 2rem;
-}
-
-.show-all-events-btn, .hide-all-events-btn {
-    background: #667eea;
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.show-all-events-btn:hover, .hide-all-events-btn:hover {
-    background: #5a67d8;
-    transform: translateY(-1px);
-}
-
 /* Tuile d'événement sélectionnée */
 .mini-event-card.selected {
     border: none;
@@ -2447,45 +2424,17 @@ section:target {
     color: inherit;
 }
 
-/* Bouton de retour discret */
-.discrete-back-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1000;
-    transition: all 0.3s ease;
-    font-size: 18px;
-}
-
-.discrete-back-button:hover {
-    background: rgba(0, 0, 0, 0.9);
-    transform: scale(1.1);
-}
-
-@media (max-width: 768px) {
-    .discrete-back-button {
-        top: 15px;
-        right: 15px;
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
-    }
-}
-
 /* Styles pour les mini-cartes cliquables */
 .mini-event-card.clickable-event {
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+/* Trigger pour le scroll infini des événements */
+.events-load-more-trigger {
+    height: 20px;
+    margin: 1rem 0;
+    /* Invisible mais présent pour l'intersection observer */
 }
 
 /* Bouton de retour à l'événement actuel */
@@ -2786,35 +2735,7 @@ section:target {
     border-left: 3px solid #e2e8f0;
 }
 
-/* Boutons d'action */
-.show-all-events-container {
-    text-align: center;
-}
-
-.show-all-events-btn, .hide-all-events-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.hide-all-events-btn {
-    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
-    margin-bottom: 1.5rem;
-}
-
-.show-all-events-btn:hover, .hide-all-events-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-}
-
-/* Section de tous les événements */
+/* Section de tous les événements (obsolète - maintenant scroll infini) */
 .all-events-section {
     margin-top: 3rem;
 }
