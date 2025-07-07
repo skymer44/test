@@ -564,7 +564,36 @@ function displayMainEvent(event) {
  * Configuration du scroll infini pour les événements (fonction de compatibilité)
  */
 function displayUpcomingEventsPreview(events, selectedEvent = null) {
-    // Réinitialiser l'affichage progressif avec mise en évidence
+    // Si on a déjà des événements affichés et qu'on veut juste changer la sélection
+    // éviter de tout recréer pour éviter le flash blanc
+    const upcomingContainer = document.getElementById('upcoming-events-list');
+    const existingCards = upcomingContainer.querySelectorAll('.mini-event-card');
+    
+    if (existingCards.length > 0 && events.length === existingCards.length) {
+        console.log('🎯 Mise à jour de la sélection sans recréer les cartes (éviter flash)');
+        
+        // Juste mettre à jour les classes de sélection
+        events.forEach((event, index) => {
+            const eventCard = existingCards[index];
+            if (eventCard) {
+                // Vérifier si c'est l'événement sélectionné
+                const isSelected = selectedEvent && 
+                    event.date === selectedEvent.date && 
+                    JSON.stringify(event.pieces) === JSON.stringify(selectedEvent.pieces);
+                
+                // Mettre à jour la classe de sélection
+                if (isSelected) {
+                    eventCard.classList.add('selected');
+                } else {
+                    eventCard.classList.remove('selected');
+                }
+            }
+        });
+        
+        return; // Sortir sans recréer
+    }
+    
+    // Sinon, réinitialiser l'affichage progressif avec mise en évidence (pour les nouveaux cas)
     initProgressiveEventDisplay(events, selectedEvent);
 }
 
@@ -899,10 +928,12 @@ function displaySpecificEvent(eventData) {
     displayMainEvent(eventData);
     
     // Régénérer les mini-cartes SANS changer l'ordre, juste avec la mise en évidence
+    // OPTIMISATION: éviter le flash blanc en ne recréant pas tout
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
     displayUpcomingEventsPreview(currentUpcomingEvents, eventData);
     
     // Scroller vers le haut seulement si l'événement principal n'est pas visible
+    // OPTIMISATION: scroll plus doux pour éviter le flash
     const mainEventContainer = document.getElementById('main-next-event');
     if (mainEventContainer) {
         const rect = mainEventContainer.getBoundingClientRect();
@@ -910,7 +941,7 @@ function displaySpecificEvent(eventData) {
         
         // Scroll seulement si l'événement n'est pas visible dans la partie haute de l'écran
         if (!isVisible) {
-            // Remonter complètement en haut du site pour un effet plus esthétique
+            // Utiliser un scroll plus doux avec une transition CSS
             window.scrollTo({ 
                 top: 0, 
                 behavior: 'smooth' 
@@ -930,8 +961,9 @@ function hideSpecificEvent() {
     }
     
     // Réinitialiser l'affichage progressif sans sélection
+    // OPTIMISATION: éviter le flash en ne recréant que si nécessaire
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
-    initProgressiveEventDisplay(currentUpcomingEvents, null);
+    displayUpcomingEventsPreview(currentUpcomingEvents, null);
 }
 
 /**
