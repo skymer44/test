@@ -2142,32 +2142,41 @@ section:target {
 }
 
 .mini-event-header {
-    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
 }
 
 .mini-event-type {
-    font-size: 0.7rem;
-    color: #718096;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+    color: #4a5568;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
-.mini-event-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
+.mini-event-countdown {
+    font-size: 0.7rem;
+    color: #718096;
+    background: #f7fafc;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
 }
 
 .mini-event-date {
     font-size: 0.85rem;
-    color: #4a5568;
+    color: #2d3748;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
 }
 
 .mini-event-pieces {
     font-size: 0.8rem;
     color: #718096;
+    line-height: 1.4;
 }
 
 /* Boutons */

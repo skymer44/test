@@ -444,12 +444,11 @@ function generateMiniEventCard(event) {
     return `
         <div class="mini-event-card ${eventTypeClass}">
             <div class="mini-event-header">
-                <div class="mini-event-type">${eventType.toUpperCase()}</div>
+                <div class="mini-event-type">${eventTypeEmoji} ${eventType}</div>
+                <div class="mini-event-countdown">${countdownText}</div>
             </div>
             
-            <h4 class="mini-event-title">${eventTitle}</h4>
-            
-            <div class="mini-event-date">${formatEventDate(event.date)} • dans ${countdownText}</div>
+            <div class="mini-event-date">${formatEventDate(event.date)}</div>
             
             <div class="mini-event-pieces">🎼 ${piecesText}</div>
             

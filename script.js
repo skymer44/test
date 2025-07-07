@@ -444,12 +444,11 @@ function generateMiniEventCard(event) {
     return `
         <div class="mini-event-card ${eventTypeClass}">
             <div class="mini-event-header">
-                <div class="mini-event-type">${eventType.toUpperCase()}</div>
+                <div class="mini-event-type">${eventTypeEmoji} ${eventType}</div>
+                <div class="mini-event-countdown">${countdownText}</div>
             </div>
             
-            <h4 class="mini-event-title">${eventTitle}</h4>
-            
-            <div class="mini-event-date">${formatEventDate(event.date)} • dans ${countdownText}</div>
+            <div class="mini-event-date">${formatEventDate(event.date)}</div>
             
             <div class="mini-event-pieces">🎼 ${piecesText}</div>
             
@@ -1489,7 +1488,7 @@ console.log('🔄 Synchronisation Notion configurée!');
 
 // Système de vérification automatique des versions
 (function() {
-    const CURRENT_VERSION = 'v20250707_4053d95b';
+    const CURRENT_VERSION = 'v20250707_2cd7a5ea';
     const CHECK_INTERVAL = 30000; // 30 secondes
     
     let isCheckingVersion = false;
