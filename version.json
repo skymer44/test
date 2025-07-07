@@ -1,0 +1,15 @@
+{
+  "version": "v20250707_4053d95b",
+  "buildTime": "2025-07-07T08:28:03.995Z",
+  "timestamp": 1751876883995,
+  "files": {
+    "script.js": "9a7dfb22852f",
+    "styles.css": "4e204d146a1e",
+    "index.html": "dde49281b968"
+  },
+  "cacheControl": {
+    "maxAge": 0,
+    "mustRevalidate": true,
+    "noCache": true
+  }
+}

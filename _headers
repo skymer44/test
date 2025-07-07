@@ -1,0 +1,30 @@
+# Configuration pour GitHub Pages
+# Empêche la mise en cache agressive
+
+/*
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+# Fichiers statiques avec versioning
+/script.js
+  Cache-Control: no-cache, must-revalidate
+  
+/styles.css
+  Cache-Control: no-cache, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+# Données JSON - toujours fraîches
+/data/*
+  Cache-Control: no-cache, must-revalidate, max-age=0
+
+# Fichiers de version
+/version.json
+  Cache-Control: no-cache, must-revalidate, max-age=0
+
+/sw.js
+  Cache-Control: no-cache, must-revalidate, max-age=0

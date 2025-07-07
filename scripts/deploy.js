@@ -28,11 +28,15 @@ class IntelligentDeployer {
             console.log('🏗️ Construction du site...');
             execSync('node scripts/site-builder.js', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
             
-            // 2. Déployer vers la racine pour GitHub Pages
+            // 2. Appliquer le cache busting
+            console.log('🔄 Application du cache busting...');
+            execSync('node scripts/cache-buster.js', { stdio: 'inherit', cwd: path.join(__dirname, '..') });
+            
+            // 3. Déployer vers la racine pour GitHub Pages
             console.log('📁 Déploiement des fichiers...');
             await this.deployFiles();
             
-            // 3. TOUJOURS commiter et pusher (pour les données et changements)
+            // 4. TOUJOURS commiter et pusher (pour les données et changements)
             console.log('📤 Commit et push...');
             await this.commitAndPush();
             
