@@ -1,14 +1,15 @@
 {
-  "version": "v20250707_e1ba978f",
-  "timestamp": "2025-07-07T09:30:33.024Z",
-  "description": "Optimisation Mobile Complète - Interface Simplifiée",
-  "changes": [
-    "Notifications mise à jour désactivées sur mobile",
-    "Boutons calendrier redimensionnés et protégés débordement",
-    "Indicateur Mis à jour remplacé par point vert discret",
-    "Cache-busting ultra-simplifié moins agressif",
-    "Interface responsive ultra-optimisée iPhone/Android",
-    "Protection débordement containers flex",
-    "Tailles boutons adaptées selon taille écran"
-  ]
+  "version": "v20250707_313b508f",
+  "buildTime": "2025-07-07T09:57:41.168Z",
+  "timestamp": 1751882261168,
+  "files": {
+    "script.js": "83a3bc951dc3",
+    "styles.css": "a356c23f2763",
+    "index.html": "10c5809b6875"
+  },
+  "cacheControl": {
+    "maxAge": 0,
+    "mustRevalidate": true,
+    "noCache": true
+  }
 }
