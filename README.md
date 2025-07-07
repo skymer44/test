@@ -31,28 +31,31 @@ Votre intégration Notion est **parfaitement opérationnelle** !
 
 ## 🚀 Utilisation
 
-### 1. Synchronisation manuelle
+### 1. Déploiement automatique (RECOMMANDÉ)
 ```bash
-# Synchroniser les données depuis Notion
+# 🚀 COMMANDE UNIQUE - TOUT AUTOMATIQUE
+npm run deploy
+```
+**Cette commande fait TOUT :**
+- ✅ Synchronise les données Notion
+- ✅ Commit automatique des changements
+- ✅ Push vers GitHub
+- ✅ Déploiement en production
+- ✅ Vérification complète
+
+### 2. Synchronisation manuelle (pour tests)
+```bash
+# Synchroniser seulement les données depuis Notion
 npm run sync
-
-# Mettre à jour le site web
-npm run update-site
-
-# Synchronisation complète (données + site)
-npm run full-sync
 ```
 
 ### 2. Tests et diagnostics
 ```bash
-# Tester la configuration
-npm run test
-
-# Guide d'analyse personnalisé
-npm run guide
-
 # Démarrer le serveur local
 npm run start
+
+# Tester la synchronisation seulement
+npm run sync
 ```
 
 ### 3. Synchronisation automatique (GitHub Actions)

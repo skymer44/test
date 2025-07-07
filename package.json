@@ -5,6 +5,7 @@
   "main": "scripts/notion-sync.js",
   "scripts": {
     "sync": "node scripts/notion-sync.js",
+    "deploy": "node scripts/sync-and-deploy.js",
     "start": "python3 -m http.server 8000",
     "cache-bust": "node scripts/cache-buster.js"
   },
