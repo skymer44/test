@@ -22,17 +22,17 @@ class NotionContentInjector {
         // Zone cible pour l'injection Notion (UNIQUEMENT cette zone)
         this.targetSelector = '#programmes-content';
         
-        // Ordre des sections (comme défini dans votre Notion)
+        // Ordre des sections (selon l'organisation exacte de votre Notion)
         this.sectionOrder = [
-            'concert-eric-aubier',        // Concert du 11 d'avril avec Eric Aubier
-            'pieces-orphelines',          // Pièces qui n'ont pas trouvé leur concert  
-            'fete-musique',              // Programme fête de la musique
             'ma-region-virtuose',        // Ma région virtuose
+            'concert-eric-aubier',       // Concert du 11 d'avril avec Eric Aubier
             'conservatoire-60-ans',      // Insertion dans les 60 ans du Conservatoire
-            'retour-karaoke',           // Retour Karaoké
-            'loto',                     // Loto
-            'pieces-ajout',             // Pièces d'ajout sans direction
-            'nouvelles-pieces'          // Nouvelles pièces (fallback)
+            'fete-musique',              // Programme fête de la musique
+            'retour-karaoke',            // Retour Karaoké
+            'loto',                      // Loto
+            'pieces-ajout',              // Pièces d'ajout sans direction
+            'pieces-orphelines',         // Pièces qui n'ont pas trouvé leur concert
+            'nouvelles-pieces'           // Nouvelles pièces (fallback)
         ];
         
         // Mapping des bases de données Notion vers les sections du site
@@ -117,7 +117,7 @@ class NotionContentInjector {
             const databaseName = piece.source?.database;
             if (databaseName) {
                 const sectionId = this.getSectionForDatabase(databaseName);
-                const sectionTitle = this.sectionTitles[sectionId] || databaseName;
+                const sectionTitle = databaseName; // Utiliser directement le nom de la base Notion
                 
                 if (!sections[sectionId]) {
                     sections[sectionId] = {
