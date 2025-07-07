@@ -5,28 +5,11 @@
   "main": "scripts/notion-sync.js",
   "scripts": {
     "sync": "node scripts/notion-sync.js",
-    "guide": "node scripts/notion-guide.js",
-    "test": "node scripts/test-notion.js",
-    "test-env": "./scripts/test-env.sh",
-    "test-sync": "node test-sync.js",
-    "list-db": "node scripts/list-databases.js",
-    "update-site": "node scripts/intelligent-update-site.js",
-    "full-sync": "npm run sync && npm run update-site",
-    "auto-sync": "./scripts/sync-and-push-ultra.sh",
-    "auto-sync-fixed": "./scripts/sync-and-push-fixed.sh",
-    "auto-sync-old": "./scripts/sync-and-push.sh",
-    "quick-commit": "./scripts/quick-commit.sh",
-    "start": "python3 -m http.server 8000",
     "build": "node scripts/site-builder.js",
     "deploy": "node scripts/deploy.js",
-    "update-and-push": "npm run sync && npm run build && npm run deploy",
-    "dev": "npm run build && npm run start",
-    "new-sync": "npm run sync && npm run build && npm run deploy",
-    "validate": "node scripts/validate-sync.js",
-    "fix-sync": "node scripts/fix-sync.js",
-    "safe-sync": "npm run validate || npm run fix-sync && npm run new-sync",
-    "cache-bust": "node scripts/cache-buster.js",
-    "force-update": "npm run cache-bust && npm run new-sync"
+    "start": "python3 -m http.server 8000",
+    "full-sync": "npm run sync && npm run build && npm run deploy",
+    "cache-bust": "node scripts/cache-buster.js"
   },
   "dependencies": {
     "@notionhq/client": "^4.0.0"
