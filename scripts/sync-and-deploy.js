@@ -46,8 +46,12 @@ class AutoDeployer {
             this.log('📊 Étape 1/5: Synchronisation Notion...');
             await this.syncNotion();
             
-            // 3. Vérifier s'il y a des changements
-            this.log('🔍 Étape 2/5: Vérification des changements...');
+            // 3. Optimiser GitHub Pages pour les données Notion
+            this.log('🔧 Étape 3/6: Optimisation GitHub Pages...');
+            await this.optimizeGitHubPages();
+            
+            // 4. Vérifier s'il y a des changements
+            this.log('🔍 Étape 4/6: Vérification des changements...');
             const hasChanges = await this.checkChanges();
             
             if (!hasChanges) {
@@ -55,16 +59,16 @@ class AutoDeployer {
                 return;
             }
             
-            // 4. Commit des changements
-            this.log('💾 Étape 3/5: Commit des changements...');
+            // 5. Commit des changements
+            this.log('💾 Étape 5/6: Commit des changements...');
             await this.commitChanges();
             
-            // 5. Push vers GitHub
-            this.log('⬆️ Étape 4/5: Push vers GitHub...');
+            // 6. Push vers GitHub
+            this.log('⬆️ Étape 6/6: Push vers GitHub...');
             await this.pushToGitHub();
             
-            // 6. Vérification finale
-            this.log('✅ Étape 5/5: Vérification du déploiement...');
+            // 7. Vérification finale
+            this.log('✅ Étape 7/7: Vérification du déploiement...');
             await this.verifyDeployment();
             
             this.log('🎉 DÉPLOIEMENT TERMINÉ AVEC SUCCÈS !');
@@ -212,7 +216,21 @@ class AutoDeployer {
         }
     }
 
-    async verifyDeployment() {
+    async optimizeGitHubPages() {
+        try {
+            const result = execSync('node scripts/github-pages-optimizer.js', { 
+                cwd: this.rootDir, 
+                encoding: 'utf8',
+                timeout: 30000 // 30 secondes max
+            });
+            
+            this.log('Optimisation GitHub Pages réussie');
+            
+        } catch (error) {
+            this.log(`⚠️ Erreur optimisation GitHub Pages: ${error.message}`);
+            // Ne pas faire échouer le déploiement pour cette étape
+        }
+    }
         try {
             // Vérifier que le commit est bien sur GitHub
             const latestCommit = execSync('git rev-parse HEAD', { 

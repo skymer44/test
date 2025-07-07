@@ -1,0 +1,28 @@
+# Configuration GitHub Pages pour Programme Musical 2026
+title: Programme Musical 2026
+description: Site web avec synchronisation Notion automatique
+
+# Inclure les fichiers JSON dans la publication
+include:
+  - data/*.json
+  - "*.json"
+
+# Configuration pour servir les fichiers JSON avec le bon Content-Type
+plugins:
+  - jekyll-optional-front-matter
+
+# Pas de traitement Jekyll pour les fichiers statiques
+exclude:
+  - node_modules/
+  - scripts/
+  - README.md
+  - package*.json
+  - deploy.log
+
+# Configuration des types MIME
+defaults:
+  - scope:
+      path: "data"
+    values:
+      layout: null
+      sitemap: false

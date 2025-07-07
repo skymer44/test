@@ -17,6 +17,205 @@ function getDeviceConfig() {
     };
 }
 
+
+// 🎵 CHARGEUR DE DONNÉES NOTION ROBUSTE
+class NotionDataLoader {
+    constructor() {
+        this.cache = new Map();
+        this.baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '');
+    }
+
+    async loadData(fileName, fallback = []) {
+        if (this.cache.has(fileName)) {
+            return this.cache.get(fileName);
+        }
+
+        const urls = [
+            `${this.baseUrl}/data/${fileName}`,
+            `./data/${fileName}`,
+            `/data/${fileName}`,
+            `data/${fileName}`
+        ];
+
+        for (const url of urls) {
+            try {
+                console.log(`🔄 Tentative de chargement: ${url}`);
+                const response = await fetch(url + '?t=' + Date.now());
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.cache.set(fileName, data);
+                    console.log(`✅ Données chargées depuis: ${url}`);
+                    return data;
+                }
+            } catch (error) {
+                console.warn(`⚠️ Échec ${url}:`, error.message);
+            }
+        }
+
+        console.warn(`⚠️ Impossible de charger ${fileName}, utilisation du fallback`);
+        return fallback;
+    }
+
+    async loadPieces() {
+        const data = await this.loadData('pieces.json', { pieces: [] });
+        return data.pieces || [];
+    }
+
+    async loadEvents() {
+        const data = await this.loadData('events.json', { events: [] });
+        return data.events || [];
+    }
+
+    async loadConcerts() {
+        const data = await this.loadData('concerts.json', { concerts: [] });
+        return data.concerts || [];
+    }
+}
+
+// Instance globale du chargeur
+window.notionLoader = new NotionDataLoader();
+
+// 🔄 FONCTION DE CHARGEMENT DES DONNÉES NOTION AMÉLIORÉE
+async function loadNotionDataRobust() {
+    try {
+        console.log('🎵 Chargement des données Notion...');
+        
+        // Charger toutes les données en parallèle
+        const [pieces, events, concerts] = await Promise.all([
+            window.notionLoader.loadPieces(),
+            window.notionLoader.loadEvents(),
+            window.notionLoader.loadConcerts()
+        ]);
+
+        console.log(`✅ Données Notion chargées: ${pieces.length} pièces, ${events.length} événements, ${concerts.length} concerts`);
+        
+        // Mettre à jour l'affichage
+        if (pieces.length > 0) {
+            updateConcertsWithNotionData(pieces);
+        }
+        
+        if (events.length > 0) {
+            updateEventsWithNotionData(events);
+        }
+
+        return { pieces, events, concerts };
+
+    } catch (error) {
+        console.error('❌ Erreur chargement données Notion:', error);
+        return { pieces: [], events: [], concerts: [] };
+    }
+}
+
+// 🎭 MISE À JOUR DES CONCERTS AVEC DONNÉES NOTION
+function updateConcertsWithNotionData(pieces) {
+    // Organiser les pièces par sections
+    const sections = organizePiecesBySections(pieces);
+    
+    // Mettre à jour chaque section
+    Object.values(sections).forEach(section => {
+        if (section.pieces.length > 0) {
+            updateSectionDisplay(section);
+        }
+    });
+}
+
+function organizePiecesBySections(pieces) {
+    const sections = {};
+    
+    const sectionMapping = {
+        'Ma région virtuose': 'ma-region-virtuose',
+        'Concert du 11 d\'avril avec Eric Aubier': 'concert-eric-aubier',
+        'Insertion dans les 60 ans du Conservatoire ': 'conservatoire-60-ans',
+        'Retour Karaoké': 'retour-karaoke',
+        'Programme fête de la musique': 'fete-musique',
+        'Loto': 'loto',
+        'Pièces d\'ajout sans direction': 'pieces-ajout',
+        'Pièces qui n\'ont pas trouvé leur concert': 'pieces-orphelines'
+    };
+    
+    // Initialiser les sections
+    Object.entries(sectionMapping).forEach(([dbName, sectionId]) => {
+        sections[sectionId] = {
+            id: sectionId,
+            title: dbName,
+            pieces: []
+        };
+    });
+    
+    // Répartir les pièces
+    pieces.forEach(piece => {
+        const dbName = piece.source?.database;
+        if (dbName) {
+            const normalizedName = dbName.replace(/[’‘‛`´]/g, "'");
+            const sectionId = sectionMapping[normalizedName] || 'pieces-orphelines';
+            
+            if (sections[sectionId]) {
+                sections[sectionId].pieces.push(piece);
+            }
+        }
+    });
+    
+    return sections;
+}
+
+function updateSectionDisplay(section) {
+    const sectionElement = document.getElementById(section.id);
+    if (!sectionElement) {
+        console.warn(`⚠️ Section ${section.id} non trouvée dans le DOM`);
+        return;
+    }
+    
+    const piecesGrid = sectionElement.querySelector('.pieces-grid');
+    if (piecesGrid) {
+        // Vider la grille actuelle
+        piecesGrid.innerHTML = '';
+        
+        // Ajouter les nouvelles pièces
+        section.pieces.forEach(piece => {
+            const pieceElement = createPieceElement(piece);
+            piecesGrid.appendChild(pieceElement);
+        });
+        
+        console.log(`✅ Section ${section.title}: ${section.pieces.length} pièces mises à jour`);
+    }
+}
+
+function createPieceElement(piece) {
+    const div = document.createElement('div');
+    div.className = 'piece-card';
+    
+    let linksHTML = '';
+    if (piece.links) {
+        const links = [];
+        if (piece.links.audio) links.push(`<a href="${piece.links.audio}" target="_blank" title="Arrangement audio">🎵 Audio</a>`);
+        if (piece.links.original) links.push(`<a href="${piece.links.original}" target="_blank" title="Œuvre originale">🎬 Original</a>`);
+        if (piece.links.purchase) links.push(`<a href="${piece.links.purchase}" target="_blank" title="Lien d'achat">🛒 Achat</a>`);
+        
+        if (links.length > 0) {
+            linksHTML = `<div class="links">${links.join(' ')}</div>`;
+        }
+    }
+    
+    div.innerHTML = `
+        <h3>${piece.title}</h3>
+        ${piece.composer ? `<p><strong>Compositeur:</strong> ${piece.composer}</p>` : ''}
+        ${piece.duration ? `<p><strong>Durée:</strong> ${piece.duration}</p>` : ''}
+        ${piece.info ? `<p><strong>Info:</strong> ${piece.info}</p>` : ''}
+        ${linksHTML}
+    `;
+    
+    return div;
+}
+
+// 🎭 MISE À JOUR DES ÉVÉNEMENTS AVEC DONNÉES NOTION
+function updateEventsWithNotionData(events) {
+    // Mettre à jour l'affichage des événements
+    console.log(`🗓️ Mise à jour de ${events.length} événements`);
+    // Implémentation selon votre structure HTML existante
+}
+
+
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Programme Musical 2026 - Chargement terminé!');
@@ -34,6 +233,13 @@ document.addEventListener('DOMContentLoaded', function() {
         addBackToTopButton();
         initPDFGeneration();
         initNotionSync();
+        
+        // Charger les données Notion de façon robuste
+        loadNotionDataRobust().then(data => {
+            console.log('🎵 Données Notion intégrées au site:', data);
+        }).catch(error => {
+            console.warn('⚠️ Chargement Notion échoué, site fonctionne avec données statiques');
+        });
         initManualSync();
     } catch (error) {
         console.log('Certaines fonctionnalités avancées ne se sont pas chargées:', error);
