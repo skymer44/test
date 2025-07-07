@@ -168,10 +168,19 @@ class NotionContentInjector {
         const initialCardCount = (htmlContent.match(/class="piece-card"/g) || []).length;
         if (initialCardCount > 20) {
             console.log(`⚠️ ALERTE: ${initialCardCount} cartes détectées dans le HTML initial (probable duplication)`);
-            console.log('🧹 Nettoyage automatique activé...');
+            console.log('🧹 Nettoyage automatique renforcé activé...');
             
-            // Nettoyer complètement la zone programmes-content
-            htmlContent = htmlContent.replace(/(<div[^>]*id=["\']programmes-content["\'][^>]*>)[\s\S]*?(<\/div>)/, '$1\n        <!-- Zone nettoyée -->\n        $2');
+            // NETTOYAGE RENFORCÉ: Supprimer TOUT le contenu entre les balises programmes
+            // Chercher la div programmes et vider complètement son contenu
+            const programmesPattern = /(<div[^>]*id=["\']programmes["\'][^>]*class=["\']tab-content["\'][^>]*>)([\s\S]*?)(<\/div>\s*<!--)/;
+            
+            if (programmesPattern.test(htmlContent)) {
+                console.log('🧹 Nettoyage complet de la section programmes...');
+                htmlContent = htmlContent.replace(programmesPattern, '$1\n            <!-- ZONE NOTION - Contenu injecté automatiquement -->\n            <div id="programmes-content">\n            </div>\n        $3');
+            } else {
+                // Fallback: nettoyage de la zone programmes-content uniquement
+                htmlContent = htmlContent.replace(/(<div[^>]*id=["\']programmes-content["\'][^>]*>)[\s\S]*?(<\/div>)/g, '$1\n        <!-- Zone nettoyée -->\n        $2');
+            }
         }
         
         // Générer le contenu des sections EN RESPECTANT L'ORDRE DÉFINI
