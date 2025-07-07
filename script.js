@@ -619,19 +619,28 @@ function initProgressiveEventDisplay(events, selectedEvent = null) {
     
     // 🚀 NOUVEAU SYSTÈME INSPIRÉ DE "PROGRAMMES MUSICAUX" :
     // Créer TOUS les événements d'un coup, mais avec animation au scroll comme les piece-cards
+    // MODIFICATION : Les 3 premières cartes sont déjà visibles
     
     events.forEach((event, index) => {
         const eventCard = createEventCardElement(event, selectedEvent);
         
-        // Préparer l'animation (comme dans initScrollAnimations)
-        eventCard.style.opacity = '0';
-        eventCard.style.transform = 'translateY(20px)';
-        eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        // 🎯 MODIFICATION : Les 3 premières cartes sont déjà visibles
+        if (index < 3) {
+            // Les 3 premières cartes : déjà visibles (pas d'animation)
+            eventCard.style.opacity = '1';
+            eventCard.style.transform = 'translateY(0)';
+            eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        } else {
+            // Les cartes suivantes : préparer l'animation (comme avant)
+            eventCard.style.opacity = '0';
+            eventCard.style.transform = 'translateY(20px)';
+            eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        }
         
         upcomingContainer.appendChild(eventCard);
     });
     
-    console.log(`📊 ${events.length} événements créés avec animation scroll`);
+    console.log(`📊 ${events.length} événements créés (3 premières visibles, ${Math.max(0, events.length - 3)} avec animation scroll)`);
     
     // Configurer l'observateur comme dans "Programmes Musicaux"
     setupEventScrollAnimations();
@@ -672,13 +681,19 @@ function setupEventScrollAnimations() {
         });
     }, observerOptions);
     
-    // Observer tous les événements (comme pour les piece-cards)
+    // Observer seulement les événements qui ont besoin d'animation (à partir du 4ème)
     const eventCards = document.querySelectorAll('#upcoming-events-list .mini-event-card');
-    console.log(`🔍 Observation de ${eventCards.length} cartes d'événements`);
+    let animatedCardsCount = 0;
     
-    eventCards.forEach(card => {
-        observer.observe(card);
+    eventCards.forEach((card, index) => {
+        // Ne surveiller que les cartes à partir de la 4ème (index >= 3)
+        if (index >= 3) {
+            observer.observe(card);
+            animatedCardsCount++;
+        }
     });
+    
+    console.log(`🔍 Observation de ${animatedCardsCount} cartes d'événements (${eventCards.length - animatedCardsCount} déjà visibles)`);
     
     // Sauvegarder l'observateur
     window.eventsScrollObserver = observer;
