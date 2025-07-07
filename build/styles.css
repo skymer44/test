@@ -2012,35 +2012,26 @@ section:target {
 }
 
 /* Titre d'événement plus sobre */
-.event-title {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin: 0.5rem 0;
-    line-height: 1.3;
-}
-
-/* Date et countdown plus discrets */
+/* Date et countdown sur une ligne fluide */
 .event-meta {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     margin-bottom: 1.2rem;
     padding-bottom: 1.2rem;
     border-bottom: 1px solid #e2e8f0;
+    font-size: 0.9rem;
+    color: #4a5568;
 }
 
 .event-date {
-    font-size: 0.9rem;
-    color: #4a5568;
     font-weight: 500;
 }
 
 .event-countdown {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
+    gap: 0.3rem;
     color: #718096;
 }
 
