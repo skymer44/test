@@ -2536,8 +2536,9 @@ console.log('📄 Génération de PDF activée!');
 console.log('🔄 Synchronisation Notion configurée!');
 
 
-
-// Système de vérification automatique des versions - VERSION OPTIMISÉE ANTI-SPAM
+// Système de vérification automatique des versions - DÉSACTIVÉ
+// (Supprimé car interrompt inutilement l'expérience utilisateur)
+/*
 (function() {
     const CURRENT_VERSION = 'v20250707_e1ba978f'; // ✅ Version mobile optimisée
     const CHECK_INTERVAL = 300000; // ✅ 5 minutes au lieu de 30 secondes (beaucoup moins agressif)
@@ -2815,6 +2816,7 @@ console.log('🔄 Synchronisation Notion configurée!');
         }
     });
 })();
+*/
 
 // 📱 SYSTÈME CACHE-BUSTING MOBILE ULTRA-SIMPLIFIÉ
 (function() {

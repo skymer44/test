@@ -184,3 +184,4 @@ Le système détecte automatiquement :
 
 **🎉 Félicitations ! Votre système de synchronisation Notion est opérationnel et prêt pour une utilisation en production.**
 npm run sync 
+npm run deploy
