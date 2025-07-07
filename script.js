@@ -1,3 +1,22 @@
+// 📱 FONCTIONS MOBILE-FIRST
+function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           ('ontouchstart' in window) || 
+           (navigator.maxTouchPoints > 0) ||
+           window.innerWidth <= 768;
+}
+
+// Configuration adaptée au device
+function getDeviceConfig() {
+    const mobile = isMobileDevice();
+    return {
+        isMobile: mobile,
+        showUpdateIndicator: !mobile, // ✅ Pas d'indicateur "mis à jour" sur mobile
+        showCalendarText: !mobile,    // ✅ Pas de texte calendrier sur mobile
+        compactView: mobile           // ✅ Vue compacte sur mobile
+    };
+}
+
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Programme Musical 2026 - Chargement terminé!');
@@ -263,10 +282,16 @@ function displayMainEvent(event) {
                     ${eventTypeEmoji} ${eventType}
                 </div>
                 <div class="header-right">
+                    ${getDeviceConfig().showUpdateIndicator ? `
                     <div class="live-indicator">
                         <span class="live-dot"></span>
-                        <span>Mis à jour automatiquement</span>
+                        <span class="live-indicator-text">Mis à jour automatiquement</span>
                     </div>
+                    ` : `
+                    <div class="live-indicator">
+                        <span class="live-dot" title="Mis à jour automatiquement"></span>
+                    </div>
+                    `}
                     <button class="add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')">
                         📅
                     </button>
@@ -452,13 +477,21 @@ function generateMiniEventCard(event) {
                 <div class="mini-event-type">${eventTypeEmoji} ${eventType}</div>
                 <div class="mini-event-actions">
                     <div class="mini-event-countdown">${countdownText}</div>
-                    <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
-                        📅
-                    </button>
+                    ${getDeviceConfig().isMobile ? `
+                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
+                            📅
+                        </button>
+                    ` : `
+                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
+                            📅
+                        </button>
+                    `}
                 </div>
             </div>
             
-            <div class="mini-event-date">${formatEventDate(event.date)}</div>
+            <div class="mini-event-date-container">
+                <div class="mini-event-date">${formatEventDate(event.date)}</div>
+            </div>
             
             <div class="mini-event-pieces">🎼 ${piecesText}</div>
             
@@ -2300,7 +2333,7 @@ console.log('🔄 Synchronisation Notion configurée!');
 
 // Système de vérification automatique des versions - VERSION OPTIMISÉE ANTI-SPAM
 (function() {
-    const CURRENT_VERSION = 'v20250707_68d03ce4'; // ✅ Version synchronisée avec version.json
+    const CURRENT_VERSION = 'v20250707_e1ba978f'; // ✅ Version mobile optimisée
     const CHECK_INTERVAL = 300000; // ✅ 5 minutes au lieu de 30 secondes (beaucoup moins agressif)
     
     let isCheckingVersion = false;
@@ -2310,8 +2343,18 @@ console.log('🔄 Synchronisation Notion configurée!');
     
     // Fonction pour vérifier la version de manière intelligente
     async function checkVersion() {
-        // ✅ Multiples protections anti-spam
+        // ✅ Multiples protections anti-spam + DÉSACTIVATION MOBILE
         if (isCheckingVersion || hasUserDismissed || consecutiveErrors > 3) return;
+        
+        // 📱 DÉSACTIVER les notifications de mise à jour sur mobile
+        const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                              ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        if (isMobileDevice) {
+            console.log('📱 Mobile détecté - Notifications de mise à jour désactivées');
+            return; // ✅ Pas de notifications sur mobile
+        }
+        
         isCheckingVersion = true;
         
         try {
@@ -2567,7 +2610,7 @@ console.log('🔄 Synchronisation Notion configurée!');
     });
 })();
 
-// 📱 SYSTÈME CACHE-BUSTING MOBILE RENFORCÉ
+// 📱 SYSTÈME CACHE-BUSTING MOBILE ULTRA-SIMPLIFIÉ
 (function() {
     // Détecter les appareils mobiles/tablettes
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
@@ -2575,21 +2618,15 @@ console.log('🔄 Synchronisation Notion configurée!');
                     (navigator.maxTouchPoints > 0);
     
     if (isMobile) {
-        console.log('📱 Détection mobile - Activation cache-busting renforcé');
+        console.log('📱 Mobile détecté - Cache-busting simplifié activé');
         
-        // Force les en-têtes no-cache sur mobile
+        // ✅ APPROCHE ULTRA-SIMPLE : Timestamp sur requêtes critiques uniquement
         const originalFetch = window.fetch;
         window.fetch = function(url, options = {}) {
-            if (typeof url === 'string' && !url.includes('://')) {
-                // Pour les requêtes locales, forcer no-cache
-                options.headers = {
-                    ...options.headers,
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                };
+            if (typeof url === 'string' && 
+                (url.includes('events.json') || url.includes('version.json'))) {
                 
-                // Ajouter timestamp si pas déjà présent
+                // Ajouter timestamp seulement sur fichiers critiques
                 if (!url.includes('?t=') && !url.includes('&t=')) {
                     url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
                 }
@@ -2598,58 +2635,12 @@ console.log('🔄 Synchronisation Notion configurée!');
             return originalFetch.call(this, url, options);
         };
         
-        // Service Worker: Vider cache sur mobile si disponible
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                if (registration.active) {
-                    registration.active.postMessage({
-                        command: 'clearCache',
-                        scope: 'mobile-cache-bust'
-                    });
-                }
-            }).catch(e => {
-                console.log('ℹ️ Service Worker non disponible:', e.message);
-            });
-        }
-        
-        // Cache API: Force le nettoyage
-        if ('caches' in window) {
-            setTimeout(() => {
-                caches.keys().then(cacheNames => {
-                    const cachesToDelete = cacheNames.filter(name => 
-                        name.includes('workbox') || 
-                        name.includes('precache') ||
-                        name.includes('runtime')
-                    );
-                    
-                    if (cachesToDelete.length > 0) {
-                        console.log('🧹 Nettoyage cache mobile:', cachesToDelete);
-                        return Promise.all(
-                            cachesToDelete.map(name => caches.delete(name))
-                        );
-                    }
-                }).catch(e => {
-                    console.log('ℹ️ Nettoyage cache échoué:', e.message);
-                });
-            }, 2000);
-        }
-        
-        // Meta tags dynamiques pour forcer le no-cache
+        // ✅ Meta tag simple pour no-cache
         const metaNoCache = document.createElement('meta');
         metaNoCache.httpEquiv = 'Cache-Control';
-        metaNoCache.content = 'no-cache, no-store, must-revalidate';
+        metaNoCache.content = 'no-cache, must-revalidate';
         document.head.appendChild(metaNoCache);
         
-        const metaPragma = document.createElement('meta');
-        metaPragma.httpEquiv = 'Pragma';
-        metaPragma.content = 'no-cache';
-        document.head.appendChild(metaPragma);
-        
-        const metaExpires = document.createElement('meta');
-        metaExpires.httpEquiv = 'Expires';
-        metaExpires.content = '0';
-        document.head.appendChild(metaExpires);
-        
-        console.log('✅ Cache-busting mobile activé avec en-têtes renforcés');
+        console.log('✅ Cache-busting mobile ultra-simplifié opérationnel');
     }
 })();

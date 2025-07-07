@@ -1991,12 +1991,23 @@ section:target {
     font-size: 0.875rem;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+    flex-shrink: 0; /* ✅ Empêche le bouton de rétrécir */
+    min-width: 32px; /* ✅ Taille minimum garantie */
 }
 
 .add-to-calendar-btn:hover {
     background: #3182ce;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+
+/* ✅ Header-right avec protection débordement */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    min-width: 0;
 }
 
 .live-dot {
@@ -2218,12 +2229,33 @@ section:target {
     font-size: 0.75rem;
     transition: all 0.2s ease;
     box-shadow: 0 1px 3px rgba(72, 187, 120, 0.2);
+    flex-shrink: 0; /* ✅ Empêche le bouton de rétrécir */
+    min-width: 24px; /* ✅ Taille minimum garantie */
 }
 
 .mini-add-to-calendar-btn:hover {
     background: #38a169;
     transform: translateY(-1px);
     box-shadow: 0 2px 6px rgba(72, 187, 120, 0.3);
+}
+
+/* ✅ Actions container avec protection débordement */
+.mini-event-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+/* ✅ Date container avec protection débordement */
+.mini-event-date-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .mini-event-date {
@@ -2525,11 +2557,56 @@ section:target {
     .mini-event-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 0.5rem;
     }
     
     .all-events-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+    
+    /* 📱 OPTIMISATIONS BOUTONS CALENDRIER MOBILE */
+    .add-to-calendar-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+    
+    .mini-add-to-calendar-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+        flex-shrink: 0;
+        margin-left: 0.5rem;
+    }
+    
+    /* 📱 CONTENEURS POUR ÉVITER DÉBORDEMENT */
+    .event-meta, .mini-event-meta {
+        overflow: hidden;
+        min-width: 0;
+    }
+    
+    .mini-event-header {
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
+    
+    .mini-event-date-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-width: 0;
+    }
+    
+    .mini-event-date {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }
 
@@ -2549,5 +2626,51 @@ section:target {
     .show-all-events-btn, .hide-all-events-btn {
         padding: 0.6rem 1.5rem;
         font-size: 0.9rem;
+    }
+    
+    /* 📱 ULTRA-MOBILE : Simplifications drastiques */
+    .add-to-calendar-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+    
+    .mini-add-to-calendar-btn {
+        width: 18px;
+        height: 18px;
+        font-size: 0.6rem;
+        border-radius: 4px;
+    }
+    
+    /* 📱 Remplacer texte par points verts sur très petits écrans */
+    .live-indicator-text {
+        display: none;
+    }
+    
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        margin-right: 0.25rem;
+    }
+    
+    /* 📱 Simplifier l'affichage des dates */
+    .mini-event-date {
+        font-size: 0.8rem;
+    }
+    
+    /* 📱 Éviter débordement sur très petits écrans */
+    .event-meta {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    
+    .mini-event-header {
+        gap: 0.25rem;
+    }
+    
+    /* 📱 Masquer éléments non-essentiels sur petit mobile */
+    .event-description {
+        font-size: 0.85rem;
+        line-height: 1.4;
     }
 }

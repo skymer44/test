@@ -1,14 +1,14 @@
 {
-  "version": "v20250707_68d03ce4",
-  "timestamp": "2025-07-07T09:23:52.988Z",
-  "description": "Optimisation système de mise à jour - Anti-spam + Cache mobile renforcé",
+  "version": "v20250707_e1ba978f",
+  "timestamp": "2025-07-07T09:30:33.024Z",
+  "description": "Optimisation Mobile Complète - Interface Simplifiée",
   "changes": [
-    "Réduction drastique fréquence vérifications (5 min au lieu de 30s)",
-    "Synchronisation version avec version.json",
-    "Protection anti-spam avec seuils intelligents",
-    "Cache-busting mobile renforcé",
-    "Notifications dismissables persistantes",
-    "Auto-fermeture notifications après 12s (pas 10s)",
-    "Limitation vérifications au focus (10 min minimum)"
+    "Notifications mise à jour désactivées sur mobile",
+    "Boutons calendrier redimensionnés et protégés débordement",
+    "Indicateur Mis à jour remplacé par point vert discret",
+    "Cache-busting ultra-simplifié moins agressif",
+    "Interface responsive ultra-optimisée iPhone/Android",
+    "Protection débordement containers flex",
+    "Tailles boutons adaptées selon taille écran"
   ]
 }
