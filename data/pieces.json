@@ -1,7 +1,37 @@
 {
   "pieces": [
     {
-      "title": "Aratunian",
+      "title": "0",
+      "source": {
+        "notion": true,
+        "database": "Pièces d’ajout sans direction",
+        "pageId": "229fcf9e-3abc-8020-b3e6-e820a433671f",
+        "lastModified": "2025-07-07T16:53:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "0",
+      "source": {
+        "notion": true,
+        "database": "Retour Karaoké",
+        "pageId": "229fcf9e-3abc-8038-823a-d4e2dc007f9b",
+        "lastModified": "2025-07-07T16:53:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "0",
+      "source": {
+        "notion": true,
+        "database": "Loto",
+        "pageId": "229fcf9e-3abc-8024-99b9-c74e321ae334",
+        "lastModified": "2025-07-07T16:53:00.000Z",
+        "order": null
+      }
+    },
+    {
+      "title": "Aratunian 0",
       "composer": "ARUTIUNIAN Alexander / arr. SCHYNS José",
       "duration": "16:00",
       "info": "Pièce complète mais pas évident / vérifier le niveau",
@@ -14,7 +44,7 @@
         "notion": true,
         "database": "Concert du 11 d’avril avec Eric Aubier",
         "pageId": "21efcf9e-3abc-8032-ac5d-ece973cb7d21",
-        "lastModified": "2025-07-06T12:51:00.000Z",
+        "lastModified": "2025-07-07T16:52:00.000Z",
         "order": 1
       }
     },
@@ -106,7 +136,94 @@
       }
     },
     {
-      "title": "Oregon",
+      "title": "Ammerland 0",
+      "composer": "Jacob de Haan 0",
+      "duration": "03:10",
+      "info": "Très interessant pour le son mais assez chère",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=y5GQ0we6dOc",
+        "purchase": "https://www.laflutedepan.com/partition/10102812/de-haan-jacob-ammerland-concert-bandharmonie.html"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose 0",
+        "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
+        "lastModified": "2025-07-07T16:52:00.000Z",
+        "order": 1
+      }
+    },
+    {
+      "title": "Music from How To Train Your Dragon",
+      "composer": "John Powell/arr. Sean O'Loughlin",
+      "duration": "04:50",
+      "info": "Marche très bien, joviale",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=FfOuif5v554&list=RDFfOuif5v554&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Music from How To Train Your Dragon - 02501568&utm_source=youtube&utm_medium=band-orch-scoreplay"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose 0",
+        "pageId": "223fcf9e-3abc-80cd-9f3b-e2ad6dd48f98",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": 2
+      }
+    },
+    {
+      "title": "The Lion King",
+      "composer": "John Higgins",
+      "duration": "08:40",
+      "info": "Super pièce",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=WEEDErl0wlI&list=RDWEEDErl0wlI&start_radio=1",
+        "purchase": "https://www.halleonard.com/product/viewproduct.action?itemid=20523032&subsiteid=1"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose 0",
+        "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": 3
+      }
+    },
+    {
+      "title": "Selections from The Nightmare Before Christmas",
+      "composer": "Elfman/arr. Brown",
+      "duration": "05:12",
+      "info": "Excellent",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=294MV8S7dU4",
+        "original": "https://www.youtube.com/watch?v=SAfmjPwxspI&list=RDSAfmjPwxspI&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Selections from Nightmare Before Christmas – Michael Brown&utm_source=youtube&utm_medium=band-orch-scoreplay"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose 0",
+        "pageId": "223fcf9e-3abc-8052-94c2-d3c8ddadf9b0",
+        "lastModified": "2025-07-06T12:47:00.000Z",
+        "order": 4
+      }
+    },
+    {
+      "title": "Allegretto from Symphony No. 7",
+      "composer": "Beethoven/arr. Longfield",
+      "duration": "03:00",
+      "info": "Bien arrangée, bien gérer la répartition",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
+        "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
+        "purchase": "https://www.sheetmusicdirect.com/en-US/se/ID_No/347710/Product.aspx"
+      },
+      "source": {
+        "notion": true,
+        "database": "Ma région virtuose 0",
+        "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
+        "lastModified": "2025-07-06T12:48:00.000Z",
+        "order": 5
+      }
+    },
+    {
+      "title": "Oregon0",
       "composer": "Jacob de Haan",
       "duration": "09:09",
       "info": "Vérifier le niveau et l'intérêt",
@@ -118,7 +235,7 @@
         "notion": true,
         "database": "Pièces qui n’ont pas trouvé leur concert",
         "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
-        "lastModified": "2025-07-06T12:51:00.000Z",
+        "lastModified": "2025-07-07T16:53:00.000Z",
         "order": 1
       }
     },
@@ -140,7 +257,7 @@
       }
     },
     {
-      "title": "Begegnung",
+      "title": "Begegnung 0",
       "composer": "Kurt Gäble",
       "links": {
         "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
@@ -149,7 +266,7 @@
         "notion": true,
         "database": "Programme fête de la musique",
         "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
-        "lastModified": "2025-07-06T12:51:00.000Z",
+        "lastModified": "2025-07-07T16:53:00.000Z",
         "order": 1
       }
     },
@@ -168,96 +285,19 @@
       }
     },
     {
-      "title": "Ammerland",
-      "composer": "Jacob de Haan",
-      "duration": "03:10",
-      "info": "Très interessant pour le son mais assez chère",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=y5GQ0we6dOc",
-        "purchase": "https://www.laflutedepan.com/partition/10102812/de-haan-jacob-ammerland-concert-bandharmonie.html"
-      },
+      "title": "0",
       "source": {
         "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-07T15:39:00.000Z",
-        "order": 1
-      }
-    },
-    {
-      "title": "Music from How To Train Your Dragon",
-      "composer": "John Powell/arr. Sean O'Loughlin",
-      "duration": "04:50",
-      "info": "Marche très bien, joviale",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=FfOuif5v554&list=RDFfOuif5v554&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Music from How To Train Your Dragon - 02501568&utm_source=youtube&utm_medium=band-orch-scoreplay"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80cd-9f3b-e2ad6dd48f98",
-        "lastModified": "2025-07-06T12:47:00.000Z",
-        "order": 2
-      }
-    },
-    {
-      "title": "The Lion King",
-      "composer": "John Higgins",
-      "duration": "08:40",
-      "info": "Super pièce",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=WEEDErl0wlI&list=RDWEEDErl0wlI&start_radio=1",
-        "purchase": "https://www.halleonard.com/product/viewproduct.action?itemid=20523032&subsiteid=1"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
-        "lastModified": "2025-07-06T12:47:00.000Z",
-        "order": 3
-      }
-    },
-    {
-      "title": "Selections from The Nightmare Before Christmas",
-      "composer": "Elfman/arr. Brown",
-      "duration": "05:12",
-      "info": "Excellent",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=294MV8S7dU4",
-        "original": "https://www.youtube.com/watch?v=SAfmjPwxspI&list=RDSAfmjPwxspI&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Selections from Nightmare Before Christmas – Michael Brown&utm_source=youtube&utm_medium=band-orch-scoreplay"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-8052-94c2-d3c8ddadf9b0",
-        "lastModified": "2025-07-06T12:47:00.000Z",
-        "order": 4
-      }
-    },
-    {
-      "title": "Allegretto from Symphony No. 7",
-      "composer": "Beethoven/arr. Longfield",
-      "duration": "03:00",
-      "info": "Bien arrangée, bien gérer la répartition",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
-        "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
-        "purchase": "https://www.sheetmusicdirect.com/en-US/se/ID_No/347710/Product.aspx"
-      },
-      "source": {
-        "notion": true,
-        "database": "Ma région virtuose",
-        "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
-        "lastModified": "2025-07-06T12:48:00.000Z",
-        "order": 5
+        "database": "Insertion dans les 60 ans du Conservatoire ",
+        "pageId": "227fcf9e-3abc-80ed-8129-c25c9724b643",
+        "lastModified": "2025-07-07T16:53:00.000Z",
+        "order": null
       }
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T15:59:52.433Z",
+    "syncDate": "2025-07-07T16:53:53.776Z",
     "source": "notion",
-    "totalPieces": 15
+    "totalPieces": 19
   }
 }
