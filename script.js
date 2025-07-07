@@ -917,9 +917,22 @@ function generateMiniEventCard(event, selectedEvent = null) {
     // Vérifier s'il y a des pièces définies
     const hasPieces = event.pieces && event.pieces.length > 0;
     
-    const piecesText = !isNoRehearsalEvent && hasPieces 
-        ? `${event.pieces.slice(0, 2).map(piece => typeof piece === 'object' && piece.name ? piece.name : piece).join(', ')}${event.pieces.length > 2 ? ` +${event.pieces.length - 2} autres` : ''}`
-        : 'Programme à définir';
+    // Créer l'affichage des pièces avec des bulles délicates
+    let piecesContent = '';
+    if (!isNoRehearsalEvent && hasPieces) {
+        const displayPieces = event.pieces.slice(0, 2);
+        const piecesBubbles = displayPieces.map(piece => {
+            const pieceName = typeof piece === 'object' && piece.name ? piece.name : piece;
+            return `<span class="piece-bubble">${pieceName}</span>`;
+        }).join('');
+        
+        const extraCount = event.pieces.length - 2;
+        const extraBubble = extraCount > 0 ? `<span class="piece-bubble extra">+${extraCount} autres</span>` : '';
+        
+        piecesContent = piecesBubbles + extraBubble;
+    } else if (!isNoRehearsalEvent) {
+        piecesContent = '<span class="piece-bubble placeholder">Programme à définir</span>';
+    }
     
     // Vérifier si c'est l'événement actuellement sélectionné
     const isSelected = selectedEvent && 
@@ -952,8 +965,12 @@ function generateMiniEventCard(event, selectedEvent = null) {
                 <div class="mini-event-date">${formatEventDate(event.date)}</div>
             </div>
             
-            ${!isNoRehearsalEvent && hasPieces ? `
-            <div class="mini-event-pieces">🎼 ${piecesText}</div>
+            ${piecesContent ? `
+            <div class="mini-event-pieces">
+                <div class="pieces-bubbles-container">
+                    ${piecesContent}
+                </div>
+            </div>
             ` : ''}
             
             ${event.notes ? `

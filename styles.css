@@ -3091,3 +3091,120 @@ section:target {
         line-height: 1.4;
     }
 }
+
+/* ========================================
+   STYLES POUR LES BULLES DE PIÈCES MUSICALES
+   ======================================== */
+
+/* Container pour les bulles de pièces */
+.pieces-bubbles-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+/* Styles pour les bulles individuelles */
+.piece-bubble {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border: 1px solid #cbd5e0;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #4a5568;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    line-height: 1.2;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Effet hover sur les bulles */
+.piece-bubble:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(102, 126, 234, 0.25);
+}
+
+/* Bulle pour le compteur "+X autres" */
+.piece-bubble.extra {
+    background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+    color: #718096;
+    font-style: italic;
+    border-color: #e2e8f0;
+}
+
+.piece-bubble.extra:hover {
+    background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+    color: #4a5568;
+    border-color: #a0aec0;
+}
+
+/* Bulle pour "Programme à définir" */
+.piece-bubble.placeholder {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    color: #94a3b8;
+    border-color: #e2e8f0;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.piece-bubble.placeholder:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #64748b;
+    border-color: #cbd5e0;
+    opacity: 1;
+}
+
+/* Mise en page pour les bulles (sans icône) */
+.mini-event-pieces {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Responsive pour les bulles sur mobile */
+@media (max-width: 480px) {
+    .piece-bubble {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+        border-radius: 10px;
+        max-width: 120px;
+    }
+    
+    .pieces-bubbles-container {
+        gap: 0.3rem;
+    }
+    
+    .mini-event-pieces {
+        gap: 0.4rem;
+    }
+}
+
+/* Animation délicate pour l'apparition des bulles */
+@keyframes bubbleAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.piece-bubble {
+    animation: bubbleAppear 0.3s ease forwards;
+}
+
+/* Délai d'animation pour créer un effet en cascade */
+.piece-bubble:nth-child(1) { animation-delay: 0ms; }
+.piece-bubble:nth-child(2) { animation-delay: 50ms; }
+.piece-bubble:nth-child(3) { animation-delay: 100ms; }
+.piece-bubble:nth-child(4) { animation-delay: 150ms; }
