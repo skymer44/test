@@ -13,17 +13,13 @@ on:
           - full
           - test
       
-  # Déclenchement programmé (beaucoup moins fréquent)
+  # Déclenchement programmé (2x par jour aux horaires optimaux)
   schedule:
-    - cron: '0 8,18 * * *'     # Seulement 2x par jour : 8h et 18h
+    - cron: '30 6,22 * * *'     # 6h30 (matin) et 22h30 (après répétition)
 
-  # Déclenchement sur push des scripts
+  # Déclenchement automatique sur TOUS les push + modifications scripts
   push:
-    paths:
-      - 'scripts/notion-sync.js'
-      - 'scripts/site-builder.js'
-      - 'scripts/deploy.js'
-      - '.github/workflows/notion-sync-v2.yml'
+    branches: [ main ]  # Sur tous les commits de la branche principale
 
 jobs:
   sync-and-build:
@@ -72,7 +68,7 @@ jobs:
         run: |
           echo "📊 === RAPPORT DE SYNCHRONISATION V2 ==="
           echo "📅 Date: $(TZ='Europe/Paris' date +'%Y-%m-%d %H:%M:%S')"
-          echo "🎯 Type: ${{ github.event.inputs.sync_type || 'full' }}"
+          echo "🎯 Horaires personnalisés: 6h30 (réveil) et 22h30 (post-répétition)"
           echo "🏗️ Architecture: Code/Données séparées"
           
           # Vérifier si des changements ont été faits
@@ -85,7 +81,7 @@ jobs:
               echo "🎵 Pièces synchronisées: $PIECES"
             fi
             
-            echo "🔄 Fréquence réduite: 2x/jour au lieu de toutes les 10min"
+            echo "🔄 Fréquence optimisée: 2x/jour (6h30 et 22h30) + à chaque commit"
             echo "🛡️ Code protégé dans /src/ - jamais écrasé par Notion"
           else
             echo "ℹ️ Aucun changement détecté - données à jour"
