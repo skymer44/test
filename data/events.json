@@ -50,12 +50,12 @@
         "Répétition"
       ],
       "pieces": [],
-      "notes": "",
+      "notes": "Putain je commence à en avoir marre. ",
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8130-94f1-e13fc08a77cd",
-        "lastModified": "2025-07-07T10:18:00.000Z"
+        "lastModified": "2025-07-07T10:22:00.000Z"
       }
     },
     {
@@ -814,7 +814,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T10:18:46.933Z",
+    "syncDate": "2025-07-07T10:22:53.586Z",
     "source": "notion",
     "totalEvents": 47
   }
