@@ -483,7 +483,7 @@ function displayEventError() {
     `;
 }
 
-// Fonction pour ajouter un événement au calendrier
+// Fonction pour ajouter un événement au calendrier - VERSION API NATIVE
 function addEventToCalendar(date, type, title, pieces, notes) {
     try {
         // Créer la date de l'événement
@@ -493,12 +493,16 @@ function addEventToCalendar(date, type, title, pieces, notes) {
         let startTime, endTime, isAllDay = false;
         
         const lowerType = type.toLowerCase();
+        let eventTitle, location;
+        
         if (lowerType.includes('répétition')) {
             // Répétitions : toujours 20h-22h
             startTime = new Date(eventDate);
             startTime.setHours(20, 0, 0);
             endTime = new Date(eventDate);
             endTime.setHours(22, 0, 0);
+            eventTitle = `Répétition de l'Harmonie de Châteaubriant`;
+            location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
         } else {
             // Concerts et autres événements : toute la journée
             startTime = new Date(eventDate);
@@ -506,67 +510,406 @@ function addEventToCalendar(date, type, title, pieces, notes) {
             endTime = new Date(eventDate);
             endTime.setHours(23, 59, 59);
             isAllDay = true;
-        }
-        
-        // Formater les dates pour le fichier ICS
-        function formatICSDate(date, allDay = false) {
-            if (allDay) {
-                return date.toISOString().split('T')[0].replace(/-/g, '');
-            } else {
-                return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-            }
+            eventTitle = title;
+            location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
         }
         
         // Créer la description avec les pièces
-        let description = `${title}\\n\\n`;
+        let description = `${eventTitle}\n\n`;
         if (pieces && pieces.length > 0) {
-            description += `Programme :\\n`;
+            description += `Programme :\n`;
             pieces.forEach(piece => {
-                description += `• ${piece}\\n`;
+                description += `• ${piece}\n`;
             });
         }
         if (notes) {
-            description += `\\nInformations : ${notes}`;
+            description += `\nInformations : ${notes}`;
         }
         
-        // Générer le contenu du fichier ICS
-        const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Programme Musical 2026//FR
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-UID:${Date.now()}@programme-musical-2026.com
-DTSTAMP:${formatICSDate(new Date())}
-DTSTART${isAllDay ? ';VALUE=DATE:' + formatICSDate(startTime, true) : ':' + formatICSDate(startTime)}
-DTEND${isAllDay ? ';VALUE=DATE:' + formatICSDate(new Date(endTime.getTime() + 24*60*60*1000), true) : ':' + formatICSDate(endTime)}
-SUMMARY:${title}
-DESCRIPTION:${description}
-LOCATION:Lieu de répétition/concert
-CATEGORIES:MUSIC,REHEARSAL
-STATUS:CONFIRMED
-END:VEVENT
-END:VCALENDAR`;
+        // 🎯 PRIORITÉ 1: Essayer l'API Web Calendar native (Chrome 108+, Edge 108+)
+        if ('createEvent' in navigator && navigator.createEvent) {
+            console.log('🚀 Utilisation de l\'API Web Calendar native');
+            tryNativeCalendarAPI(eventTitle, startTime, endTime, description, location);
+            return;
+        }
         
-        // Créer et télécharger le fichier
-        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
+        // 🎯 PRIORITÉ 2: Essayer l'API expérimentale
+        if (window.chrome && window.chrome.runtime) {
+            console.log('🔬 Tentative API expérimentale Chrome');
+            tryExperimentalCalendarAPI(eventTitle, startTime, endTime, description, location);
+            return;
+        }
         
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_${eventDate.toISOString().split('T')[0]}.ics`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        // Notification de succès
-        showCalendarNotification('📅 Événement ajouté au calendrier !', 'success');
+        // 🎯 PRIORITÉ 3: Fallback vers fichier ICS avec ouverture directe
+        console.log('📅 Fallback vers ICS optimisé');
+        createOptimizedICSEvent(eventTitle, startTime, endTime, description, location, isAllDay);
         
     } catch (error) {
         console.error('❌ Erreur lors de la création du calendrier:', error);
         showCalendarNotification('❌ Erreur lors de l\'ajout au calendrier', 'error');
     }
+}
+
+// Fonction pour l'API Web Calendar native
+async function tryNativeCalendarAPI(title, startTime, endTime, description, location) {
+    try {
+        // Vérifier si l'API est vraiment disponible
+        if (typeof navigator.createEvent !== 'function') {
+            throw new Error('API non disponible');
+        }
+        
+        const event = await navigator.createEvent({
+            title: title,
+            startTime: startTime.getTime(),
+            endTime: endTime.getTime(),
+            description: description,
+            location: location
+        });
+        
+        console.log('✅ Événement créé avec l\'API native:', event);
+        showCalendarNotification('📅 Événement ajouté à votre calendrier !', 'success');
+        
+    } catch (error) {
+        console.log('⚠️ API native échouée, fallback vers ICS:', error);
+        createOptimizedICSEvent(title, startTime, endTime, description, location, false);
+    }
+}
+
+// Fonction pour l'API expérimentale Chrome
+async function tryExperimentalCalendarAPI(title, startTime, endTime, description, location) {
+    try {
+        // Approche expérimentale pour Chrome
+        const eventData = {
+            'title': title,
+            'start': {'dateTime': startTime.toISOString()},
+            'end': {'dateTime': endTime.toISOString()},
+            'description': description,
+            'location': location
+        };
+        
+        // Tentative avec chrome.calendar si disponible
+        if (window.chrome && window.chrome.calendar) {
+            await window.chrome.calendar.createEvent(eventData);
+            showCalendarNotification('📅 Événement ajouté via Chrome Calendar !', 'success');
+            return;
+        }
+        
+        throw new Error('Chrome Calendar API non disponible');
+        
+    } catch (error) {
+        console.log('⚠️ API Chrome échouée, fallback vers ICS:', error);
+        createOptimizedICSEvent(title, startTime, endTime, description, location, false);
+    }
+}
+
+// Fonction pour créer un ICS optimisé (fallback)
+function createOptimizedICSEvent(title, startTime, endTime, description, location, isAllDay) {
+    try {
+        const icsContent = generateICSContent(
+            encodeURIComponent(title), 
+            startTime.toISOString(), 
+            endTime.toISOString(), 
+            encodeURIComponent(description), 
+            encodeURIComponent(location), 
+            isAllDay
+        );
+        
+        // Créer le blob avec le bon MIME type pour que le navigateur le reconnaisse
+        const blob = new Blob([icsContent], { 
+            type: 'text/calendar;charset=utf-8;method=REQUEST'
+        });
+        
+        // Essayer d'ouvrir directement (certains navigateurs affichent une popup)
+        const url = URL.createObjectURL(blob);
+        
+        // Tenter l'ouverture dans une nouvelle fenêtre d'abord
+        const newWindow = window.open(url, '_blank', 'width=400,height=300');
+        
+        // Si ça ne marche pas, télécharger le fichier
+        setTimeout(() => {
+            if (!newWindow || newWindow.closed) {
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${decodeURIComponent(title).replace(/[^a-zA-Z0-9]/g, '_')}.ics`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showCalendarNotification('📅 Fichier calendrier téléchargé', 'success');
+            } else {
+                showCalendarNotification('📅 Calendrier ouvert dans un nouvel onglet', 'success');
+            }
+            URL.revokeObjectURL(url);
+        }, 1000);
+        
+    } catch (error) {
+        console.error('❌ Erreur création ICS:', error);
+        showCalendarNotification('❌ Erreur lors de la création du calendrier', 'error');
+    }
+}
+
+// Fonction pour afficher le modal de sélection de calendrier
+function showCalendarSelectionModal(title, startTime, endTime, description, location, isAllDay) {
+    // Supprimer un modal existant s'il y en a un
+    const existingModal = document.querySelector('.calendar-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Créer le modal
+    const modal = document.createElement('div');
+    modal.className = 'calendar-modal';
+    modal.innerHTML = `
+        <div class="calendar-modal-content">
+            <div class="calendar-modal-header">
+                <h3>📅 Ajouter à votre calendrier</h3>
+                <button class="calendar-modal-close" onclick="this.closest('.calendar-modal').remove()">×</button>
+            </div>
+            <div class="calendar-modal-body">
+                <p><strong>${title}</strong></p>
+                <p>📍 ${location}</p>
+                <p>🕒 ${formatTimeRange(startTime, endTime, isAllDay)}</p>
+                
+                <div class="calendar-options">
+                    <button class="calendar-option google" onclick="addToGoogleCalendar('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay})">
+                        📧 Google Calendar
+                    </button>
+                    <button class="calendar-option outlook" onclick="addToOutlookCalendar('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay})">
+                        📮 Outlook
+                    </button>
+                    <button class="calendar-option apple" onclick="addToAppleCalendar('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay})">
+                        🍎 Apple Calendar
+                    </button>
+                    <button class="calendar-option yahoo" onclick="addToYahooCalendar('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay})">
+                        🟣 Yahoo Calendar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Styles du modal
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    // Ajouter les styles CSS
+    if (!document.getElementById('calendar-modal-styles')) {
+        const style = document.createElement('style');
+        style.id = 'calendar-modal-styles';
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .calendar-modal-content {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                max-width: 400px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            .calendar-modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            
+            .calendar-modal-header h3 {
+                margin: 0;
+                color: #2d3748;
+                font-size: 1.25rem;
+            }
+            
+            .calendar-modal-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #718096;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background-color 0.2s;
+            }
+            
+            .calendar-modal-close:hover {
+                background: #f7fafc;
+            }
+            
+            .calendar-modal-body {
+                padding: 1.5rem;
+            }
+            
+            .calendar-modal-body p {
+                margin: 0.5rem 0;
+                color: #4a5568;
+            }
+            
+            .calendar-options {
+                display: grid;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+            }
+            
+            .calendar-option {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                background: white;
+                cursor: pointer;
+                transition: all 0.2s;
+                font-size: 0.95rem;
+                font-weight: 500;
+            }
+            
+            .calendar-option:hover {
+                border-color: #4299e1;
+                background: #f7fafc;
+                transform: translateY(-1px);
+            }
+            
+            .calendar-option.google:hover { border-color: #4285f4; }
+            .calendar-option.outlook:hover { border-color: #0078d4; }
+            .calendar-option.apple:hover { border-color: #007aff; }
+            .calendar-option.yahoo:hover { border-color: #7b68ee; }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(modal);
+    
+    // Fermer en cliquant sur le fond
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// Fonctions pour chaque calendrier
+function addToGoogleCalendar(title, startTime, endTime, description, location, isAllDay) {
+    const start = formatGoogleDate(new Date(startTime), isAllDay);
+    const end = formatGoogleDate(new Date(endTime), isAllDay);
+    
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${description}&location=${location}`;
+    window.open(url, '_blank');
+    document.querySelector('.calendar-modal').remove();
+    showCalendarNotification('📅 Ouverture de Google Calendar...', 'success');
+}
+
+function addToOutlookCalendar(title, startTime, endTime, description, location, isAllDay) {
+    const start = new Date(startTime).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const end = new Date(endTime).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    const url = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&startdt=${start}&enddt=${end}&body=${description}&location=${location}`;
+    window.open(url, '_blank');
+    document.querySelector('.calendar-modal').remove();
+    showCalendarNotification('📅 Ouverture d\'Outlook...', 'success');
+}
+
+function addToAppleCalendar(title, startTime, endTime, description, location, isAllDay) {
+    // Générer un fichier ICS pour Apple Calendar
+    const icsContent = generateICSContent(title, startTime, endTime, description, location, isAllDay);
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${decodeURIComponent(title).replace(/[^a-zA-Z0-9]/g, '_')}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    document.querySelector('.calendar-modal').remove();
+    showCalendarNotification('📅 Fichier téléchargé pour Apple Calendar', 'success');
+}
+
+function addToYahooCalendar(title, startTime, endTime, description, location, isAllDay) {
+    const start = formatYahooDate(new Date(startTime));
+    const duration = Math.round((new Date(endTime) - new Date(startTime)) / (1000 * 60)); // en minutes
+    
+    const url = `https://calendar.yahoo.com/?v=60&view=d&type=20&title=${title}&st=${start}&dur=${isAllDay ? '1440' : duration}&desc=${description}&in_loc=${location}`;
+    window.open(url, '_blank');
+    document.querySelector('.calendar-modal').remove();
+    showCalendarNotification('📅 Ouverture de Yahoo Calendar...', 'success');
+}
+
+// Fonctions utilitaires pour les dates
+function formatGoogleDate(date, isAllDay) {
+    if (isAllDay) {
+        return date.toISOString().split('T')[0].replace(/-/g, '');
+    } else {
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    }
+}
+
+function formatYahooDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
+
+function formatTimeRange(startTime, endTime, isAllDay) {
+    if (isAllDay) {
+        return 'Toute la journée';
+    } else {
+        const start = startTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const end = endTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return `${start} - ${end}`;
+    }
+}
+
+function generateICSContent(title, startTime, endTime, description, location, isAllDay) {
+    function formatICSDate(date, allDay = false) {
+        if (allDay) {
+            return date.toISOString().split('T')[0].replace(/-/g, '');
+        } else {
+            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        }
+    }
+    
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    
+    return `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Harmonie de Châteaubriant//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${Date.now()}@harmonie-chateaubriant.fr
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART${isAllDay ? ';VALUE=DATE:' + formatICSDate(start, true) : ':' + formatICSDate(start)}
+DTEND${isAllDay ? ';VALUE=DATE:' + formatICSDate(new Date(end.getTime() + 24*60*60*1000), true) : ':' + formatICSDate(end)}
+SUMMARY:${decodeURIComponent(title)}
+DESCRIPTION:${decodeURIComponent(description)}
+LOCATION:${decodeURIComponent(location)}
+CATEGORIES:MUSIC,REHEARSAL
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
 }
 
 // Fonction pour afficher une notification de calendrier
