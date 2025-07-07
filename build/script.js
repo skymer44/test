@@ -254,7 +254,7 @@ function displayMainEvent(event) {
     // Générer la liste des pièces
     const piecesHtml = event.pieces && event.pieces.length > 0 
         ? generatePiecesHtml(event.pieces)
-        : '<p><em>Programme à définir</em></p>';
+        : '<div class="piece-item"><h5>Programme à définir</h5><p>Le programme sera communiqué prochainement</p></div>';
     
     mainEventContainer.innerHTML = `
         <div class="main-event-content">
@@ -264,26 +264,28 @@ function displayMainEvent(event) {
             
             <h2 class="event-title">${eventTitle}</h2>
             
-            <div class="event-countdown">
-                <span>Dans</span>
-                <span class="countdown-number">${countdownText}</span>
+            <div class="event-meta">
+                <div class="event-date">
+                    📅 ${formatEventDate(event.date)}
+                </div>
+                <div class="event-countdown">
+                    <span>Dans</span>
+                    <span class="countdown-number">${countdownText}</span>
+                </div>
             </div>
             
-            <div class="event-date">
-                📅 ${formatEventDate(event.date)}
+            <div class="event-pieces">
+                <h4>🎼 Programme</h4>
+                <div class="pieces-list">
+                    ${piecesHtml}
+                </div>
             </div>
             
             ${event.notes ? `
                 <div class="event-notes">
-                    <strong>ℹ️ Informations importantes :</strong><br>
-                    ${event.notes}
+                    <strong>ℹ️ Informations :</strong> ${event.notes}
                 </div>
             ` : ''}
-            
-            <div class="event-pieces">
-                <h4>🎼 Programme à travailler :</h4>
-                ${piecesHtml}
-            </div>
         </div>
     `;
 }
@@ -413,19 +415,15 @@ function formatEventDate(dateString) {
 
 function generatePiecesHtml(pieces) {
     if (!pieces || pieces.length === 0) {
-        return '<p><em>Programme à définir</em></p>';
+        return '<div class="piece-item"><h5>Programme à définir</h5><p>Le programme sera communiqué prochainement</p></div>';
     }
     
-    return `
-        <div class="pieces-list">
-            ${pieces.map(piece => `
-                <div class="piece-item">
-                    <h5>${piece}</h5>
-                    <p>Cliquez sur "Programmes Musicaux" pour plus d'infos</p>
-                </div>
-            `).join('')}
+    return pieces.map(piece => `
+        <div class="piece-item">
+            <h5>${piece}</h5>
+            <p>Consulter les partitions dans l'onglet "Programmes"</p>
         </div>
-    `;
+    `).join('');
 }
 
 function generateMiniEventCard(event) {
@@ -438,21 +436,20 @@ function generateMiniEventCard(event) {
     const eventType = Array.isArray(event.type) ? event.type[0] || 'Événement' : event.type || 'Événement';
     
     const piecesText = event.pieces && event.pieces.length > 0 
-        ? `🎼 ${event.pieces.slice(0, 2).join(', ')}${event.pieces.length > 2 ? '...' : ''}`
-        : '🎼 Programme à définir';
+        ? `${event.pieces.slice(0, 2).join(', ')}${event.pieces.length > 2 ? ` +${event.pieces.length - 2} autres` : ''}`
+        : 'Programme à définir';
     
     return `
         <div class="mini-event-card ${eventTypeClass}">
             <div class="mini-event-header">
-                <span class="mini-event-type ${eventTypeClass}">
-                    ${eventTypeEmoji} ${eventType}
-                </span>
-                <span class="mini-event-date">Dans ${countdownText}</span>
+                <div class="mini-event-type">${eventType.toUpperCase()}</div>
             </div>
             
             <h4 class="mini-event-title">${eventTitle}</h4>
             
-            <div class="mini-event-pieces">${piecesText}</div>
+            <div class="mini-event-date">${formatEventDate(event.date)} • Dans ${countdownText}</div>
+            
+            <div class="mini-event-pieces">🎼 ${piecesText}</div>
             
             ${event.notes ? `
                 <div class="mini-event-notes">

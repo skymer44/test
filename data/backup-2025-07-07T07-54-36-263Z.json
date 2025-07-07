@@ -1,0 +1,75 @@
+{
+  "concerts": [
+    {
+      "id": "ma-region-virtuose",
+      "title": "Ma région virtuose",
+      "pieces": [
+        {
+          "title": "Ammerland"
+        },
+        {
+          "title": "Music from How To Train Your Dragon"
+        },
+        {
+          "title": "The Lion King"
+        },
+        {
+          "title": "Selections from The Nightmare Before Christmas"
+        },
+        {
+          "title": "Allegretto from Symphony No. 7"
+        }
+      ]
+    },
+    {
+      "id": "concert-eric-aubier",
+      "title": "Concert du 11 d'avril avec Eric Aubier",
+      "pieces": [
+        {
+          "title": "Aratunian"
+        },
+        {
+          "title": "Carnaval de Venise"
+        },
+        {
+          "title": "Napoli"
+        },
+        {
+          "title": "La Virgen de la Macarena"
+        },
+        {
+          "title": "The Mandalorian"
+        },
+        {
+          "title": "Eldorado"
+        }
+      ]
+    },
+    {
+      "id": "fete-musique",
+      "title": "Programme fête de la musique",
+      "pieces": [
+        {
+          "title": "Begegnung"
+        },
+        {
+          "title": "Libertango"
+        }
+      ]
+    },
+    {
+      "id": "pieces-orphelines",
+      "title": "Pièces qui n'ont pas trouvé leur concert",
+      "pieces": [
+        {
+          "title": "Oregon"
+        },
+        {
+          "title": "Danse Bacchanale Samson et Dalila, Op. 47"
+        }
+      ]
+    }
+  ],
+  "timestamp": "2025-07-07T07:54:36.264Z",
+  "source": "site-extraction"
+}
