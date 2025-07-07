@@ -2298,126 +2298,358 @@ console.log('🔄 Synchronisation Notion configurée!');
 
 
 
-// Système de vérification automatique des versions
+// Système de vérification automatique des versions - VERSION OPTIMISÉE ANTI-SPAM
 (function() {
-    const CURRENT_VERSION = 'v20250707_471cdbda';
-    const CHECK_INTERVAL = 30000; // 30 secondes
+    const CURRENT_VERSION = 'v20250707_68d03ce4'; // ✅ Version synchronisée avec version.json
+    const CHECK_INTERVAL = 300000; // ✅ 5 minutes au lieu de 30 secondes (beaucoup moins agressif)
     
     let isCheckingVersion = false;
+    let lastNotificationTime = 0;
+    let hasUserDismissed = false;
+    let consecutiveErrors = 0;
     
-    // Fonction pour vérifier la version
+    // Fonction pour vérifier la version de manière intelligente
     async function checkVersion() {
-        if (isCheckingVersion) return;
+        // ✅ Multiples protections anti-spam
+        if (isCheckingVersion || hasUserDismissed || consecutiveErrors > 3) return;
         isCheckingVersion = true;
         
         try {
             const response = await fetch('/version.json?t=' + Date.now());
-            const versionData = await response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             
-            if (versionData.version !== CURRENT_VERSION) {
-                console.log('🔄 Nouvelle version détectée:', versionData.version);
-                showUpdateNotification(versionData);
+            const versionData = await response.json();
+            consecutiveErrors = 0; // Reset sur succès
+            
+            // ✅ Vérification très stricte pour éviter les faux positifs
+            if (versionData.version && 
+                versionData.version !== CURRENT_VERSION && 
+                versionData.version.length > 5) { // Sécurité supplémentaire
+                
+                // ✅ Éviter les notifications répétées (minimum 15 minutes entre notifications)
+                const now = Date.now();
+                if (now - lastNotificationTime > 900000) { // 15 minutes
+                    console.log('🔄 Nouvelle version détectée:', versionData.version);
+                    showUpdateNotification(versionData);
+                    lastNotificationTime = now;
+                }
             }
         } catch (error) {
-            console.log('Erreur vérification version:', error);
+            consecutiveErrors++;
+            console.log(`ℹ️ Vérification version échouée (${consecutiveErrors}/3):`, error.message);
+            
+            // Arrêter les vérifications après 3 erreurs consécutives
+            if (consecutiveErrors > 3) {
+                console.log('⚠️ Trop d\'erreurs de vérification, arrêt du système');
+            }
         } finally {
             isCheckingVersion = false;
         }
     }
     
-    // Afficher une notification de mise à jour
+    // Notification de mise à jour ultra-améliorée et discrète
     function showUpdateNotification(versionData) {
-        // Créer une notification discrète
+        // Supprimer toute notification existante
+        const existingNotification = document.querySelector('.update-notification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+        
+        // Créer une notification très discrète
         const notification = document.createElement('div');
         notification.className = 'update-notification';
         notification.innerHTML = `
             <div class="update-content">
                 <span class="update-icon">🔄</span>
-                <span class="update-text">Nouvelle version disponible!</span>
-                <button class="update-btn" onclick="location.reload(true)">Mettre à jour</button>
-                <button class="dismiss-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+                <div class="update-text-container">
+                    <span class="update-title">Mise à jour disponible</span>
+                    <span class="update-subtitle">Amélioration du site</span>
+                </div>
+                <div class="update-actions">
+                    <button class="update-btn" onclick="smartReload()">Actualiser</button>
+                    <button class="dismiss-btn" onclick="dismissUpdate()">×</button>
+                </div>
             </div>
         `;
         
         notification.style.cssText = `
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
-            background: #4299e1;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 0.875rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
             z-index: 10000;
-            font-family: system-ui;
-            animation: slideIn 0.3s ease;
+            max-width: 280px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.85rem;
         `;
         
-        // Ajouter les styles pour l'animation
+        // Styles CSS intégrés
+        const style = document.createElement('style');
+        style.textContent = `
+            .update-content {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .update-icon {
+                font-size: 1.1rem;
+                flex-shrink: 0;
+                animation: rotation 2s infinite linear;
+            }
+            
+            @keyframes rotation {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            
+            .update-text-container {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 0.15rem;
+            }
+            
+            .update-title {
+                font-weight: 600;
+                font-size: 0.85rem;
+                line-height: 1.2;
+            }
+            
+            .update-subtitle {
+                font-size: 0.7rem;
+                opacity: 0.85;
+                line-height: 1.1;
+            }
+            
+            .update-actions {
+                display: flex;
+                gap: 0.4rem;
+                align-items: center;
+            }
+            
+            .update-btn, .dismiss-btn {
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                padding: 0.35rem 0.7rem;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 0.75rem;
+                font-weight: 500;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            
+            .update-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-1px);
+            }
+            
+            .dismiss-btn {
+                width: 24px;
+                height: 24px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+            }
+            
+            .dismiss-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+            }
+        `;
+        
         if (!document.getElementById('update-notification-styles')) {
-            const style = document.createElement('style');
             style.id = 'update-notification-styles';
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                .update-content {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-                .update-btn {
-                    background: rgba(255,255,255,0.2);
-                    border: none;
-                    color: white;
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 0.875rem;
-                }
-                .update-btn:hover {
-                    background: rgba(255,255,255,0.3);
-                }
-                .dismiss-btn {
-                    background: none;
-                    border: none;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 1.2rem;
-                    padding: 0;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-            `;
             document.head.appendChild(style);
         }
         
         document.body.appendChild(notification);
         
-        // Auto-mise à jour après 10 secondes
+        // Animation d'apparition fluide
         setTimeout(() => {
-            if (notification.parentElement) {
-                location.reload(true);
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateY(0)';
+        }, 100);
+        
+        // ✅ Auto-fermeture après 12 secondes (discret)
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 400);
             }
-        }, 10000);
+        }, 12000);
     }
     
-    // Démarrer la vérification périodique
-    setInterval(checkVersion, CHECK_INTERVAL);
+    // ✅ Fonctions globales optimisées
+    window.smartReload = function() {
+        console.log('🔄 Actualisation intelligente par l\'utilisateur');
+        
+        // Vider le cache intelligemment
+        if ('caches' in window) {
+            caches.keys().then(names => {
+                names.forEach(name => {
+                    if (name.includes('runtime') || name.includes('precache')) {
+                        caches.delete(name);
+                    }
+                });
+            }).finally(() => {
+                // Actualisation douce
+                window.location.reload();
+            });
+        } else {
+            // Fallback simple
+            window.location.reload();
+        }
+    };
     
-    // Vérifier aussi quand la page redevient visible
+    window.dismissUpdate = function() {
+        const notification = document.querySelector('.update-notification');
+        if (notification) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(10px)';
+            setTimeout(() => notification.remove(), 400);
+        }
+        
+        // ✅ Marquer comme rejeté pour TOUTE la session
+        hasUserDismissed = true;
+        localStorage.setItem('updateDismissed', Date.now().toString());
+        console.log('ℹ️ Notifications de mise à jour désactivées pour cette session');
+    };
+    
+    // ✅ Vérifier si l'utilisateur a déjà rejeté récemment
+    const lastDismissed = localStorage.getItem('updateDismissed');
+    if (lastDismissed && (Date.now() - parseInt(lastDismissed)) < 3600000) { // 1 heure
+        hasUserDismissed = true;
+        console.log('ℹ️ Notifications de mise à jour désactivées (rejetée récemment)');
+    }
+    
+    // ✅ Démarrage très retardé et peu fréquent
+    setTimeout(() => {
+        console.log('✅ Système de vérification version démarré (mode discret)');
+        console.log('📋 Version actuelle:', CURRENT_VERSION);
+        
+        // Première vérification après 5 minutes
+        setTimeout(checkVersion, 300000); // 5 minutes
+        
+        // Puis vérifier toutes les 5 minutes SEULEMENT
+        setInterval(checkVersion, CHECK_INTERVAL);
+        
+    }, 10000); // Attendre 10 secondes après le chargement
+    
+    // ✅ Vérification au focus TRÈS limitée
+    let lastFocusCheck = 0;
     document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-            setTimeout(checkVersion, 1000);
+        if (!document.hidden && !hasUserDismissed) {
+            const now = Date.now();
+            // Minimum 10 minutes entre les vérifications au focus
+            if (now - lastFocusCheck > 600000) {
+                lastFocusCheck = now;
+                setTimeout(checkVersion, 3000); // Délai de 3 secondes
+            }
         }
     });
+})();
+
+// 📱 SYSTÈME CACHE-BUSTING MOBILE RENFORCÉ
+(function() {
+    // Détecter les appareils mobiles/tablettes
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                    ('ontouchstart' in window) ||
+                    (navigator.maxTouchPoints > 0);
     
-    // Vérifier au chargement initial
-    setTimeout(checkVersion, 5000);
-    
-    console.log('🔄 Système de vérification des versions activé - Version courante:', CURRENT_VERSION);
+    if (isMobile) {
+        console.log('📱 Détection mobile - Activation cache-busting renforcé');
+        
+        // Force les en-têtes no-cache sur mobile
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            if (typeof url === 'string' && !url.includes('://')) {
+                // Pour les requêtes locales, forcer no-cache
+                options.headers = {
+                    ...options.headers,
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                };
+                
+                // Ajouter timestamp si pas déjà présent
+                if (!url.includes('?t=') && !url.includes('&t=')) {
+                    url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+                }
+            }
+            
+            return originalFetch.call(this, url, options);
+        };
+        
+        // Service Worker: Vider cache sur mobile si disponible
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                if (registration.active) {
+                    registration.active.postMessage({
+                        command: 'clearCache',
+                        scope: 'mobile-cache-bust'
+                    });
+                }
+            }).catch(e => {
+                console.log('ℹ️ Service Worker non disponible:', e.message);
+            });
+        }
+        
+        // Cache API: Force le nettoyage
+        if ('caches' in window) {
+            setTimeout(() => {
+                caches.keys().then(cacheNames => {
+                    const cachesToDelete = cacheNames.filter(name => 
+                        name.includes('workbox') || 
+                        name.includes('precache') ||
+                        name.includes('runtime')
+                    );
+                    
+                    if (cachesToDelete.length > 0) {
+                        console.log('🧹 Nettoyage cache mobile:', cachesToDelete);
+                        return Promise.all(
+                            cachesToDelete.map(name => caches.delete(name))
+                        );
+                    }
+                }).catch(e => {
+                    console.log('ℹ️ Nettoyage cache échoué:', e.message);
+                });
+            }, 2000);
+        }
+        
+        // Meta tags dynamiques pour forcer le no-cache
+        const metaNoCache = document.createElement('meta');
+        metaNoCache.httpEquiv = 'Cache-Control';
+        metaNoCache.content = 'no-cache, no-store, must-revalidate';
+        document.head.appendChild(metaNoCache);
+        
+        const metaPragma = document.createElement('meta');
+        metaPragma.httpEquiv = 'Pragma';
+        metaPragma.content = 'no-cache';
+        document.head.appendChild(metaPragma);
+        
+        const metaExpires = document.createElement('meta');
+        metaExpires.httpEquiv = 'Expires';
+        metaExpires.content = '0';
+        document.head.appendChild(metaExpires);
+        
+        console.log('✅ Cache-busting mobile activé avec en-têtes renforcés');
+    }
 })();
