@@ -1,0 +1,69 @@
+{
+  "concerts": [
+    {
+      "id": "ma-region-virtuose",
+      "title": "Ma région virtuose",
+      "pieces": [
+        {
+          "title": "Ammerland 5"
+        },
+        {
+          "title": "Music from How To Train Your Dragon"
+        },
+        {
+          "title": "The Lion King"
+        },
+        {
+          "title": "Selections from The Nightmare Before Christmas"
+        },
+        {
+          "title": "Allegretto from Symphony No. 7"
+        }
+      ]
+    },
+    {
+      "id": "fete-musique",
+      "title": "Programme fête de la musique",
+      "pieces": [
+        {
+          "title": "Begegnung"
+        },
+        {
+          "title": "Libertango"
+        }
+      ]
+    },
+    {
+      "id": "pieces-orphelines",
+      "title": "Pièces qui n'ont pas trouvé leur concert",
+      "pieces": [
+        {
+          "title": "Aratunian"
+        },
+        {
+          "title": "Oregon"
+        },
+        {
+          "title": "Carnaval de Venise"
+        },
+        {
+          "title": "Danse Bacchanale Samson et Dalila, Op. 47"
+        },
+        {
+          "title": "Napoli"
+        },
+        {
+          "title": "La Virgen de la Macarena"
+        },
+        {
+          "title": "The Mandalorian"
+        },
+        {
+          "title": "Eldorado"
+        }
+      ]
+    }
+  ],
+  "timestamp": "2025-07-07T15:41:13.893Z",
+  "source": "site-extraction"
+}

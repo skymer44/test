@@ -1,68 +1,6 @@
 {
   "pieces": [
     {
-      "title": "Oregon",
-      "composer": "Jacob de Haan",
-      "duration": "09:09",
-      "info": "Vérifier le niveau et l'intérêt",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=to3gePlszMY&list=RDto3gePlszMY&start_radio=1",
-        "purchase": "https://www.rundel.de/fr/artikel/oregon/DH890139"
-      },
-      "source": {
-        "notion": true,
-        "database": "Pièces qui n’ont pas trouvé leur concert",
-        "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
-        "lastModified": "2025-07-06T12:51:00.000Z",
-        "order": 1
-      }
-    },
-    {
-      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
-      "composer": "Camille Saint-Saëns / arr. L. Steiger",
-      "duration": "07:20",
-      "info": "La pièce est peut-être trop dure. ",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=1VuTNuH6Oio&list=RD1VuTNuH6Oio&start_radio=1",
-        "purchase": "https://www.hebu-music.com/en/article/camille-saint-saens/neil-a-kjos-music-company/danse-bacchanale-samson-and-delilah.150183/"
-      },
-      "source": {
-        "notion": true,
-        "database": "Pièces qui n’ont pas trouvé leur concert",
-        "pageId": "223fcf9e-3abc-806b-b57f-e10a1bd9d36a",
-        "lastModified": "2025-07-06T12:51:00.000Z",
-        "order": 2
-      }
-    },
-    {
-      "title": "Begegnung",
-      "composer": "Kurt Gäble",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
-      },
-      "source": {
-        "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
-        "lastModified": "2025-07-06T12:51:00.000Z",
-        "order": 1
-      }
-    },
-    {
-      "title": "Libertango",
-      "composer": "Astor Piazzola / arr. Tony Cheseaux",
-      "links": {
-        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
-      },
-      "source": {
-        "notion": true,
-        "database": "Programme fête de la musique",
-        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
-        "lastModified": "2025-07-06T12:51:00.000Z",
-        "order": 2
-      }
-    },
-    {
       "title": "Aratunian",
       "composer": "ARUTIUNIAN Alexander / arr. SCHYNS José",
       "duration": "16:00",
@@ -168,6 +106,68 @@
       }
     },
     {
+      "title": "Oregon",
+      "composer": "Jacob de Haan",
+      "duration": "09:09",
+      "info": "Vérifier le niveau et l'intérêt",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=to3gePlszMY&list=RDto3gePlszMY&start_radio=1",
+        "purchase": "https://www.rundel.de/fr/artikel/oregon/DH890139"
+      },
+      "source": {
+        "notion": true,
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": 1
+      }
+    },
+    {
+      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
+      "composer": "Camille Saint-Saëns / arr. L. Steiger",
+      "duration": "07:20",
+      "info": "La pièce est peut-être trop dure. ",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=1VuTNuH6Oio&list=RD1VuTNuH6Oio&start_radio=1",
+        "purchase": "https://www.hebu-music.com/en/article/camille-saint-saens/neil-a-kjos-music-company/danse-bacchanale-samson-and-delilah.150183/"
+      },
+      "source": {
+        "notion": true,
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-806b-b57f-e10a1bd9d36a",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": 2
+      }
+    },
+    {
+      "title": "Begegnung",
+      "composer": "Kurt Gäble",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=-oVXca78OVc"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8048-8cd8-f59fa4881beb",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": 1
+      }
+    },
+    {
+      "title": "Libertango",
+      "composer": "Astor Piazzola / arr. Tony Cheseaux",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=eJlUJYbUxZo"
+      },
+      "source": {
+        "notion": true,
+        "database": "Programme fête de la musique",
+        "pageId": "226fcf9e-3abc-8037-b029-c7dad0429300",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": 2
+      }
+    },
+    {
       "title": "Ammerland",
       "composer": "Jacob de Haan",
       "duration": "03:10",
@@ -180,7 +180,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-06T18:37:00.000Z",
+        "lastModified": "2025-07-07T15:39:00.000Z",
         "order": 1
       }
     },
@@ -256,7 +256,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T11:45:30.097Z",
+    "syncDate": "2025-07-07T15:41:28.887Z",
     "source": "notion",
     "totalPieces": 15
   }
