@@ -6,12 +6,13 @@
   "scripts": {
     "sync": "node scripts/notion-sync.js",
     "deploy": "node scripts/sync-and-deploy.js",
-    "deploy-simple": "npm run sync && node scripts/intelligent-update-site.js && npm run cache-bust && git add . && git commit -m 'Update Notion data and site' && git push",
+    "deploy-simple": "npm run sync && node scripts/notion-content-injector.js && npm run cache-bust && git add . && git commit -m 'Update Notion data and site' && git push",
     "start": "python3 -m http.server 8000",
     "cache-bust": "node scripts/cache-buster.js"
   },
   "dependencies": {
-    "@notionhq/client": "^4.0.0"
+    "@notionhq/client": "^4.0.0",
+    "jsdom": "^26.1.0"
   },
   "keywords": [
     "notion",

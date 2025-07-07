@@ -112,16 +112,16 @@ class AutoDeployer {
 
     async updateSite() {
         try {
-            const result = execSync('node scripts/intelligent-update-site.js', { 
+            const result = execSync('node scripts/notion-content-injector.js', { 
                 cwd: this.rootDir, 
                 encoding: 'utf8',
                 timeout: 30000 // 30 secondes max
             });
             
-            this.log('Mise à jour du site réussie');
+            this.log('Injection ciblée du contenu Notion réussie');
             
         } catch (error) {
-            throw new Error(`Erreur mise à jour site: ${error.message}`);
+            throw new Error(`Erreur injection contenu: ${error.message}`);
         }
     }
 
