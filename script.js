@@ -829,9 +829,15 @@ function generatePiecesHtml(pieces) {
         const pieceName = typeof piece === 'object' && piece.name ? piece.name : piece;
         const pieceColor = typeof piece === 'object' && piece.color ? piece.color : null;
         
+        // Échapper les guillemets pour l'attribut onclick
+        const escapedPieceName = pieceName.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        
         return `
-            <div class="piece-item${pieceColor ? ` piece-${pieceColor}` : ''}">
+            <div class="piece-item${pieceColor ? ` piece-${pieceColor}` : ''} clickable-piece" 
+                 onclick="navigateToPieceInPrograms('${escapedPieceName}')" 
+                 title="Cliquer pour voir cette pièce dans les programmes musicaux">
                 <h5>${pieceName}</h5>
+                <span class="piece-click-indicator">→</span>
             </div>
         `;
     }).join('');
@@ -1015,6 +1021,241 @@ function selectMiniEvent(eventId) {
     if (selectedEvent) {
         displaySpecificEvent(selectedEvent);
     }
+}
+
+// ========================================
+// SYSTÈME DE NAVIGATION INTER-ONGLETS POUR LES PIÈCES
+// ========================================
+
+/**
+ * Normalise le nom d'une pièce pour la correspondance
+ */
+function normalizePieceName(name) {
+    return name
+        .toLowerCase()
+        .trim()
+        .replace(/[''‛`´]/g, "'")  // Normaliser les apostrophes
+        .replace(/[^\w\s'-]/g, '') // Supprimer la ponctuation sauf apostrophes et tirets
+        .replace(/\s+/g, ' ');     // Normaliser les espaces
+}
+
+/**
+ * Trouve une pièce dans les programmes musicaux par son nom
+ */
+function findPieceInPrograms(pieceName) {
+    const normalizedSearchName = normalizePieceName(pieceName);
+    console.log(`🔍 Recherche de la pièce: "${pieceName}" (normalisé: "${normalizedSearchName}")`);
+    
+    // Chercher dans toutes les sections de programmes musicaux
+    const sections = [
+        'ma-region-virtuose',
+        'concert-eric-aubier', 
+        'conservatoire-60-ans',
+        'retour-karaoke',
+        'fete-musique',
+        'loto',
+        'pieces-ajout',
+        'pieces-orphelines'
+    ];
+    
+    for (const sectionId of sections) {
+        const sectionElement = document.getElementById(sectionId);
+        if (!sectionElement) continue;
+        
+        const pieceCards = sectionElement.querySelectorAll('.piece-card');
+        
+        for (const pieceCard of pieceCards) {
+            const titleElement = pieceCard.querySelector('h3');
+            if (!titleElement) continue;
+            
+            const pieceTitle = titleElement.textContent;
+            const normalizedPieceTitle = normalizePieceName(pieceTitle);
+            
+            if (normalizedPieceTitle === normalizedSearchName) {
+                console.log(`✅ Pièce trouvée: "${pieceTitle}" dans la section ${sectionId}`);
+                return {
+                    element: pieceCard,
+                    section: sectionId,
+                    title: pieceTitle
+                };
+            }
+        }
+    }
+    
+    console.warn(`⚠️ Pièce "${pieceName}" non trouvée dans les programmes musicaux`);
+    return null;
+}
+
+/**
+ * Navigue vers une pièce spécifique dans l'onglet Programmes Musicaux
+ */
+function navigateToPieceInPrograms(pieceName) {
+    console.log(`🎯 Navigation vers la pièce: "${pieceName}"`);
+    
+    // 1. Basculer vers l'onglet Programmes Musicaux
+    switchToTab('programmes');
+    
+    // 2. Attendre que l'onglet soit actif, puis chercher la pièce
+    setTimeout(() => {
+        const pieceInfo = findPieceInPrograms(pieceName);
+        
+        if (pieceInfo) {
+            // 3. Scroller vers la pièce et la mettre en évidence
+            highlightPiece(pieceInfo.element, pieceInfo.title);
+        } else {
+            // 4. Afficher une notification si la pièce n'est pas trouvée
+            showPieceNotFoundNotification(pieceName);
+        }
+    }, 300); // Délai pour laisser l'onglet se charger
+}
+
+/**
+ * Bascule vers un onglet spécifique (réutilise la logique existante)
+ */
+function switchToTab(targetId) {
+    console.log(`🔄 Basculement vers l'onglet: ${targetId}`);
+    
+    // Utiliser la logique existante de showTab
+    const tabContents = document.querySelectorAll('.tab-content');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    // Masquer tous les contenus d'onglets
+    tabContents.forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Désactiver tous les boutons d'onglets
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Afficher le contenu de l'onglet ciblé
+    const targetContent = document.getElementById(targetId);
+    if (targetContent) {
+        targetContent.classList.add('active');
+        console.log(`✅ Onglet ${targetId} activé`);
+    }
+    
+    // Activer le bouton correspondant
+    const activeButton = document.querySelector(`[data-tab="${targetId}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
+
+/**
+ * Met en évidence une pièce avec animation et scroll
+ */
+function highlightPiece(pieceElement, pieceTitle) {
+    console.log(`✨ Mise en évidence de la pièce: "${pieceTitle}"`);
+    
+    // Supprimer toute mise en évidence précédente
+    const previousHighlight = document.querySelector('.piece-highlighted');
+    if (previousHighlight) {
+        previousHighlight.classList.remove('piece-highlighted');
+    }
+    
+    // Scroller vers la pièce avec un offset pour la rendre bien visible
+    const elementRect = pieceElement.getBoundingClientRect();
+    const offset = window.innerHeight * 0.2; // 20% de la hauteur de l'écran
+    
+    window.scrollTo({
+        top: window.pageYOffset + elementRect.top - offset,
+        behavior: 'smooth'
+    });
+    
+    // Attendre le scroll, puis appliquer la mise en évidence
+    setTimeout(() => {
+        pieceElement.classList.add('piece-highlighted');
+        
+        // Supprimer la mise en évidence après 4 secondes
+        setTimeout(() => {
+            pieceElement.classList.remove('piece-highlighted');
+        }, 4000);
+        
+        // Pas de notification - l'animation suffit
+        
+    }, 800); // Attendre que le scroll soit terminé
+}
+
+/**
+ * Affiche une notification quand une pièce est trouvée
+ */
+function showPieceFoundNotification(pieceTitle) {
+    showNotification(`� "${pieceTitle}"`, 'success', 2500);
+}
+
+/**
+ * Affiche une notification quand une pièce n'est pas trouvée
+ */
+function showPieceNotFoundNotification(pieceName) {
+    showNotification(`⚠️ Pièce "${pieceName}" non trouvée dans les programmes`, 'warning', 4000);
+}
+
+/**
+ * Système de notifications réutilisable
+ */
+function showNotification(message, type = 'info', duration = 3000) {
+    // Supprimer les notifications existantes
+    const existingNotifications = document.querySelectorAll('.piece-navigation-notification');
+    existingNotifications.forEach(notif => notif.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `piece-navigation-notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Styles de base
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        max-width: 300px;
+        word-wrap: break-word;
+    `;
+    
+    // Couleurs selon le type
+    switch (type) {
+        case 'success':
+            notification.style.background = '#48bb78';
+            break;
+        case 'warning':
+            notification.style.background = '#ed8936';
+            break;
+        case 'error':
+            notification.style.background = '#f56565';
+            break;
+        default:
+            notification.style.background = '#4299e1';
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'apparition
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Auto-suppression
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, duration);
 }
 
 // Fonction pour ajouter un événement au calendrier - VERSION GOOGLE CALENDAR OPTIMISÉE

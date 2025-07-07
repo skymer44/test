@@ -12,6 +12,161 @@ body {
     background-color: #f7fafc;
 }
 
+/* ========================================
+   NAVIGATION INTER-ONGLETS POUR LES PIÈCES
+   ======================================== */
+
+/* Styles pour les pièces cliquables dans les événements */
+.clickable-piece {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.clickable-piece:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    border-color: #667eea;
+}
+
+.clickable-piece .piece-click-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: opacity 0.3s ease;
+}
+
+.clickable-piece:hover .piece-click-indicator {
+    opacity: 1;
+}
+
+/* Animation de mise en évidence délicate pour les pièces trouvées */
+.piece-highlighted {
+    position: relative;
+    animation: subtlePieceHighlight 3.5s ease-in-out;
+    border: 2px solid #667eea !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25) !important;
+    z-index: 5;
+}
+
+.piece-highlighted::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, #667eea, #764ba2, #667eea, #5a67d8);
+    background-size: 300% 300%;
+    border-radius: 16px;
+    z-index: -1;
+    opacity: 0;
+    animation: gentleBorderGlow 3.5s ease-in-out, gradientShift 3.5s ease-in-out;
+}
+
+@keyframes subtlePieceHighlight {
+    0% {
+        transform: scale(1);
+        border-color: #e2e8f0;
+    }
+    15% {
+        transform: scale(1.02);
+        border-color: #667eea;
+    }
+    30% {
+        transform: scale(1.025);
+        border-color: #5a67d8;
+    }
+    50% {
+        transform: scale(1.02);
+        border-color: #764ba2;
+    }
+    70% {
+        transform: scale(1.015);
+        border-color: #667eea;
+    }
+    100% {
+        transform: scale(1);
+        border-color: #667eea;
+    }
+}
+
+@keyframes gentleBorderGlow {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    80% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Amélioration visuelle des piece-items existants */
+.piece-item {
+    position: relative;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.piece-item h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .clickable-piece:hover {
+        transform: none; /* Pas de translation sur mobile */
+    }
+    
+    .piece-click-indicator {
+        opacity: 1 !important; /* Toujours visible sur mobile */
+        font-size: 1rem;
+    }
+    
+    .piece-highlighted {
+        transform: scale(1.01) !important; /* Mise à l'échelle légèrement plus visible sur mobile */
+    }
+    
+    .piece-highlighted::before {
+        opacity: 0.2 !important; /* Effet un peu plus visible sur mobile */
+    }
+}
+
 /* Header */
 header {
     background: #ffffff;
