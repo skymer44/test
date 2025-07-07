@@ -246,6 +246,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     console.log('✅ Site web complètement initialisé et prêt!');
+console.log('🚫 SYSTÈME DE RECHARGEMENT AUTOMATIQUE DÉSACTIVÉ - Plus d\'interruptions!');
+
+// 🛡️ PROTECTION ANTI-RECHARGEMENT : Intercepter toute tentative de rechargement automatique
+(function() {
+    const originalReload = Location.prototype.reload;
+    Location.prototype.reload = function(forcedReload) {
+        console.warn('🚫 Tentative de rechargement interceptée et bloquée pour éviter les interruptions');
+        console.log('💡 Pour recharger manuellement, utilisez F5 ou les contrôles du navigateur');
+        
+        // Afficher une notification au lieu de recharger
+        if (typeof showNotification === 'function') {
+            showNotification('🔄 Rechargement automatique bloqué - Utilisez F5 pour actualiser manuellement', 'warning', 4000);
+        }
+        
+        return false; // Bloquer le rechargement
+    };
+    
+    console.log('🛡️ Protection anti-rechargement activée');
+})();
 });
 
 // Initialisation des onglets - VERSION SIMPLE ET ROBUSTE
@@ -365,10 +384,10 @@ function initNextEventsSystem() {
     // Configurer les boutons d'interaction
     setupEventInteractions();
     
-    // Mettre à jour automatiquement les données
-    setInterval(updateEventDisplay, 60000); // Mettre à jour toutes les minutes
+    // DÉSACTIVÉ : Mettre à jour automatiquement les données pour éviter les rafraîchissements intempestifs
+    // setInterval(updateEventDisplay, 60000); // Mettre à jour toutes les minutes
     
-    console.log('✅ Système des prochains événements initialisé');
+    console.log('✅ Système des prochains événements initialisé (sans mise à jour automatique)');
 }
 
 /**
@@ -3353,29 +3372,15 @@ console.log('🔄 Synchronisation Notion configurée!');
             }
         }, 12000);
     }
-    
-    // ✅ Fonctions globales optimisées
+     // ✅ Fonctions globales DÉSACTIVÉES (pour éviter les rechargements intempestifs)
     window.smartReload = function() {
-        console.log('🔄 Actualisation intelligente par l\'utilisateur');
+        console.log('� Actualisation automatique désactivée pour éviter les interruptions');
+        console.log('💡 Pour actualiser manuellement, utilisez F5 ou Ctrl+R');
         
-        // Vider le cache intelligemment
-        if ('caches' in window) {
-            caches.keys().then(names => {
-                names.forEach(name => {
-                    if (name.includes('runtime') || name.includes('precache')) {
-                        caches.delete(name);
-                    }
-                });
-            }).finally(() => {
-                // Actualisation douce
-                window.location.reload();
-            });
-        } else {
-            // Fallback simple
-            window.location.reload();
-        }
+        // Afficher une notification discrète au lieu de recharger
+        showNotification('🔄 Actualisation automatique désactivée - Utilisez F5 pour actualiser manuellement', 'info', 5000);
     };
-    
+
     window.dismissUpdate = function() {
         const notification = document.querySelector('.update-notification');
         if (notification) {
@@ -3384,10 +3389,7 @@ console.log('🔄 Synchronisation Notion configurée!');
             setTimeout(() => notification.remove(), 400);
         }
         
-        // ✅ Marquer comme rejeté pour TOUTE la session
-        hasUserDismissed = true;
-        localStorage.setItem('updateDismissed', Date.now().toString());
-        console.log('ℹ️ Notifications de mise à jour désactivées pour cette session');
+        console.log('ℹ️ Notification supprimée');
     };
     
     // ✅ Vérifier si l'utilisateur a déjà rejeté récemment
