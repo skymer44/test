@@ -46,9 +46,13 @@ class AutoDeployer {
             this.log('📊 Étape 1/5: Synchronisation Notion...');
             await this.syncNotion();
             
-            // 3. Optimiser GitHub Pages pour les données Notion
-            this.log('🔧 Étape 3/6: Optimisation GitHub Pages...');
-            await this.optimizeGitHubPages();
+            // 3. Mettre à jour le site HTML
+            this.log('🌐 Étape 2/5: Mise à jour du site web...');
+            await this.updateSite();
+            
+            // 4. Appliquer le cache busting
+            this.log('⚡ Étape 3/5: Application du cache busting...');
+            await this.applyCacheBusting();
             
             // 4. Vérifier s'il y a des changements
             this.log('🔍 Étape 4/6: Vérification des changements...');
@@ -103,6 +107,36 @@ class AutoDeployer {
             
         } catch (error) {
             throw new Error(`Échec synchronisation Notion: ${error.message}`);
+        }
+    }
+
+    async updateSite() {
+        try {
+            const result = execSync('node scripts/intelligent-update-site.js', { 
+                cwd: this.rootDir, 
+                encoding: 'utf8',
+                timeout: 30000 // 30 secondes max
+            });
+            
+            this.log('Mise à jour du site réussie');
+            
+        } catch (error) {
+            throw new Error(`Erreur mise à jour site: ${error.message}`);
+        }
+    }
+
+    async applyCacheBusting() {
+        try {
+            const result = execSync('node scripts/cache-buster.js', { 
+                cwd: this.rootDir, 
+                encoding: 'utf8',
+                timeout: 15000 // 15 secondes max
+            });
+            
+            this.log('Cache busting appliqué');
+            
+        } catch (error) {
+            throw new Error(`Erreur cache busting: ${error.message}`);
         }
     }
 
@@ -216,22 +250,7 @@ class AutoDeployer {
         }
     }
 
-    async optimizeGitHubPages() {
-        try {
-            const result = execSync('node scripts/github-pages-optimizer.js', { 
-                cwd: this.rootDir, 
-                encoding: 'utf8',
-                timeout: 30000 // 30 secondes max
-            });
-            
-            this.log('Optimisation GitHub Pages réussie');
-            
-        } catch (error) {
-            this.log(`⚠️ Erreur optimisation GitHub Pages: ${error.message}`);
-            // Ne pas faire échouer le déploiement pour cette étape
-        }
-    }
-        try {
+    async verifyDeployment() {
             // Vérifier que le commit est bien sur GitHub
             const latestCommit = execSync('git rev-parse HEAD', { 
                 cwd: this.rootDir, 

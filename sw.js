@@ -1,9 +1,9 @@
 
-// Service Worker pour la gestion du cache - Version v20250707_313b508f
-// Généré automatiquement le 2025-07-07T09:57:41.168Z
+// Service Worker pour la gestion du cache - Version v20250707_1a667f9d
+// Généré automatiquement le 2025-07-07T15:45:58.069Z
 
-const CACHE_NAME = 'programme-musical-v20250707_313b508f';
-const CACHE_VERSION = 'v20250707_313b508f';
+const CACHE_NAME = 'programme-musical-v20250707_1a667f9d';
+const CACHE_VERSION = 'v20250707_1a667f9d';
 
 // Forcer la mise à jour immédiate
 self.addEventListener('install', event => {
@@ -49,7 +49,7 @@ self.addEventListener('message', event => {
     if (event.data.action === 'getVersion') {
         event.ports[0].postMessage({
             version: CACHE_VERSION,
-            buildTime: 1751882261168
+            buildTime: 1751903158069
         });
     }
 });

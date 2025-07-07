@@ -5,7 +5,8 @@
   "main": "scripts/notion-sync.js",
   "scripts": {
     "sync": "node scripts/notion-sync.js",
-    "deploy": "npm run sync && git add data/*.json && git commit -m 'Update Notion data' && git push",
+    "deploy": "node scripts/sync-and-deploy.js",
+    "deploy-simple": "npm run sync && node scripts/intelligent-update-site.js && npm run cache-bust && git add . && git commit -m 'Update Notion data and site' && git push",
     "start": "python3 -m http.server 8000",
     "cache-bust": "node scripts/cache-buster.js"
   },

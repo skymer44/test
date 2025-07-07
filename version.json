@@ -1,11 +1,11 @@
 {
-  "version": "v20250707_313b508f",
-  "buildTime": "2025-07-07T09:57:41.168Z",
-  "timestamp": 1751882261168,
+  "version": "v20250707_1a667f9d",
+  "buildTime": "2025-07-07T15:45:58.069Z",
+  "timestamp": 1751903158069,
   "files": {
-    "script.js": "83a3bc951dc3",
-    "styles.css": "a356c23f2763",
-    "index.html": "10c5809b6875"
+    "script.js": "e86551a4544b",
+    "styles.css": "fda6559d0fd3",
+    "index.html": "143c5f61515a"
   },
   "cacheControl": {
     "maxAge": 0,
