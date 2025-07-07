@@ -2039,13 +2039,43 @@ section:target {
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
     font-size: 0.8rem;
-    font-weight: 500;
+    font-weight: 600;
     color: white;
     position: relative;
 }
 
 .event-type-badge.repetition {
-    background: #48bb78;
+    background: rgba(107, 114, 128, 0.1) !important;
+    color: #374151 !important;
+}
+
+/* Forcer la couleur pour le badge principal spécifiquement */
+.main-event-header .event-type-badge.repetition,
+.main-event-header .event-type-badge.event-gray {
+    background: rgba(107, 114, 128, 0.1) !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+/* Test spécifique pour event-gray */
+.main-event-header .event-type-badge.event-gray {
+    background: rgba(107, 114, 128, 0.1) !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+/* Test spécifique pour event-blue (selon commentaires JS, les répétitions) */
+.main-event-header .event-type-badge.event-blue {
+    background: rgba(107, 114, 128, 0.1) !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+}
+
+/* Test spécifique pour event-default */
+.main-event-header .event-type-badge.event-default {
+    background: rgba(107, 114, 128, 0.1) !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
 }
 
 .event-type-badge.concert {
@@ -2067,8 +2097,8 @@ section:target {
 }
 
 .event-type-badge.event-gray {
-    background: #6b7280;
-    color: white;
+    background: rgba(107, 114, 128, 0.1);
+    color: #374151;
 }
 
 .event-type-badge.event-brown {
@@ -2087,28 +2117,28 @@ section:target {
 }
 
 .event-type-badge.event-green {
-    background: #059669;
-    color: white;
+    background: rgba(72, 187, 120, 0.1) !important;
+    color: #2f855a !important;
 }
 
 .event-type-badge.event-blue {
-    background: #0284c7;
-    color: white;
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
 }
 
 .event-type-badge.event-purple {
-    background: #7c3aed;
-    color: white;
+    background: rgba(124, 58, 237, 0.1);
+    color: #7c3aed;
 }
 
 .event-type-badge.event-pink {
-    background: #be185d;
-    color: white;
+    background: rgba(190, 24, 93, 0.1);
+    color: #be185d;
 }
 
 .event-type-badge.event-red {
-    background: #dc2626;
-    color: white;
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
 }
 
 /* Titre d'événement plus sobre */
@@ -2407,7 +2437,7 @@ section:target {
 
 .mini-event-card.selected .mini-event-type {
     color: inherit;
-    font-weight: inherit;
+    font-weight: 600 !important;
 }
 
 .mini-event-card.selected .mini-event-date,
@@ -2660,8 +2690,8 @@ section:target {
 }
 
 .mini-event-type.repetition {
-    background: rgba(72, 187, 120, 0.1);
-    color: #2f855a;
+    background: rgba(107, 114, 128, 0.1);
+    color: #374151;
 }
 
 .mini-event-type.concert {
