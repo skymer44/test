@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+/* IMPORTANT : Masquer complètement les liens d'achat */
+.links a[title="Lien d'achat"] {
+    display: none !important;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
