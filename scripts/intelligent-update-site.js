@@ -277,6 +277,7 @@ class IntelligentSiteUpdater {
         <div class="audio-player-content">
             <div class="audio-info">
                 <span id="audio-title">Titre de la pièce</span>
+                <span id="audio-title-floating" style="display: none;">Titre de la pièce</span>
             </div>
             <div class="audio-controls">
                 <button id="show-video-btn" class="audio-control-btn" title="Afficher la vidéo">▶</button>
