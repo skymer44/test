@@ -310,6 +310,20 @@ function initTabs() {
 // Données d'événements temporaires (sera remplacé par Notion)
 const tempEventsData = [
     {
+        date: "2025-07-08",
+        type: "Pas de répétition",
+        title: "Vacances d'été",
+        pieces: ["Test piece 1", "Test piece 2"], // Ces pièces ne doivent pas s'afficher
+        notes: "Pas de répétition pendant les vacances d'été"
+    },
+    {
+        date: "2025-07-15",
+        type: "Répétition pendant les vacances",
+        title: "Répétition exceptionnelle",
+        pieces: ["Ammerland", "The Lion King"], // Ces pièces DOIVENT s'afficher
+        notes: "Répétition exceptionnelle pendant les vacances"
+    },
+    {
         date: "2025-09-04",
         type: "Répétition",
         title: "Première répétition de l'année",
@@ -500,10 +514,18 @@ function displayMainEvent(event) {
     // Calculer le countdown
     const countdownText = generateCountdownText(event);
     
-    // Générer la liste des pièces
-    const piecesHtml = event.pieces && event.pieces.length > 0 
+    // Vérifier si c'est un événement "Pas de répétition" ou similaire
+    const isNoRehearsalEvent = eventType.toLowerCase().includes('pas de répétition') || 
+                               eventType.toLowerCase().includes('annulé') ||
+                               eventType.toLowerCase().includes('annulée') ||
+                               (eventType.toLowerCase().includes('vacances') && !eventType.toLowerCase().includes('répétition'));
+    
+    // Générer la liste des pièces seulement si ce n'est pas un événement "Pas de répétition"
+    const piecesHtml = !isNoRehearsalEvent && event.pieces && event.pieces.length > 0 
         ? generatePiecesHtml(event.pieces)
-        : '<div class="piece-item"><h5>Programme à définir</h5></div>';
+        : !isNoRehearsalEvent 
+            ? '<div class="piece-item"><h5>Le programme n\'est pas encore disponible</h5></div>'
+            : '';
     
     mainEventContainer.innerHTML = `
         <div class="main-event-content">
@@ -544,12 +566,14 @@ function displayMainEvent(event) {
                 </div>
             </div>
             
+            ${!isNoRehearsalEvent ? `
             <div class="event-pieces">
                 <h4>🎼 Programme</h4>
                 <div class="pieces-list">
                     ${piecesHtml}
                 </div>
             </div>
+            ` : ''}
             
             ${event.notes ? `
                 <div class="event-notes">
@@ -779,7 +803,9 @@ function getEventTypeClassFromString(typeStr) {
     
     if (lowerType.includes('répétition')) return 'repetition';
     if (lowerType.includes('concert')) return 'concert';
-    if (lowerType.includes('pas de')) return 'vacances';
+    if (lowerType.includes('pas de répétition') || 
+        lowerType.includes('annulé') ||
+        (lowerType.includes('vacances') && !lowerType.includes('répétition'))) return 'vacances';
     return 'other';
 }
 
@@ -803,7 +829,9 @@ function getEventTypeEmoji(type) {
     
     if (lowerType.includes('répétition')) return '🎵';
     if (lowerType.includes('concert')) return '🎼';
-    if (lowerType.includes('pas de')) return '🏖️';
+    if (lowerType.includes('pas de répétition') || 
+        lowerType.includes('annulé') ||
+        (lowerType.includes('vacances') && !lowerType.includes('répétition'))) return '🏖️';
     return '📅';
 }
 
@@ -880,7 +908,16 @@ function generateMiniEventCard(event, selectedEvent = null) {
         eventType = event.type || 'Événement';
     }
     
-    const piecesText = event.pieces && event.pieces.length > 0 
+    // Vérifier si c'est un événement "Pas de répétition" ou similaire
+    const isNoRehearsalEvent = eventType.toLowerCase().includes('pas de répétition') || 
+                               eventType.toLowerCase().includes('annulé') ||
+                               eventType.toLowerCase().includes('annulée') ||
+                               (eventType.toLowerCase().includes('vacances') && !eventType.toLowerCase().includes('répétition'));
+    
+    // Vérifier s'il y a des pièces définies
+    const hasPieces = event.pieces && event.pieces.length > 0;
+    
+    const piecesText = !isNoRehearsalEvent && hasPieces 
         ? `${event.pieces.slice(0, 2).map(piece => typeof piece === 'object' && piece.name ? piece.name : piece).join(', ')}${event.pieces.length > 2 ? ` +${event.pieces.length - 2} autres` : ''}`
         : 'Programme à définir';
     
@@ -915,7 +952,9 @@ function generateMiniEventCard(event, selectedEvent = null) {
                 <div class="mini-event-date">${formatEventDate(event.date)}</div>
             </div>
             
+            ${!isNoRehearsalEvent && hasPieces ? `
             <div class="mini-event-pieces">🎼 ${piecesText}</div>
+            ` : ''}
             
             ${event.notes ? `
                 <div class="mini-event-notes">
