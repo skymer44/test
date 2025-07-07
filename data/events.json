@@ -50,12 +50,12 @@
         "Répétition"
       ],
       "pieces": [],
-      "notes": "",
+      "notes": "ppp",
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8130-94f1-e13fc08a77cd",
-        "lastModified": "2025-07-07T10:16:00.000Z"
+        "lastModified": "2025-07-07T10:17:00.000Z"
       }
     },
     {
@@ -814,7 +814,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T10:17:26.930Z",
+    "syncDate": "2025-07-07T10:18:04.816Z",
     "source": "notion",
     "totalEvents": 47
   }
