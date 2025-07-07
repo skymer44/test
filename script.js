@@ -18,6 +18,47 @@ function getDeviceConfig() {
 }
 
 
+// ========================================
+// FONCTIONS UTILITAIRES POUR EXTRACTION NOTION
+// ========================================
+
+/**
+ * Extrait proprement un titre depuis les données Notion (gère objets et tableaux)
+ */
+function extractCleanTitle(titleData) {
+    if (Array.isArray(titleData) && titleData.length > 0) {
+        if (typeof titleData[0] === 'object' && titleData[0].name) {
+            return titleData[0].name;
+        } else if (typeof titleData[0] === 'string') {
+            return titleData[0];
+        }
+    } else if (typeof titleData === 'object' && titleData && titleData.name) {
+        return titleData.name;
+    } else if (typeof titleData === 'string') {
+        return titleData;
+    }
+    return 'Événement';
+}
+
+/**
+ * Extrait proprement un type depuis les données Notion (gère objets et tableaux)
+ */
+function extractCleanType(typeData) {
+    if (Array.isArray(typeData) && typeData.length > 0) {
+        if (typeof typeData[0] === 'object' && typeData[0].name) {
+            return typeData[0].name;
+        } else if (typeof typeData[0] === 'string') {
+            return typeData[0];
+        }
+    } else if (typeof typeData === 'object' && typeData && typeData.name) {
+        return typeData.name;
+    } else if (typeof typeData === 'string') {
+        return typeData;
+    }
+    return 'Événement';
+}
+
+
 // 🎵 CHARGEUR DE DONNÉES NOTION ROBUSTE
 class NotionDataLoader {
     constructor() {
@@ -514,21 +555,10 @@ function displayMainEvent(event) {
     const eventTypeEmoji = getEventTypeEmoji(event.type);
     
     // Gérer les titres et types qui peuvent être des tableaux avec couleurs
-    const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+    const eventTitle = extractCleanTitle(event.title);
     
     // Extraire le nom du type depuis le nouveau format ou l'ancien
-    let eventType = 'Événement';
-    if (Array.isArray(event.type) && event.type.length > 0) {
-        if (typeof event.type[0] === 'object' && event.type[0].name) {
-            eventType = event.type[0].name;
-        } else {
-            eventType = event.type[0] || 'Événement';
-        }
-    } else if (typeof event.type === 'object' && event.type.name) {
-        eventType = event.type.name;
-    } else {
-        eventType = event.type || 'Événement';
-    }
+    const eventType = extractCleanType(event.type);
     
     // Calculer le countdown
     const countdownText = generateCountdownText(event);
@@ -911,21 +941,10 @@ function generateMiniEventCard(event, selectedEvent = null) {
     const countdownText = generateCountdownText(event);
     
     // Gérer les titres et types qui peuvent être des tableaux avec couleurs
-    const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+    const eventTitle = extractCleanTitle(event.title);
     
     // Extraire le nom du type depuis le nouveau format ou l'ancien
-    let eventType = 'Événement';
-    if (Array.isArray(event.type) && event.type.length > 0) {
-        if (typeof event.type[0] === 'object' && event.type[0].name) {
-            eventType = event.type[0].name;
-        } else {
-            eventType = event.type[0] || 'Événement';
-        }
-    } else if (typeof event.type === 'object' && event.type.name) {
-        eventType = event.type.name;
-    } else {
-        eventType = event.type || 'Événement';
-    }
+    const eventType = extractCleanType(event.type);
     
     // Vérifier si c'est un événement "Pas de répétition" ou similaire
     const isNoRehearsalEvent = eventType.toLowerCase().includes('pas de répétition') || 
@@ -1351,22 +1370,62 @@ function showNotification(message, type = 'info', duration = 3000) {
 // Fonction pour ajouter un événement au calendrier - VERSION GOOGLE CALENDAR OPTIMISÉE
 function addEventToCalendar(date, type, title, pieces, notes) {
     try {
+        // 🐛 DEBUG: Log des paramètres reçus
+        console.log('📅 addEventToCalendar - Paramètres reçus:', {
+            date,
+            type: typeof type === 'object' ? JSON.stringify(type) : type,
+            title: typeof title === 'object' ? JSON.stringify(title) : title,
+            pieces: pieces?.length || 0,
+            notes
+        });
+        
         // Créer la date de l'événement
         const eventDate = new Date(date);
         
         // Déterminer les heures selon le type d'événement
         let startTime, endTime, isAllDay = false;
         
-        const lowerType = type.toLowerCase();
+        // Extraire le type et le titre proprement (gérer les objets Notion)
+        const eventType = extractCleanType(type);
+        const cleanTitle = extractCleanTitle(title);
+        
+        const lowerType = eventType.toLowerCase();
         let eventTitle, location;
         
-        if (lowerType.includes('répétition')) {
+        if (lowerType.includes('répétition') && !lowerType.includes('pas de') && !lowerType.includes('annul')) {
             // Répétitions : toujours 20h-22h
             startTime = new Date(eventDate);
             startTime.setHours(20, 0, 0);
             endTime = new Date(eventDate);
             endTime.setHours(22, 0, 0);
-            eventTitle = `Répétition de l'Harmonie de Châteaubriant`;
+            
+            // Distinguer répétition normale vs répétition spéciale
+            if (lowerType === 'répétition' || lowerType.includes('répétition régulière')) {
+                // Répétition normale
+                eventTitle = `Répétition de l'Harmonie de Châteaubriant`;
+            } else {
+                // Répétition spéciale (ex: "Répétition pendant les vacances")
+                eventTitle = `${eventType} - Harmonie de Châteaubriant`;
+            }
+            location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
+        } else if (lowerType.includes('pas de répétition')) {
+            // Pas de répétition : même horaire qu'une répétition normale (20h-22h)
+            startTime = new Date(eventDate);
+            startTime.setHours(20, 0, 0);
+            endTime = new Date(eventDate);
+            endTime.setHours(22, 0, 0);
+            eventTitle = `${eventType} - Harmonie de Châteaubriant`;
+            location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
+        } else if (lowerType.includes('annulé') ||
+                   lowerType.includes('annulée') ||
+                   (lowerType.includes('vacances') && !lowerType.includes('répétition'))) {
+            // Autres événements d'annulation : toute la journée
+            startTime = new Date(eventDate);
+            startTime.setHours(0, 0, 0);
+            endTime = new Date(eventDate);
+            endTime.setHours(23, 59, 59);
+            isAllDay = true;
+            eventTitle = `${eventType} - Harmonie de Châteaubriant`;
             location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
         } else {
             // Concerts et autres événements : toute la journée
@@ -1375,9 +1434,13 @@ function addEventToCalendar(date, type, title, pieces, notes) {
             endTime = new Date(eventDate);
             endTime.setHours(23, 59, 59);
             isAllDay = true;
-            eventTitle = title;
+            // Utiliser le titre propre ou le type comme fallback
+            eventTitle = cleanTitle !== 'Événement' ? `${cleanTitle} - Harmonie de Châteaubriant` : `${eventType} - Harmonie de Châteaubriant`;
             location = "Conservatoire de Châteaubriant, 6 Rue Guy Môquet, 44110 Châteaubriant";
         }
+        
+        // 🐛 DEBUG: Log du titre final déterminé
+        console.log('📅 Titre final de l\'événement:', eventTitle);
         
         // Créer la description avec les pièces
         let description = `${eventTitle}\n\n`;
