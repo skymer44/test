@@ -483,7 +483,7 @@ function displayEventError() {
     `;
 }
 
-// Fonction pour ajouter un événement au calendrier - VERSION API NATIVE
+// Fonction pour ajouter un événement au calendrier - VERSION GOOGLE CALENDAR OPTIMISÉE
 function addEventToCalendar(date, type, title, pieces, notes) {
     try {
         // Créer la date de l'événement
@@ -526,23 +526,9 @@ function addEventToCalendar(date, type, title, pieces, notes) {
             description += `\nInformations : ${notes}`;
         }
         
-        // 🎯 PRIORITÉ 1: Essayer l'API Web Calendar native (Chrome 108+, Edge 108+)
-        if ('createEvent' in navigator && navigator.createEvent) {
-            console.log('🚀 Utilisation de l\'API Web Calendar native');
-            tryNativeCalendarAPI(eventTitle, startTime, endTime, description, location);
-            return;
-        }
-        
-        // 🎯 PRIORITÉ 2: Essayer l'API expérimentale
-        if (window.chrome && window.chrome.runtime) {
-            console.log('🔬 Tentative API expérimentale Chrome');
-            tryExperimentalCalendarAPI(eventTitle, startTime, endTime, description, location);
-            return;
-        }
-        
-        // 🎯 PRIORITÉ 3: Fallback vers fichier ICS avec ouverture directe
-        console.log('📅 Fallback vers ICS optimisé');
-        createOptimizedICSEvent(eventTitle, startTime, endTime, description, location, isAllDay);
+        // 🎯 STRATÉGIE SIMPLIFIÉE: Google Calendar d'abord, avec détection intelligente
+        console.log('📅 Ouverture de Google Calendar...');
+        tryGoogleCalendarWithFallback(eventTitle, startTime, endTime, description, location, isAllDay);
         
     } catch (error) {
         console.error('❌ Erreur lors de la création du calendrier:', error);
@@ -550,101 +536,446 @@ function addEventToCalendar(date, type, title, pieces, notes) {
     }
 }
 
-// Fonction pour l'API Web Calendar native
-async function tryNativeCalendarAPI(title, startTime, endTime, description, location) {
+// Fonction principale: Google Calendar avec détection intelligente
+function tryGoogleCalendarWithFallback(title, startTime, endTime, description, location, isAllDay) {
     try {
-        // Vérifier si l'API est vraiment disponible
-        if (typeof navigator.createEvent !== 'function') {
-            throw new Error('API non disponible');
-        }
+        // Créer l'URL Google Calendar
+        const start = formatGoogleDate(startTime, isAllDay);
+        const end = formatGoogleDate(endTime, isAllDay);
         
-        const event = await navigator.createEvent({
-            title: title,
-            startTime: startTime.getTime(),
-            endTime: endTime.getTime(),
-            description: description,
-            location: location
-        });
+        const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}`;
         
-        console.log('✅ Événement créé avec l\'API native:', event);
-        showCalendarNotification('📅 Événement ajouté à votre calendrier !', 'success');
+        // Ouvrir Google Calendar dans un nouvel onglet
+        const googleWindow = window.open(googleUrl, '_blank');
+        
+        // Vérification intelligente et fallback
+        setTimeout(() => {
+            checkGoogleCalendarSuccess(googleWindow, title, startTime, endTime, description, location, isAllDay);
+        }, 3000); // Attendre 3 secondes pour voir si ça fonctionne
+        
+        // Notification immédiate
+        showCalendarNotification('📅 Ouverture de Google Calendar...', 'info');
         
     } catch (error) {
-        console.log('⚠️ API native échouée, fallback vers ICS:', error);
-        createOptimizedICSEvent(title, startTime, endTime, description, location, false);
+        console.error('❌ Erreur Google Calendar:', error);
+        // Fallback direct vers ICS
+        console.log('� Fallback vers fichier ICS...');
+        createICSFallback(title, startTime, endTime, description, location, isAllDay);
     }
 }
 
-// Fonction pour l'API expérimentale Chrome
-async function tryExperimentalCalendarAPI(title, startTime, endTime, description, location) {
+// Vérification du succès Google Calendar avec fallback automatique
+function checkGoogleCalendarSuccess(googleWindow, title, startTime, endTime, description, location, isAllDay) {
     try {
-        // Approche expérimentale pour Chrome
-        const eventData = {
-            'title': title,
-            'start': {'dateTime': startTime.toISOString()},
-            'end': {'dateTime': endTime.toISOString()},
-            'description': description,
-            'location': location
-        };
-        
-        // Tentative avec chrome.calendar si disponible
-        if (window.chrome && window.chrome.calendar) {
-            await window.chrome.calendar.createEvent(eventData);
-            showCalendarNotification('📅 Événement ajouté via Chrome Calendar !', 'success');
+        // Vérifier si la fenêtre Google est encore ouverte
+        if (!googleWindow || googleWindow.closed) {
+            // L'utilisateur a fermé rapidement = problème potentiel
+            console.log('⚠️ Fenêtre Google Calendar fermée rapidement - Proposition de fallback');
+            offerICSFallback(title, startTime, endTime, description, location, isAllDay);
             return;
         }
         
-        throw new Error('Chrome Calendar API non disponible');
+        // Essayer de détecter si l'utilisateur est connecté à Google
+        try {
+            // Vérifier l'URL de la fenêtre (si possible)
+            const currentUrl = googleWindow.location.href;
+            
+            if (currentUrl && currentUrl.includes('accounts.google.com')) {
+                // Redirection vers login = pas connecté
+                console.log('🔑 Redirection vers login Google détectée');
+                showCalendarNotification('� Connexion Google requise ou fichier ICS en alternative', 'info');
+                
+                // Proposer ICS en alternative après 5 secondes
+                setTimeout(() => {
+                    offerICSFallback(title, startTime, endTime, description, location, isAllDay);
+                }, 5000);
+            } else {
+                // Semble fonctionner
+                console.log('✅ Google Calendar ouvert avec succès');
+                showCalendarNotification('✅ Google Calendar ouvert - Validez l\'événement', 'success');
+            }
+        } catch (securityError) {
+            // Erreur de sécurité = fenêtre sur un autre domaine = probablement OK
+            console.log('🔒 Google Calendar dans un autre domaine (normal)');
+            showCalendarNotification('✅ Google Calendar ouvert - Validez l\'événement', 'success');
+        }
         
     } catch (error) {
-        console.log('⚠️ API Chrome échouée, fallback vers ICS:', error);
-        createOptimizedICSEvent(title, startTime, endTime, description, location, false);
+        console.error('❌ Erreur vérification Google:', error);
+        offerICSFallback(title, startTime, endTime, description, location, isAllDay);
     }
 }
 
-// Fonction pour créer un ICS optimisé (fallback)
-function createOptimizedICSEvent(title, startTime, endTime, description, location, isAllDay) {
-    try {
-        const icsContent = generateICSContent(
-            encodeURIComponent(title), 
-            startTime.toISOString(), 
-            endTime.toISOString(), 
-            encodeURIComponent(description), 
-            encodeURIComponent(location), 
-            isAllDay
-        );
+// Proposer fichier ICS en fallback avec notification interactive
+function offerICSFallback(title, startTime, endTime, description, location, isAllDay) {
+    // Créer une notification interactive
+    const notification = document.createElement('div');
+    notification.className = 'calendar-fallback-notification';
+    notification.innerHTML = `
+        <div class="fallback-content">
+            <div class="fallback-header">
+                <span>📋 Alternative disponible</span>
+                <button class="fallback-close" onclick="this.closest('.calendar-fallback-notification').remove()">×</button>
+            </div>
+            <div class="fallback-body">
+                <p>Problème avec Google Calendar ?</p>
+                <div class="fallback-actions">
+                    <button class="fallback-btn primary" onclick="downloadICSFile('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay}); this.closest('.calendar-fallback-notification').remove();">
+                        📥 Télécharger fichier ICS
+                    </button>
+                    <button class="fallback-btn secondary" onclick="this.closest('.calendar-fallback-notification').remove();">
+                        ✅ C'est bon
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border: 2px solid #4299e1;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        z-index: 10000;
+        max-width: 320px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    `;
+    
+    // Styles pour le contenu
+    const style = document.createElement('style');
+    style.textContent = `
+        .fallback-content {
+            padding: 0;
+        }
         
-        // Créer le blob avec le bon MIME type pour que le navigateur le reconnaisse
+        .fallback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .fallback-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #718096;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .fallback-close:hover {
+            background: #f7fafc;
+        }
+        
+        .fallback-body {
+            padding: 1rem;
+        }
+        
+        .fallback-body p {
+            margin: 0 0 1rem 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        
+        .fallback-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-direction: column;
+        }
+        
+        .fallback-btn {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .fallback-btn.primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .fallback-btn.primary:hover {
+            background: #3182ce;
+        }
+        
+        .fallback-btn.secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .fallback-btn.secondary:hover {
+            background: #edf2f7;
+        }
+    `;
+    
+    if (!document.getElementById('fallback-styles')) {
+        style.id = 'fallback-styles';
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'apparition
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Auto-fermeture après 15 secondes
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 15000);
+}
+
+// Fonction pour télécharger le fichier ICS (fallback)
+function downloadICSFile(title, startTime, endTime, description, location, isAllDay) {
+    try {
+        const icsContent = generateICSContent(title, startTime, endTime, description, location, isAllDay);
+        
         const blob = new Blob([icsContent], { 
-            type: 'text/calendar;charset=utf-8;method=REQUEST'
+            type: 'text/calendar;charset=utf-8'
         });
         
-        // Essayer d'ouvrir directement (certains navigateurs affichent une popup)
         const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${decodeURIComponent(title).replace(/[^a-zA-Z0-9]/g, '_')}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
         
-        // Tenter l'ouverture dans une nouvelle fenêtre d'abord
-        const newWindow = window.open(url, '_blank', 'width=400,height=300');
-        
-        // Si ça ne marche pas, télécharger le fichier
-        setTimeout(() => {
-            if (!newWindow || newWindow.closed) {
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${decodeURIComponent(title).replace(/[^a-zA-Z0-9]/g, '_')}.ics`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                showCalendarNotification('📅 Fichier calendrier téléchargé', 'success');
-            } else {
-                showCalendarNotification('📅 Calendrier ouvert dans un nouvel onglet', 'success');
-            }
-            URL.revokeObjectURL(url);
-        }, 1000);
+        showCalendarNotification('📥 Fichier ICS téléchargé avec succès', 'success');
         
     } catch (error) {
-        console.error('❌ Erreur création ICS:', error);
-        showCalendarNotification('❌ Erreur lors de la création du calendrier', 'error');
+        console.error('❌ Erreur téléchargement ICS:', error);
+        showCalendarNotification('❌ Erreur lors du téléchargement', 'error');
     }
+}
+
+// Fallback ICS direct (pour les cas d'erreur)
+function createICSFallback(title, startTime, endTime, description, location, isAllDay) {
+    console.log('📋 Création du fichier ICS de secours...');
+    downloadICSFile(encodeURIComponent(title), startTime.toISOString(), endTime.toISOString(), encodeURIComponent(description), encodeURIComponent(location), isAllDay);
+}
+
+// Vérification du succès Google Calendar avec fallback automatique
+function checkGoogleCalendarSuccess(googleWindow, title, startTime, endTime, description, location, isAllDay) {
+    try {
+        // Vérifier si la fenêtre Google est encore ouverte
+        if (!googleWindow || googleWindow.closed) {
+            // L'utilisateur a fermé rapidement = problème potentiel
+            console.log('⚠️ Fenêtre Google Calendar fermée rapidement - Proposition de fallback');
+            offerICSFallback(title, startTime, endTime, description, location, isAllDay);
+            return;
+        }
+        
+        // Essayer de détecter si l'utilisateur est connecté à Google
+        try {
+            // Vérifier l'URL de la fenêtre (si possible)
+            const currentUrl = googleWindow.location.href;
+            
+            if (currentUrl && currentUrl.includes('accounts.google.com')) {
+                // Redirection vers login = pas connecté
+                console.log('🔑 Redirection vers login Google détectée');
+                showCalendarNotification('🔑 Connexion Google requise ou fichier ICS en alternative', 'info');
+                
+                // Proposer ICS en alternative après 5 secondes
+                setTimeout(() => {
+                    offerICSFallback(title, startTime, endTime, description, location, isAllDay);
+                }, 5000);
+            } else {
+                // Semble fonctionner
+                console.log('✅ Google Calendar ouvert avec succès');
+                showCalendarNotification('✅ Google Calendar ouvert - Validez l\'événement', 'success');
+            }
+        } catch (securityError) {
+            // Erreur de sécurité = fenêtre sur un autre domaine = probablement OK
+            console.log('🔒 Google Calendar dans un autre domaine (normal)');
+            showCalendarNotification('✅ Google Calendar ouvert - Validez l\'événement', 'success');
+        }
+        
+    } catch (error) {
+        console.error('❌ Erreur vérification Google:', error);
+        offerICSFallback(title, startTime, endTime, description, location, isAllDay);
+    }
+}
+
+// Proposer fichier ICS en fallback avec notification interactive
+function offerICSFallback(title, startTime, endTime, description, location, isAllDay) {
+    // Créer une notification interactive
+    const notification = document.createElement('div');
+    notification.className = 'calendar-fallback-notification';
+    notification.innerHTML = `
+        <div class="fallback-content">
+            <div class="fallback-header">
+                <span>📋 Alternative disponible</span>
+                <button class="fallback-close" onclick="this.closest('.calendar-fallback-notification').remove()">×</button>
+            </div>
+            <div class="fallback-body">
+                <p>Problème avec Google Calendar ?</p>
+                <div class="fallback-actions">
+                    <button class="fallback-btn primary" onclick="downloadICSFile('${encodeURIComponent(title)}', '${startTime.toISOString()}', '${endTime.toISOString()}', '${encodeURIComponent(description)}', '${encodeURIComponent(location)}', ${isAllDay}); this.closest('.calendar-fallback-notification').remove();">
+                        📥 Télécharger fichier ICS
+                    </button>
+                    <button class="fallback-btn secondary" onclick="this.closest('.calendar-fallback-notification').remove();">
+                        ✅ C'est bon
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border: 2px solid #4299e1;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        z-index: 10000;
+        max-width: 320px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    `;
+    
+    // Styles pour le contenu
+    const style = document.createElement('style');
+    style.textContent = `
+        .fallback-content {
+            padding: 0;
+        }
+        
+        .fallback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .fallback-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #718096;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .fallback-close:hover {
+            background: #f7fafc;
+        }
+        
+        .fallback-body {
+            padding: 1rem;
+        }
+        
+        .fallback-body p {
+            margin: 0 0 1rem 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        
+        .fallback-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-direction: column;
+        }
+        
+        .fallback-btn {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .fallback-btn.primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .fallback-btn.primary:hover {
+            background: #3182ce;
+        }
+        
+        .fallback-btn.secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .fallback-btn.secondary:hover {
+            background: #edf2f7;
+        }
+    `;
+    
+    if (!document.getElementById('fallback-styles')) {
+        style.id = 'fallback-styles';
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Animation d'apparition
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Auto-fermeture après 15 secondes
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 15000);
 }
 
 // Fonction pour afficher le modal de sélection de calendrier
@@ -1964,3 +2295,129 @@ console.log('✨ Toutes les fonctionnalités JavaScript ont été initialisées!
 console.log('🎵 Système de modale vidéo YouTube activé!');
 console.log('📄 Génération de PDF activée!');
 console.log('🔄 Synchronisation Notion configurée!');
+
+
+
+// Système de vérification automatique des versions
+(function() {
+    const CURRENT_VERSION = 'v20250707_471cdbda';
+    const CHECK_INTERVAL = 30000; // 30 secondes
+    
+    let isCheckingVersion = false;
+    
+    // Fonction pour vérifier la version
+    async function checkVersion() {
+        if (isCheckingVersion) return;
+        isCheckingVersion = true;
+        
+        try {
+            const response = await fetch('/version.json?t=' + Date.now());
+            const versionData = await response.json();
+            
+            if (versionData.version !== CURRENT_VERSION) {
+                console.log('🔄 Nouvelle version détectée:', versionData.version);
+                showUpdateNotification(versionData);
+            }
+        } catch (error) {
+            console.log('Erreur vérification version:', error);
+        } finally {
+            isCheckingVersion = false;
+        }
+    }
+    
+    // Afficher une notification de mise à jour
+    function showUpdateNotification(versionData) {
+        // Créer une notification discrète
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <div class="update-content">
+                <span class="update-icon">🔄</span>
+                <span class="update-text">Nouvelle version disponible!</span>
+                <button class="update-btn" onclick="location.reload(true)">Mettre à jour</button>
+                <button class="dismiss-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4299e1;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-family: system-ui;
+            animation: slideIn 0.3s ease;
+        `;
+        
+        // Ajouter les styles pour l'animation
+        if (!document.getElementById('update-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'update-notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                .update-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .update-btn {
+                    background: rgba(255,255,255,0.2);
+                    border: none;
+                    color: white;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.875rem;
+                }
+                .update-btn:hover {
+                    background: rgba(255,255,255,0.3);
+                }
+                .dismiss-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    padding: 0;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Auto-mise à jour après 10 secondes
+        setTimeout(() => {
+            if (notification.parentElement) {
+                location.reload(true);
+            }
+        }, 10000);
+    }
+    
+    // Démarrer la vérification périodique
+    setInterval(checkVersion, CHECK_INTERVAL);
+    
+    // Vérifier aussi quand la page redevient visible
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            setTimeout(checkVersion, 1000);
+        }
+    });
+    
+    // Vérifier au chargement initial
+    setTimeout(checkVersion, 5000);
+    
+    console.log('🔄 Système de vérification des versions activé - Version courante:', CURRENT_VERSION);
+})();
