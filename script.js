@@ -1484,3 +1484,129 @@ console.log('✨ Toutes les fonctionnalités JavaScript ont été initialisées!
 console.log('🎵 Système de modale vidéo YouTube activé!');
 console.log('📄 Génération de PDF activée!');
 console.log('🔄 Synchronisation Notion configurée!');
+
+
+
+// Système de vérification automatique des versions
+(function() {
+    const CURRENT_VERSION = 'v20250707_4053d95b';
+    const CHECK_INTERVAL = 30000; // 30 secondes
+    
+    let isCheckingVersion = false;
+    
+    // Fonction pour vérifier la version
+    async function checkVersion() {
+        if (isCheckingVersion) return;
+        isCheckingVersion = true;
+        
+        try {
+            const response = await fetch('/version.json?t=' + Date.now());
+            const versionData = await response.json();
+            
+            if (versionData.version !== CURRENT_VERSION) {
+                console.log('🔄 Nouvelle version détectée:', versionData.version);
+                showUpdateNotification(versionData);
+            }
+        } catch (error) {
+            console.log('Erreur vérification version:', error);
+        } finally {
+            isCheckingVersion = false;
+        }
+    }
+    
+    // Afficher une notification de mise à jour
+    function showUpdateNotification(versionData) {
+        // Créer une notification discrète
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <div class="update-content">
+                <span class="update-icon">🔄</span>
+                <span class="update-text">Nouvelle version disponible!</span>
+                <button class="update-btn" onclick="location.reload(true)">Mettre à jour</button>
+                <button class="dismiss-btn" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4299e1;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-family: system-ui;
+            animation: slideIn 0.3s ease;
+        `;
+        
+        // Ajouter les styles pour l'animation
+        if (!document.getElementById('update-notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'update-notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                .update-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                .update-btn {
+                    background: rgba(255,255,255,0.2);
+                    border: none;
+                    color: white;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.875rem;
+                }
+                .update-btn:hover {
+                    background: rgba(255,255,255,0.3);
+                }
+                .dismiss-btn {
+                    background: none;
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                    font-size: 1.2rem;
+                    padding: 0;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Auto-mise à jour après 10 secondes
+        setTimeout(() => {
+            if (notification.parentElement) {
+                location.reload(true);
+            }
+        }, 10000);
+    }
+    
+    // Démarrer la vérification périodique
+    setInterval(checkVersion, CHECK_INTERVAL);
+    
+    // Vérifier aussi quand la page redevient visible
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            setTimeout(checkVersion, 1000);
+        }
+    });
+    
+    // Vérifier au chargement initial
+    setTimeout(checkVersion, 5000);
+    
+    console.log('🔄 Système de vérification des versions activé - Version courante:', CURRENT_VERSION);
+})();
