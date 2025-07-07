@@ -1920,50 +1920,11 @@ section:target {
     padding: 2rem;
 }
 
-.next-events-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.next-events-header h2 {
-    font-size: 2.2rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 1rem;
-}
-
-/* Indicateur "Live" */
-.live-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #f7fafc;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid #e2e8f0;
-    font-size: 0.85rem;
-    color: #4a5568;
-}
-
-.live-dot {
-    width: 8px;
-    height: 8px;
-    background: #48bb78;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-/* Carte de l'événement principal - Design épuré */
+/* Carte de l'événement principal - Design épuré et compact */
 .main-next-event {
     background: white;
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1.5rem;
     margin-bottom: 3rem;
     border: 2px solid #e2e8f0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -1986,7 +1947,43 @@ section:target {
     z-index: 1;
 }
 
-/* Badge de type d'événement - Plus petit et discret */
+/* Header avec indicateur live en haut à droite */
+.main-event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+/* Indicateur "Live" déplacé en haut à droite */
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #f7fafc;
+    padding: 0.3rem 0.7rem;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.75rem;
+    color: #4a5568;
+    flex-shrink: 0;
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    background: #48bb78;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Badge de type d'événement - Plus petit */
 .event-type-badge {
     display: inline-flex;
     align-items: center;
@@ -1995,7 +1992,6 @@ section:target {
     border-radius: 20px;
     font-size: 0.8rem;
     font-weight: 500;
-    margin-bottom: 1rem;
     color: white;
 }
 
@@ -2017,10 +2013,10 @@ section:target {
 
 /* Titre d'événement plus sobre */
 .event-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     color: #2d3748;
-    margin-bottom: 0.8rem;
+    margin: 0.5rem 0;
     line-height: 1.3;
 }
 
@@ -2029,13 +2025,13 @@ section:target {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.2rem;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .event-date {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #4a5568;
     font-weight: 500;
 }
@@ -2044,27 +2040,27 @@ section:target {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #718096;
 }
 
 .countdown-number {
     background: #f7fafc;
-    padding: 0.25rem 0.6rem;
-    border-radius: 8px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
     font-weight: 600;
     color: #4a5568;
 }
 
-/* Focus sur les pièces - Section principale */
+/* Focus sur les pièces - Layout en colonnes */
 .event-pieces {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .event-pieces h4 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     color: #2d3748;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -2073,42 +2069,37 @@ section:target {
 
 .pieces-list {
     display: grid;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.8rem;
 }
 
 .piece-item {
     background: #f8fafc;
-    padding: 1rem;
-    border-radius: 12px;
+    padding: 0.8rem;
+    border-radius: 10px;
     border-left: 4px solid #667eea;
     transition: all 0.2s ease;
 }
 
 .piece-item:hover {
     background: #edf2f7;
-    transform: translateX(4px);
+    transform: translateX(2px);
 }
 
 .piece-item h5 {
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    font-size: 1rem;
+    margin-bottom: 0;
     color: #2d3748;
     font-weight: 600;
-}
-
-.piece-item p {
-    font-size: 0.9rem;
-    color: #718096;
-    margin: 0;
 }
 
 /* Notes - Plus discrètes */
 .event-notes {
     background: #fffaf0;
-    padding: 1rem;
+    padding: 0.8rem;
     border-radius: 8px;
     border-left: 3px solid #ed8936;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #744210;
 }
 

@@ -254,12 +254,18 @@ function displayMainEvent(event) {
     // Générer la liste des pièces
     const piecesHtml = event.pieces && event.pieces.length > 0 
         ? generatePiecesHtml(event.pieces)
-        : '<div class="piece-item"><h5>Programme à définir</h5><p>Le programme sera communiqué prochainement</p></div>';
+        : '<div class="piece-item"><h5>Programme à définir</h5></div>';
     
     mainEventContainer.innerHTML = `
         <div class="main-event-content">
-            <div class="event-type-badge ${eventTypeClass}">
-                ${eventTypeEmoji} ${eventType}
+            <div class="main-event-header">
+                <div class="event-type-badge ${eventTypeClass}">
+                    ${eventTypeEmoji} ${eventType}
+                </div>
+                <div class="live-indicator">
+                    <span class="live-dot"></span>
+                    <span>Mis à jour automatiquement</span>
+                </div>
             </div>
             
             <h2 class="event-title">${eventTitle}</h2>
@@ -415,13 +421,12 @@ function formatEventDate(dateString) {
 
 function generatePiecesHtml(pieces) {
     if (!pieces || pieces.length === 0) {
-        return '<div class="piece-item"><h5>Programme à définir</h5><p>Le programme sera communiqué prochainement</p></div>';
+        return '<div class="piece-item"><h5>Programme à définir</h5></div>';
     }
     
     return pieces.map(piece => `
         <div class="piece-item">
             <h5>${piece}</h5>
-            <p>Consulter les partitions dans l'onglet "Programmes"</p>
         </div>
     `).join('');
 }
