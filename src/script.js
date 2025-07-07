@@ -268,14 +268,11 @@ function displayMainEvent(event) {
                 </div>
             </div>
             
-            <h2 class="event-title">${eventTitle}</h2>
-            
             <div class="event-meta">
                 <div class="event-date">
-                    📅 ${formatEventDate(event.date)}
+                    📅 ${formatEventDate(event.date)} - dans
                 </div>
                 <div class="event-countdown">
-                    <span>Dans</span>
                     <span class="countdown-number">${countdownText}</span>
                 </div>
             </div>
@@ -452,7 +449,7 @@ function generateMiniEventCard(event) {
             
             <h4 class="mini-event-title">${eventTitle}</h4>
             
-            <div class="mini-event-date">${formatEventDate(event.date)} • Dans ${countdownText}</div>
+            <div class="mini-event-date">${formatEventDate(event.date)} • dans ${countdownText}</div>
             
             <div class="mini-event-pieces">🎼 ${piecesText}</div>
             
