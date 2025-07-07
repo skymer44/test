@@ -16,7 +16,7 @@
         "notion": true,
         "database": "Retour Karaoké",
         "pageId": "229fcf9e-3abc-8038-823a-d4e2dc007f9b",
-        "lastModified": "2025-07-07T16:53:00.000Z",
+        "lastModified": "2025-07-07T16:54:00.000Z",
         "order": null
       }
     },
@@ -26,7 +26,7 @@
         "notion": true,
         "database": "Loto",
         "pageId": "229fcf9e-3abc-8024-99b9-c74e321ae334",
-        "lastModified": "2025-07-07T16:53:00.000Z",
+        "lastModified": "2025-07-07T16:54:00.000Z",
         "order": null
       }
     },
@@ -296,7 +296,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T16:53:53.776Z",
+    "syncDate": "2025-07-07T16:57:32.421Z",
     "source": "notion",
     "totalPieces": 19
   }
