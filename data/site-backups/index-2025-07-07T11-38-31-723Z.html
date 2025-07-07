@@ -392,13 +392,36 @@
                 </div>
             </section>
         </div>
+    </main>
 
-    <!-- Contrôles audio -->
-    <div id="audio-controls" class="audio-controls" style="display: none;">
-        <div id="audio-info">
-            <span id="audio-title">Aucun audio en cours</span>
-            <div class="audio-buttons">
-                <button id="pause-resume-btn" class="audio-control-btn" title="Pause/Reprendre">⏸</button>
+    <!-- Modale vidéo YouTube -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-modal-wrapper">
+            <div class="video-controls">
+                <button id="audio-mode-btn" class="control-btn" title="Mode audio uniquement">🎧</button>
+                <button id="close-modal-btn" class="control-btn" title="Fermer">✕</button>
+            </div>
+            <div class="video-modal-content">
+                <div class="video-container">
+                    <iframe id="youtube-player" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-lecteur audio en bas -->
+    <div id="audio-player" class="audio-player">
+        <div class="audio-player-content">
+            <div class="audio-info">
+                <span id="audio-title">Titre de la pièce</span>
+            </div>
+            <div class="audio-controls">
                 <button id="show-video-btn" class="audio-control-btn" title="Afficher la vidéo">▶</button>
                 <button id="stop-audio-btn" class="audio-control-btn" title="Arrêter">⏹</button>
             </div>

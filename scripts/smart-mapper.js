@@ -182,9 +182,9 @@ class SmartMapper {
             case 'number':
                 return property.number;
             case 'select':
-                return property.select?.name;
+                return property.select ? { name: property.select.name, color: property.select.color } : null;
             case 'multi_select':
-                return property.multi_select.map(s => s.name);
+                return property.multi_select.map(s => ({ name: s.name, color: s.color }));
             case 'date':
                 return property.date?.start;
             case 'checkbox':
@@ -262,9 +262,9 @@ class SmartMapper {
     getPropertyConfig(property) {
         switch (property.type) {
             case 'select':
-                return { options: property.select.options.map(o => o.name) };
+                return { options: property.select.options.map(o => ({ name: o.name, color: o.color })) };
             case 'multi_select':
-                return { options: property.multi_select.options.map(o => o.name) };
+                return { options: property.multi_select.options.map(o => ({ name: o.name, color: o.color })) };
             case 'relation':
                 return { database_id: property.relation.database_id };
             case 'rollup':

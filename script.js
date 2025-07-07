@@ -367,6 +367,11 @@ async function loadAndDisplayEvents() {
         // Calculer le prochain événement et les suivants
         const { nextEvent, upcomingEvents, allEvents } = processEvents(eventsData);
         
+        // Sauvegarder les données globalement pour les interactions
+        window.currentNextEvent = nextEvent;
+        window.currentUpcomingEvents = upcomingEvents;
+        window.currentAllEvents = allEvents;
+        
         // Afficher le prochain événement principal
         displayMainEvent(nextEvent);
         
@@ -448,6 +453,14 @@ function processEvents(eventsData) {
 }
 
 /**
+ * Extrait les noms des pièces depuis le nouveau format ou l'ancien
+ */
+function extractPieceNames(pieces) {
+    if (!pieces || !Array.isArray(pieces)) return [];
+    return pieces.map(piece => typeof piece === 'object' && piece.name ? piece.name : piece);
+}
+
+/**
  * Affiche l'événement principal
  */
 function displayMainEvent(event) {
@@ -469,9 +482,22 @@ function displayMainEvent(event) {
     const eventTypeClass = determineEventTypeClass(event.type);
     const eventTypeEmoji = getEventTypeEmoji(event.type);
     
-    // Gérer les titres et types qui peuvent être des tableaux
+    // Gérer les titres et types qui peuvent être des tableaux avec couleurs
     const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
-    const eventType = Array.isArray(event.type) ? event.type[0] || 'Événement' : event.type || 'Événement';
+    
+    // Extraire le nom du type depuis le nouveau format ou l'ancien
+    let eventType = 'Événement';
+    if (Array.isArray(event.type) && event.type.length > 0) {
+        if (typeof event.type[0] === 'object' && event.type[0].name) {
+            eventType = event.type[0].name;
+        } else {
+            eventType = event.type[0] || 'Événement';
+        }
+    } else if (typeof event.type === 'object' && event.type.name) {
+        eventType = event.type.name;
+    } else {
+        eventType = event.type || 'Événement';
+    }
     
     // Calculer le countdown
     const countdownText = generateCountdownText(event);
@@ -484,8 +510,15 @@ function displayMainEvent(event) {
     mainEventContainer.innerHTML = `
         <div class="main-event-content">
             <div class="main-event-header">
-                <div class="event-type-badge ${eventTypeClass}">
-                    ${eventTypeEmoji} ${eventType}
+                <div class="header-left">
+                    ${window.selectedEventForHighlight ? `
+                        <button class="back-to-default-btn-modern" onclick="hideSpecificEvent()" title="Revenir au prochain événement">
+                            ←
+                        </button>
+                    ` : ''}
+                    <div class="event-type-badge ${eventTypeClass}">
+                        ${eventTypeEmoji} ${eventType}
+                    </div>
                 </div>
                 <div class="header-right">
                     ${getDeviceConfig().showUpdateIndicator ? `
@@ -498,7 +531,7 @@ function displayMainEvent(event) {
                         <span class="live-dot" title="Mis à jour automatiquement"></span>
                     </div>
                     `}
-                    <button class="add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')">
+                    <button class="add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')">
                         📅
                     </button>
                 </div>
@@ -532,7 +565,7 @@ function displayMainEvent(event) {
 /**
  * Affiche l'aperçu des événements suivants
  */
-function displayUpcomingEventsPreview(events) {
+function displayUpcomingEventsPreview(events, selectedEvent = null) {
     const upcomingContainer = document.getElementById('upcoming-events-list');
     
     if (!events || events.length === 0) {
@@ -544,7 +577,7 @@ function displayUpcomingEventsPreview(events) {
         return;
     }
     
-    const eventsHtml = events.map(event => generateMiniEventCard(event)).join('');
+    const eventsHtml = events.map(event => generateMiniEventCard(event, selectedEvent)).join('');
     upcomingContainer.innerHTML = eventsHtml;
 }
 
@@ -604,8 +637,61 @@ function updateEventDisplay() {
 // Fonctions utilitaires
 
 function determineEventTypeClass(type) {
-    // Gérer le cas où type est un tableau ou une chaîne
-    const typeStr = Array.isArray(type) ? type[0] || '' : type || '';
+    // Gérer le cas où type est un tableau d'objets avec couleurs ou une chaîne
+    if (Array.isArray(type) && type.length > 0) {
+        // Si c'est un array d'objets avec couleurs (nouveau format)
+        if (typeof type[0] === 'object' && type[0].color) {
+            return getNotionColorClass(type[0].color);
+        }
+        // Si c'est un array de strings (ancien format)
+        const typeStr = type[0] || '';
+        return getEventTypeClassFromString(typeStr);
+    }
+    
+    // Si c'est un objet avec couleur
+    if (typeof type === 'object' && type.color) {
+        return getNotionColorClass(type.color);
+    }
+    
+    // Si c'est une chaîne simple (ancien format)
+    const typeStr = type || '';
+    return getEventTypeClassFromString(typeStr);
+}
+
+/**
+ * Convertit une couleur Notion en classe CSS
+ * 
+ * CONVENTION DES COULEURS POUR LES ÉVÉNEMENTS :
+ * - GREEN (vert) : Concerts publics
+ * - BLUE (bleu) : Répétitions régulières  
+ * - PURPLE (violet) : Répétitions spéciales
+ * - RED (rouge) : Événements importants/urgents
+ * - ORANGE (orange) : Événements de formation
+ * - YELLOW (jaune) : Événements sociaux
+ * - GRAY (gris) : Pas de répétition / vacances
+ * - DEFAULT : Événements généraux
+ */
+function getNotionColorClass(notionColor) {
+    const colorMap = {
+        'default': 'event-default',
+        'gray': 'event-gray',
+        'brown': 'event-brown',
+        'orange': 'event-orange',
+        'yellow': 'event-yellow',
+        'green': 'event-green',      // CONCERTS
+        'blue': 'event-blue',        // RÉPÉTITIONS
+        'purple': 'event-purple',    // RÉPÉTITIONS SPÉCIALES
+        'pink': 'event-pink',
+        'red': 'event-red'           // ÉVÉNEMENTS IMPORTANTS
+    };
+    
+    return colorMap[notionColor] || 'event-default';
+}
+
+/**
+ * Fallback pour l'ancien système basé sur le texte
+ */
+function getEventTypeClassFromString(typeStr) {
     const lowerType = typeStr.toLowerCase();
     
     if (lowerType.includes('répétition')) return 'repetition';
@@ -615,8 +701,21 @@ function determineEventTypeClass(type) {
 }
 
 function getEventTypeEmoji(type) {
-    // Gérer le cas où type est un tableau ou une chaîne
-    const typeStr = Array.isArray(type) ? type[0] || '' : type || '';
+    // Extraire le nom du type depuis le nouveau format ou l'ancien
+    let typeStr = '';
+    
+    if (Array.isArray(type) && type.length > 0) {
+        if (typeof type[0] === 'object' && type[0].name) {
+            typeStr = type[0].name;
+        } else {
+            typeStr = type[0] || '';
+        }
+    } else if (typeof type === 'object' && type.name) {
+        typeStr = type.name;
+    } else {
+        typeStr = type || '';
+    }
+    
     const lowerType = typeStr.toLowerCase();
     
     if (lowerType.includes('répétition')) return '🎵';
@@ -657,38 +756,66 @@ function generatePiecesHtml(pieces) {
         return '<div class="piece-item"><h5>Programme à définir</h5></div>';
     }
     
-    return pieces.map(piece => `
-        <div class="piece-item">
-            <h5>${piece}</h5>
-        </div>
-    `).join('');
+    return pieces.map(piece => {
+        // Gérer le nouveau format avec couleurs et l'ancien format
+        const pieceName = typeof piece === 'object' && piece.name ? piece.name : piece;
+        const pieceColor = typeof piece === 'object' && piece.color ? piece.color : null;
+        
+        return `
+            <div class="piece-item${pieceColor ? ` piece-${pieceColor}` : ''}">
+                <h5>${pieceName}</h5>
+            </div>
+        `;
+    }).join('');
 }
 
-function generateMiniEventCard(event) {
+function generateMiniEventCard(event, selectedEvent = null) {
     const eventTypeClass = determineEventTypeClass(event.type);
     const eventTypeEmoji = getEventTypeEmoji(event.type);
     const countdownText = generateCountdownText(event);
     
-    // Gérer les titres et types qui peuvent être des tableaux
+    // Gérer les titres et types qui peuvent être des tableaux avec couleurs
     const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
-    const eventType = Array.isArray(event.type) ? event.type[0] || 'Événement' : event.type || 'Événement';
+    
+    // Extraire le nom du type depuis le nouveau format ou l'ancien
+    let eventType = 'Événement';
+    if (Array.isArray(event.type) && event.type.length > 0) {
+        if (typeof event.type[0] === 'object' && event.type[0].name) {
+            eventType = event.type[0].name;
+        } else {
+            eventType = event.type[0] || 'Événement';
+        }
+    } else if (typeof event.type === 'object' && event.type.name) {
+        eventType = event.type.name;
+    } else {
+        eventType = event.type || 'Événement';
+    }
     
     const piecesText = event.pieces && event.pieces.length > 0 
-        ? `${event.pieces.slice(0, 2).join(', ')}${event.pieces.length > 2 ? ` +${event.pieces.length - 2} autres` : ''}`
+        ? `${event.pieces.slice(0, 2).map(piece => typeof piece === 'object' && piece.name ? piece.name : piece).join(', ')}${event.pieces.length > 2 ? ` +${event.pieces.length - 2} autres` : ''}`
         : 'Programme à définir';
     
+    // Vérifier si c'est l'événement actuellement sélectionné
+    const isSelected = selectedEvent && 
+        event.date === selectedEvent.date && 
+        JSON.stringify(event.pieces) === JSON.stringify(selectedEvent.pieces);
+    
+    // Créer un ID unique pour cet événement (s'assurer que eventTitle est une chaîne)
+    const eventTitleString = String(eventTitle || 'evenement');
+    const eventId = `event_${event.date}_${eventTitleString.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    
     return `
-        <div class="mini-event-card ${eventTypeClass}">
+        <div class="mini-event-card ${eventTypeClass} clickable-event${isSelected ? ' selected' : ''}" data-event-id="${eventId}" onclick="selectMiniEvent('${eventId}')">
             <div class="mini-event-header">
-                <div class="mini-event-type">${eventTypeEmoji} ${eventType}</div>
+                <div class="mini-event-type ${eventTypeClass}">${eventTypeEmoji} ${eventType}</div>
                 <div class="mini-event-actions">
                     <div class="mini-event-countdown">${countdownText}</div>
                     ${getDeviceConfig().isMobile ? `
-                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
+                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
                             📅
                         </button>
                     ` : `
-                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(event.pieces || []).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
+                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
                             📅
                         </button>
                     `}
@@ -720,6 +847,128 @@ function displayEventError() {
             </div>
         </div>
     `;
+}
+
+/**
+ * Affiche un événement spécifique en tant qu'événement principal
+ */
+// Ajouter un bouton de retour discret
+function addDiscreteBackButton() {
+    // Supprimer le bouton existant s'il y en a un
+    const existingButton = document.querySelector('.discrete-back-button');
+    if (existingButton) {
+        existingButton.remove();
+    }
+    
+    // Créer le nouveau bouton
+    const backButton = document.createElement('button');
+    backButton.className = 'discrete-back-button';
+    backButton.innerHTML = '←';
+    backButton.title = 'Revenir aux événements à venir';
+    backButton.onclick = () => {
+        hideSpecificEvent();
+        backButton.remove();
+    };
+    
+    // L'ajouter au body
+    document.body.appendChild(backButton);
+}
+
+function displaySpecificEvent(eventData) {
+    // Sauvegarder l'événement sélectionné pour la mise en évidence
+    window.selectedEventForHighlight = eventData;
+    
+    // Afficher l'événement sélectionné comme événement principal
+    displayMainEvent(eventData);
+    
+    // Régénérer les mini-cartes SANS changer l'ordre, juste avec la mise en évidence
+    const currentUpcomingEvents = window.currentUpcomingEvents || [];
+    displayUpcomingEventsPreview(currentUpcomingEvents, eventData);
+    
+    // Ajouter le bouton discret de retour
+    addDiscreteBackButton();
+    
+    // Scroller vers le haut seulement si l'événement principal n'est pas visible
+    const mainEventContainer = document.getElementById('main-next-event');
+    if (mainEventContainer) {
+        const rect = mainEventContainer.getBoundingClientRect();
+        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+        
+        // Scroll seulement si l'événement n'est pas visible dans la partie haute de l'écran
+        if (!isVisible) {
+            // Remonter complètement en haut du site pour un effet plus esthétique
+            window.scrollTo({ 
+                top: 0, 
+                behavior: 'smooth' 
+            });
+        }
+    }
+}
+
+// Fonction pour cacher l'événement spécifique et revenir à l'affichage normal
+function hideSpecificEvent() {
+    // Supprimer la sélection
+    window.selectedEventForHighlight = null;
+    
+    // Restaurer l'affichage normal
+    if (window.currentNextEvent) {
+        displayMainEvent(window.currentNextEvent);
+    }
+    
+    // Régénérer les mini-cartes sans sélection
+    const currentUpcomingEvents = window.currentUpcomingEvents || [];
+    displayUpcomingEventsPreview(currentUpcomingEvents, null);
+}
+
+/**
+ * Ajoute un bouton pour revenir à l'événement actuel
+ */
+function addBackToCurrentButton() {
+    const mainEventContainer = document.getElementById('main-next-event');
+    const backButton = `
+        <div class="back-to-current-container">
+            <button class="back-to-current-btn" onclick="backToCurrentEvent()">
+                ← Revenir au prochain événement
+            </button>
+        </div>
+    `;
+    mainEventContainer.insertAdjacentHTML('afterbegin', backButton);
+}
+
+/**
+ * Revient à l'affichage du prochain événement réel
+ */
+function backToCurrentEvent() {
+    if (window.originalEventData) {
+        displayMainEvent(window.originalEventData.nextEvent);
+        displayUpcomingEventsPreview(window.originalEventData.upcomingEvents.slice(0, 3));
+        
+        // Supprimer le bouton de retour
+        const backButton = document.querySelector('.back-to-current-container');
+        if (backButton) {
+            backButton.remove();
+        }
+        
+        // Réinitialiser les données sauvegardées
+        window.originalEventData = null;
+    }
+}
+
+/**
+ * Gère la sélection d'un mini-événement
+ */
+function selectMiniEvent(eventId) {
+    // Trouver l'événement correspondant dans les données globales
+    const selectedEvent = window.currentAllEvents.find(event => {
+        const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+        const eventTitleString = String(eventTitle || 'evenement');
+        const computedId = `event_${event.date}_${eventTitleString.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        return computedId === eventId;
+    });
+    
+    if (selectedEvent) {
+        displaySpecificEvent(selectedEvent);
+    }
 }
 
 // Fonction pour ajouter un événement au calendrier - VERSION GOOGLE CALENDAR OPTIMISÉE

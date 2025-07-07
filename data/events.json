@@ -3,15 +3,30 @@
     {
       "date": "2025-09-04",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [
-        "Ammerland",
-        "The Lion King",
-        "Allegretto from Symphony No. 7"
+        {
+          "name": "Ammerland",
+          "color": "blue"
+        },
+        {
+          "name": "The Lion King",
+          "color": "blue"
+        },
+        {
+          "name": "Allegretto from Symphony No. 7",
+          "color": "blue"
+        }
       ],
       "notes": "Première répétition de l’année et première lecture des pièces.",
       "source": {
@@ -24,14 +39,26 @@
     {
       "date": "2025-09-11",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [
-        "Music from How To Train Your Dragon",
-        "Selections from The Nightmare Before Christmas"
+        {
+          "name": "Music from How To Train Your Dragon",
+          "color": "blue"
+        },
+        {
+          "name": "Selections from The Nightmare Before Christmas",
+          "color": "blue"
+        }
       ],
       "notes": "Pièces déjà lues une fois avant les vacances",
       "source": {
@@ -44,10 +71,16 @@
     {
       "date": "2025-09-18",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -61,10 +94,16 @@
     {
       "date": "2025-09-25",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -78,10 +117,16 @@
     {
       "date": "2025-10-02",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -95,10 +140,16 @@
     {
       "date": "2025-10-09",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -112,10 +163,16 @@
     {
       "date": "2025-10-16",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -129,10 +186,16 @@
     {
       "date": "2025-10-30",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "2ᵉ jeudi vacances Toussaint",
@@ -146,10 +209,16 @@
     {
       "date": "2025-10-23",
       "type": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "title": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "pieces": [],
       "notes": "La date sera confirmée ultérieurement. ",
@@ -163,10 +232,16 @@
     {
       "date": "2025-11-06",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -180,10 +255,16 @@
     {
       "date": "2025-11-13",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -197,10 +278,16 @@
     {
       "date": "2025-11-20",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -214,10 +301,16 @@
     {
       "date": "2025-11-27",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -231,10 +324,16 @@
     {
       "date": "2025-12-04",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -248,10 +347,16 @@
     {
       "date": "2025-12-11",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -265,10 +370,16 @@
     {
       "date": "2025-12-18",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -282,10 +393,16 @@
     {
       "date": "2025-12-25",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "Noël (jour férié)",
@@ -299,10 +416,16 @@
     {
       "date": "2026-01-01",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "2ᵉ jeudi vacances Noël; Jour de l'An (jour férié)",
@@ -316,10 +439,16 @@
     {
       "date": "2026-01-08",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -333,10 +462,16 @@
     {
       "date": "2026-01-22",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -350,10 +485,16 @@
     {
       "date": "2026-01-15",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -367,10 +508,16 @@
     {
       "date": "2026-02-05",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -384,10 +531,16 @@
     {
       "date": "2026-01-29",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -401,10 +554,16 @@
     {
       "date": "2026-02-12",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -418,10 +577,16 @@
     {
       "date": "2026-02-26",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "2ᵉ jeudi vacances Hiver",
@@ -435,10 +600,16 @@
     {
       "date": "2026-02-19",
       "type": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "title": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "pieces": [],
       "notes": "La date sera confirmée ultérieurement. ",
@@ -452,10 +623,16 @@
     {
       "date": "2026-03-05",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -469,10 +646,16 @@
     {
       "date": "2026-03-12",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -486,10 +669,16 @@
     {
       "date": "2026-03-19",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -503,10 +692,16 @@
     {
       "date": "2026-04-02",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -520,10 +715,16 @@
     {
       "date": "2026-03-26",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -537,10 +738,16 @@
     {
       "date": "2026-04-09",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -554,10 +761,16 @@
     {
       "date": "2026-04-16",
       "type": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "title": [
-        "Répétition pendant les vacances"
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
       ],
       "pieces": [],
       "notes": "La date sera confirmée ultérieurement. ",
@@ -571,10 +784,16 @@
     {
       "date": "2026-04-23",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "2ᵉ jeudi vacances Printemps",
@@ -588,10 +807,16 @@
     {
       "date": "2026-04-30",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -605,10 +830,16 @@
     {
       "date": "2026-05-07",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -622,10 +853,16 @@
     {
       "date": "2026-05-14",
       "type": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "title": [
-        "Pas de répétition"
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
       ],
       "pieces": [],
       "notes": "Ascension (jour férié)",
@@ -639,10 +876,16 @@
     {
       "date": "2026-05-21",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -656,10 +899,16 @@
     {
       "date": "2026-06-04",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -673,10 +922,16 @@
     {
       "date": "2026-05-28",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -690,10 +945,16 @@
     {
       "date": "2026-06-11",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -707,10 +968,16 @@
     {
       "date": "2026-06-18",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -724,10 +991,16 @@
     {
       "date": "2026-07-02",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -741,10 +1014,16 @@
     {
       "date": "2026-06-25",
       "type": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "title": [
-        "Répétition"
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
       ],
       "pieces": [],
       "notes": "",
@@ -758,10 +1037,16 @@
     {
       "date": "2026-04-11",
       "type": [
-        "Concert avec Eric Aubier"
+        {
+          "name": "Concert avec Eric Aubier",
+          "color": "green"
+        }
       ],
       "title": [
-        "Concert avec Eric Aubier"
+        {
+          "name": "Concert avec Eric Aubier",
+          "color": "green"
+        }
       ],
       "pieces": [],
       "notes": "Beaucoup de choses à confirmer",
@@ -775,10 +1060,16 @@
     {
       "date": "2026-06-19",
       "type": [
-        "Fête de la musique"
+        {
+          "name": "Fête de la musique",
+          "color": "green"
+        }
       ],
       "title": [
-        "Fête de la musique"
+        {
+          "name": "Fête de la musique",
+          "color": "green"
+        }
       ],
       "pieces": [],
       "notes": "Date provisoire à confirmer",
@@ -792,17 +1083,38 @@
     {
       "date": "2026-01-25",
       "type": [
-        "Ma Région Virtuose"
+        {
+          "name": "Ma Région Virtuose",
+          "color": "green"
+        }
       ],
       "title": [
-        "Ma Région Virtuose"
+        {
+          "name": "Ma Région Virtuose",
+          "color": "green"
+        }
       ],
       "pieces": [
-        "Ammerland",
-        "Music from How To Train Your Dragon",
-        "The Lion King",
-        "Selections from The Nightmare Before Christmas",
-        "Allegretto from Symphony No. 7"
+        {
+          "name": "Ammerland",
+          "color": "blue"
+        },
+        {
+          "name": "Music from How To Train Your Dragon",
+          "color": "blue"
+        },
+        {
+          "name": "The Lion King",
+          "color": "blue"
+        },
+        {
+          "name": "Selections from The Nightmare Before Christmas",
+          "color": "blue"
+        },
+        {
+          "name": "Allegretto from Symphony No. 7",
+          "color": "blue"
+        }
       ],
       "notes": "Date provisoire à confirmer",
       "source": {
@@ -814,7 +1126,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-07T11:30:43.530Z",
+    "syncDate": "2025-07-07T11:45:30.099Z",
     "source": "notion",
     "totalEvents": 47
   }

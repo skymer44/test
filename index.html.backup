@@ -392,13 +392,176 @@
                 </div>
             </section>
         </div>
+            <section id="aimer-from-the-musical-romeo-et-juliette">
+            <h2>Aimer from the Musical: Roméo et Juliette</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
 
-    <!-- Contrôles audio -->
-    <div id="audio-controls" class="audio-controls" style="display: none;">
-        <div id="audio-info">
-            <span id="audio-title">Aucun audio en cours</span>
-            <div class="audio-buttons">
-                <button id="pause-resume-btn" class="audio-control-btn" title="Pause/Reprendre">⏸</button>
+            <section id="big-spender">
+            <h2>Big Spender</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="youll-be-back">
+            <h2>You’ll be back</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="skyfall">
+            <h2>Skyfall</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="soundtrack-highlights-from-the-hunger-games">
+            <h2>Soundtrack Highlights from the Hunger Games</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="suite-from-symphonie-fantastique">
+            <h2>Suite from Symphonie Fantastique</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="tableaux-dune-exposition">
+            <h2>Tableaux d’une exposition</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="lhymne-a-lamour">
+            <h2>L’hymne à l’amour</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="mambo-extrait-west-side-story">
+            <h2>Mambo (extrait West side Story)</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="rhapsody-in-blue">
+            <h2>Rhapsody In Blue</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="waltz-no-2">
+            <h2>Waltz No. 2</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="west-side-story-a-medley">
+            <h2>West Side Story (A Medley)</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="epic-gaming-themes">
+            <h2>Epic Gaming Themes</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="bamboleo">
+            <h2>Bamboleo</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="music-from-carmen">
+            <h2>Music from Carmen</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="night-on-bald-mountain">
+            <h2>Night On Bald Mountain</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="danse-des-sauvages">
+            <h2>Danse des Sauvages</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="three-klezmer-miniatures">
+            <h2>Three Klezmer Miniatures</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="lac-des-cygnes">
+            <h2>Lac des cygnes</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+            <section id="pirates-of-the-caribbean-medley">
+            <h2>Pirates of the Caribbean Medley</h2>
+            <div class="pieces-grid">
+                
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modale vidéo YouTube -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-modal-wrapper">
+            <div class="video-controls">
+                <button id="audio-mode-btn" class="control-btn" title="Mode audio uniquement">🎧</button>
+                <button id="close-modal-btn" class="control-btn" title="Fermer">✕</button>
+            </div>
+            <div class="video-modal-content">
+                <div class="video-container">
+                    <iframe id="youtube-player" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini-lecteur audio en bas -->
+    <div id="audio-player" class="audio-player">
+        <div class="audio-player-content">
+            <div class="audio-info">
+                <span id="audio-title">Titre de la pièce</span>
+            </div>
+            <div class="audio-controls">
                 <button id="show-video-btn" class="audio-control-btn" title="Afficher la vidéo">▶</button>
                 <button id="stop-audio-btn" class="audio-control-btn" title="Arrêter">⏹</button>
             </div>

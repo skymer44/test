@@ -1951,8 +1951,15 @@ section:target {
 .main-event-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 1rem;
+}
+
+/* Container pour la partie gauche du header */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /* Container pour la partie droite du header */
@@ -2034,6 +2041,7 @@ section:target {
     font-size: 0.8rem;
     font-weight: 500;
     color: white;
+    position: relative;
 }
 
 .event-type-badge.repetition {
@@ -2050,6 +2058,57 @@ section:target {
 
 .event-type-badge.other {
     background: #ed8936;
+}
+
+/* Couleurs Notion pour les badges d'événements */
+.event-type-badge.event-default {
+    background: #6b7280;
+    color: white;
+}
+
+.event-type-badge.event-gray {
+    background: #6b7280;
+    color: white;
+}
+
+.event-type-badge.event-brown {
+    background: #92400e;
+    color: white;
+}
+
+.event-type-badge.event-orange {
+    background: #ea580c;
+    color: white;
+}
+
+.event-type-badge.event-yellow {
+    background: #d97706;
+    color: white;
+}
+
+.event-type-badge.event-green {
+    background: #059669;
+    color: white;
+}
+
+.event-type-badge.event-blue {
+    background: #0284c7;
+    color: white;
+}
+
+.event-type-badge.event-purple {
+    background: #7c3aed;
+    color: white;
+}
+
+.event-type-badge.event-pink {
+    background: #be185d;
+    color: white;
+}
+
+.event-type-badge.event-red {
+    background: #dc2626;
+    color: white;
 }
 
 /* Titre d'événement plus sobre */
@@ -2123,6 +2182,47 @@ section:target {
     margin-bottom: 0;
     color: #2d3748;
     font-weight: 600;
+}
+
+/* Couleurs Notion pour les pièces musicales */
+.piece-item.piece-default {
+    border-left-color: #6b7280;
+}
+
+.piece-item.piece-gray {
+    border-left-color: #6b7280;
+}
+
+.piece-item.piece-brown {
+    border-left-color: #92400e;
+}
+
+.piece-item.piece-orange {
+    border-left-color: #ea580c;
+}
+
+.piece-item.piece-yellow {
+    border-left-color: #d97706;
+}
+
+.piece-item.piece-green {
+    border-left-color: #059669;
+}
+
+.piece-item.piece-blue {
+    border-left-color: #0284c7;
+}
+
+.piece-item.piece-purple {
+    border-left-color: #7c3aed;
+}
+
+.piece-item.piece-pink {
+    border-left-color: #be185d;
+}
+
+.piece-item.piece-red {
+    border-left-color: #dc2626;
 }
 
 /* Notes - Plus discrètes */
@@ -2294,6 +2394,95 @@ section:target {
     transform: translateY(-1px);
 }
 
+/* Tuile d'événement sélectionnée */
+.mini-event-card.selected {
+    border: none;
+    box-shadow: 
+        inset 0 0 0 4px #667eea,
+        0 2px 8px rgba(102, 126, 234, 0.15),
+        inset 0 1px 3px rgba(102, 126, 234, 0.1);
+    transform: none;
+    background: inherit;
+}
+
+.mini-event-card.selected .mini-event-type {
+    color: inherit;
+    font-weight: inherit;
+}
+
+.mini-event-card.selected .mini-event-date,
+.mini-event-card.selected .mini-event-location,
+.mini-event-card.selected .mini-event-pieces,
+.mini-event-card.selected .mini-event-countdown {
+    color: inherit;
+}
+
+/* Bouton de retour discret */
+.discrete-back-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+
+.discrete-back-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .discrete-back-button {
+        top: 15px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+}
+
+/* Styles pour les mini-cartes cliquables */
+.mini-event-card.clickable-event {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Bouton de retour à l'événement actuel */
+.back-to-current-container {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.back-to-current-btn {
+    background: #ed8936;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(237, 137, 54, 0.3);
+}
+
+.back-to-current-btn:hover {
+    background: #dd7724;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+}
+
 /* Section tous les événements */
 .all-events-section {
     margin-top: 3rem;
@@ -2371,9 +2560,84 @@ section:target {
     background: linear-gradient(90deg, #818cf8, #6366f1);
 }
 
+/* Couleurs Notion pour les mini-event-card */
+.mini-event-card.event-default::before,
+.mini-event-card.event-gray::before {
+    background: linear-gradient(90deg, #6b7280, #4b5563);
+}
+
+.mini-event-card.event-brown::before {
+    background: linear-gradient(90deg, #92400e, #78350f);
+}
+
+.mini-event-card.event-orange::before {
+    background: linear-gradient(90deg, #ea580c, #c2410c);
+}
+
+.mini-event-card.event-yellow::before {
+    background: linear-gradient(90deg, #d97706, #b45309);
+}
+
+.mini-event-card.event-green::before {
+    background: linear-gradient(90deg, #059669, #047857);
+}
+
+.mini-event-card.event-blue::before {
+    background: linear-gradient(90deg, #0284c7, #0369a1);
+}
+
+.mini-event-card.event-purple::before {
+    background: linear-gradient(90deg, #7c3aed, #6d28d9);
+}
+
+.mini-event-card.event-pink::before {
+    background: linear-gradient(90deg, #be185d, #9d174d);
+}
+
+.mini-event-card.event-red::before {
+    background: linear-gradient(90deg, #dc2626, #b91c1c);
+}
+
 .mini-event-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Garder le style de sélection même au hover */
+.mini-event-card.selected:hover {
+    transform: none;
+    box-shadow: 
+        inset 0 0 0 4px #667eea,
+        0 2px 8px rgba(102, 126, 234, 0.15),
+        inset 0 1px 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Bouton moderne flat design à gauche du badge */
+.back-to-default-btn-modern {
+    background: #f5f5f5;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.back-to-default-btn-modern:hover {
+    background: #e8e8e8;
+    border-color: #d0d0d0;
+    color: #333;
+}
+
+.back-to-default-btn-modern:active {
+    background: #ddd;
 }
 
 .mini-event-header {
@@ -2413,6 +2677,53 @@ section:target {
 .mini-event-type.other {
     background: rgba(236, 201, 75, 0.1);
     color: #d69e2e;
+}
+
+/* Couleurs Notion pour les mini-event-type */
+.mini-event-type.event-default,
+.mini-event-type.event-gray {
+    background: rgba(107, 114, 128, 0.1);
+    color: #374151;
+}
+
+.mini-event-type.event-brown {
+    background: rgba(146, 64, 14, 0.1);
+    color: #92400e;
+}
+
+.mini-event-type.event-orange {
+    background: rgba(234, 88, 12, 0.1);
+    color: #ea580c;
+}
+
+.mini-event-type.event-yellow {
+    background: rgba(217, 119, 6, 0.1);
+    color: #d97706;
+}
+
+.mini-event-type.event-green {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+}
+
+.mini-event-type.event-blue {
+    background: rgba(2, 132, 199, 0.1);
+    color: #0284c7;
+}
+
+.mini-event-type.event-purple {
+    background: rgba(124, 58, 237, 0.1);
+    color: #7c3aed;
+}
+
+.mini-event-type.event-pink {
+    background: rgba(190, 24, 93, 0.1);
+    color: #be185d;
+}
+
+.mini-event-type.event-red {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
 }
 
 .mini-event-date {
