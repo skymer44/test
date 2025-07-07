@@ -53,16 +53,21 @@ jobs:
           echo "📊 Type de sync: $SYNC_TYPE"
           node scripts/notion-sync.js
           
-      - name: 🏗️ Build site with new architecture
+      - name: � Inject Notion content (Secure Architecture)
         run: |
-          echo "🔄 Construction du site avec nouvelle architecture..."
-          npm run build
-          echo "✅ Site construit dans /build/ avec séparation code/données"
+          echo "🔄 Injection sécurisée du contenu Notion..."
+          node scripts/notion-content-injector.js
+          echo "✅ Contenu injecté de manière sécurisée dans #programmes-content"
           
       - name: 🚀 Deploy to production
         run: |
-          echo "📁 Déploiement intelligent..."
-          npm run deploy
+          echo "📁 Déploiement sécurisé..."
+          npm run cache-bust
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "🎵 Auto-sync: Notion data updated [$(date '+%Y-%m-%d %H:%M')]" || echo "No changes to commit"
+          git push
           
       - name: 📊 Summary Report
         run: |
