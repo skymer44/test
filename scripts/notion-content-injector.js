@@ -36,8 +36,11 @@ class NotionContentInjector {
         ];
         
         // Mapping des bases de données Notion vers les sections du site
+        // Ce mapping permet de maintenir un ordre stable même si vous changez les noms dans Notion
         this.sectionMapping = {
+            // Mapping exact (nom complet)
             'Ma région virtuose': 'ma-region-virtuose',
+            'Ma région virtuose 0': 'ma-region-virtuose',  // Nouveau nom détecté
             'Concert du 11 d\'avril avec Eric Aubier': 'concert-eric-aubier',
             'Insertion dans les 60 ans du Conservatoire ': 'conservatoire-60-ans',
             'Retour Karaoké': 'retour-karaoke',
@@ -45,6 +48,25 @@ class NotionContentInjector {
             'Loto': 'loto',
             'Pièces d\'ajout sans direction': 'pieces-ajout',
             'Pièces qui n\'ont pas trouvé leur concert': 'pieces-orphelines'
+        };
+        
+        // Mapping par mots-clés (détection intelligente pour nouveaux noms)
+        this.keywordMapping = {
+            'ma région': 'ma-region-virtuose',
+            'région virtuose': 'ma-region-virtuose',
+            'concert.*eric.*aubier': 'concert-eric-aubier',
+            'eric aubier': 'concert-eric-aubier',
+            'conservatoire.*60': 'conservatoire-60-ans',
+            '60.*conservatoire': 'conservatoire-60-ans',
+            'fête.*musique': 'fete-musique',
+            'programme.*fête': 'fete-musique',
+            'retour.*karaoké': 'retour-karaoke',
+            'karaoké': 'retour-karaoke',
+            'loto': 'loto',
+            'pièces.*ajout': 'pieces-ajout',
+            'ajout.*direction': 'pieces-ajout',
+            'pas.*trouvé': 'pieces-orphelines',
+            'orphelines': 'pieces-orphelines'
         };
         
         // Titres français des sections
@@ -113,6 +135,21 @@ class NotionContentInjector {
     organizePiecesBySection(pieces) {
         const sections = {};
         
+        // Détecter les nouveaux noms de bases de données
+        const detectedDatabases = new Set();
+        pieces.forEach(piece => {
+            if (piece.source?.database) {
+                detectedDatabases.add(piece.source.database);
+            }
+        });
+        
+        console.log('📋 Bases de données détectées dans Notion:');
+        detectedDatabases.forEach(dbName => {
+            const sectionId = this.getSectionForDatabase(dbName);
+            const isKnown = Object.keys(this.sectionMapping).includes(dbName);
+            console.log(`  ${isKnown ? '✅' : '🆕'} "${dbName}" → ${sectionId}`);
+        });
+        
         pieces.forEach(piece => {
             const databaseName = piece.source?.database;
             if (databaseName) {
@@ -160,7 +197,27 @@ class NotionContentInjector {
 
     getSectionForDatabase(databaseName) {
         const normalizedName = databaseName.replace(/[\u2019\u2018\u201B\u0060\u00B4]/g, "'");
-        return this.sectionMapping[normalizedName] || 'nouvelles-pieces';
+        
+        // 1. Tentative de mapping exact
+        if (this.sectionMapping[normalizedName]) {
+            return this.sectionMapping[normalizedName];
+        }
+        
+        // 2. Détection intelligente par mots-clés
+        const lowerName = normalizedName.toLowerCase();
+        for (const [keyword, sectionId] of Object.entries(this.keywordMapping)) {
+            const regex = new RegExp(keyword, 'i');
+            if (regex.test(lowerName)) {
+                console.log(`🔍 Détection automatique: "${databaseName}" → ${sectionId} (via "${keyword}")`);
+                // Ajouter au mapping pour la prochaine fois
+                this.sectionMapping[normalizedName] = sectionId;
+                return sectionId;
+            }
+        }
+        
+        // 3. Fallback : nouvelles pièces
+        console.log(`⚠️ Base inconnue: "${databaseName}" → nouvelles-pieces`);
+        return 'nouvelles-pieces';
     }
 
     async injectContentIntoTarget(htmlContent, sections) {
