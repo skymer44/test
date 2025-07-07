@@ -1488,7 +1488,7 @@ console.log('🔄 Synchronisation Notion configurée!');
 
 // Système de vérification automatique des versions
 (function() {
-    const CURRENT_VERSION = 'v20250707_2cd7a5ea';
+    const CURRENT_VERSION = 'v20250707_172bb17e';
     const CHECK_INTERVAL = 30000; // 30 secondes
     
     let isCheckingVersion = false;
