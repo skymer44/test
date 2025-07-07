@@ -987,15 +987,6 @@ function generateMiniEventCard(event, selectedEvent = null) {
                 <div class="mini-event-type ${eventTypeClass}">${eventTypeEmoji} ${eventType}</div>
                 <div class="mini-event-actions">
                     <div class="mini-event-countdown">${countdownText}</div>
-                    ${getDeviceConfig().isMobile ? `
-                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
-                            📅
-                        </button>
-                    ` : `
-                        <button class="mini-add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')" title="Ajouter au calendrier">
-                            📅
-                        </button>
-                    `}
                 </div>
             </div>
             
@@ -1121,7 +1112,7 @@ function backToCurrentEvent() {
 function selectMiniEvent(eventId) {
     // Trouver l'événement correspondant dans les données globales
     const selectedEvent = window.currentAllEvents.find(event => {
-        const eventTitle = Array.isArray(event.title) ? event.title[0] || 'Événement' : event.title || 'Événement';
+        const eventTitle = extractCleanTitle(event.title);
         const eventTitleString = String(eventTitle || 'evenement');
         const computedId = `event_${event.date}_${eventTitleString.replace(/[^a-zA-Z0-9]/g, '_')}`;
         return computedId === eventId;
@@ -1129,6 +1120,13 @@ function selectMiniEvent(eventId) {
     
     if (selectedEvent) {
         displaySpecificEvent(selectedEvent);
+    } else {
+        console.warn('⚠️ Événement non trouvé pour ID:', eventId);
+        console.log('📊 IDs disponibles:', window.currentAllEvents?.map(event => {
+            const eventTitle = extractCleanTitle(event.title);
+            const eventTitleString = String(eventTitle || 'evenement');
+            return `event_${event.date}_${eventTitleString.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        }));
     }
 }
 
