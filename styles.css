@@ -561,6 +561,11 @@ header h1 {
     .mobile-search {
         flex: 1;
         max-width: 300px;
+        display: none;
+    }
+    
+    .mobile-search.visible {
+        display: block;
     }
     
     .mobile-search input {
@@ -597,6 +602,15 @@ header h1 {
     main {
         padding-bottom: 100px; /* Espace pour la navigation bottom */
         padding-top: 0;
+    }
+    
+    /* Masquer le lecteur audio modal sur mobile */
+    .audio-player {
+        display: none !important;
+    }
+    
+    .video-modal {
+        display: none !important;
     }
     
     /* Styles pour que les onglets desktop soient cachés sur mobile */

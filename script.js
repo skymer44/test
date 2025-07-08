@@ -384,6 +384,7 @@ function initTabs() {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('data-tab');
+            console.log('🔄 Mobile - Clic sur onglet:', targetId);
             showTab(targetId);
         });
     });
@@ -2951,7 +2952,15 @@ function addSearchFunctionality() {
         if (searchContainer) {
             searchContainer.style.display = isVisible ? 'flex' : 'none';
         }
-        // La recherche mobile est toujours visible sur mobile
+        // Gérer la visibilité de la recherche mobile
+        const mobileSearchContainer = document.querySelector('.mobile-search');
+        if (mobileSearchContainer) {
+            if (isVisible) {
+                mobileSearchContainer.classList.add('visible');
+            } else {
+                mobileSearchContainer.classList.remove('visible');
+            }
+        }
     }
     
     // Fonction de recherche centralisée
@@ -3080,7 +3089,14 @@ function initVideoModal() {
             const videoId = getYouTubeVideoId(videoUrl);
             
             if (videoId) {
-                // Trouver le titre de la pièce
+                // Sur mobile, rediriger directement vers YouTube
+                if (window.innerWidth <= 768) {
+                    // Essayer d'ouvrir l'app YouTube, sinon fallback vers le navigateur
+                    window.open(videoUrl, '_blank');
+                    return;
+                }
+                
+                // Sur desktop, utiliser le lecteur modal
                 const pieceCard = link.closest('.piece-card');
                 const title = pieceCard ? pieceCard.querySelector('h3')?.textContent : 'Vidéo YouTube';
                 
