@@ -49,13 +49,17 @@
         </div>
     </header>
 
-    <!-- Navigation par onglets -->
+    <!-- Navigation principale = Header unifié -->
     <nav class="tab-navigation">
         <div class="tab-container">
+            <h1 class="tab-title">Fiche Musicien</h1>
             <div class="tab-buttons">
                 <button class="tab-button active" data-tab="prochains-evenements">🗓️ Prochains événements à venir</button>
                 <button class="tab-button" data-tab="programmes">📚 Programme musical</button>
                 <button class="tab-button" data-tab="partitions">🎼 Partitions</button>
+            </div>
+            <div id="site-stats" class="site-statistics">
+                <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
             </div>
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">

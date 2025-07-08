@@ -172,13 +172,9 @@ body {
     }
 }
 
-/* Header compact */
+/* Header supprimé - remplacé par la navigation */
 header {
-    background: #ffffff;
-    color: #1a202c;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: none;
 }
 
 .header-content {
@@ -311,32 +307,43 @@ header h1 {
     opacity: 0.9;
 }
 
-/* Navigation par onglets moderne */
+/* Navigation transformée en header principal */
 .tab-navigation {
-    background: #f7fafc;
-    border-bottom: none;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
     padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: relative;
 }
 
 .tab-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
     align-items: center;
     gap: 2rem;
     padding: 0 2rem;
 }
 
+/* Titre intégré dans la navigation */
+.tab-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 0;
+    white-space: nowrap;
+}
+
 .tab-buttons {
     display: flex;
     gap: 0.5rem;
-    background: #ffffff;
+    background: #f7fafc;
     padding: 0.25rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border: 1px solid #e2e8f0;
+    justify-self: center;
 }
 
 .tab-button {
@@ -354,7 +361,7 @@ header h1 {
 }
 
 .tab-button:hover {
-    background: #f7fafc;
+    background: #ffffff;
     color: #2d3748;
     transform: translateY(-1px);
 }
@@ -366,18 +373,44 @@ header h1 {
     transform: translateY(-1px);
 }
 
-/* Barre de recherche moderne */
+/* Statistiques intégrées */
+.site-statistics {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.2);
+    transition: transform 0.2s ease;
+    min-width: 60px;
+    font-size: 0.85rem;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Barre de recherche dans le header unifié */
 .search-container {
     flex-shrink: 0;
 }
 
 .search-input {
-    width: 280px;
+    width: 260px;
     padding: 0.75rem 1rem;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     font-size: 0.9rem;
-    background: #ffffff;
+    background: #f7fafc;
     color: #4a5568;
     transition: all 0.2s ease;
     outline: none;
@@ -386,6 +419,7 @@ header h1 {
 
 .search-input:focus {
     border-color: #4299e1;
+    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1), 0 2px 6px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
 }
@@ -394,27 +428,18 @@ header h1 {
     color: #a0aec0;
 }
 
-/* Responsive pour header et navigation moderne */
+/* Responsive pour header unifié */
 @media (max-width: 768px) {
-    .header-content {
-        padding: 0 1rem;
-    }
-
-    header h1 {
-        font-size: 1.3rem;
-    }
-
-    .site-statistics {
-        gap: 1rem;
-        justify-content: center;
-        order: 2;
-        width: 100%;
-    }
-
     .tab-container {
-        flex-direction: column;
+        grid-template-columns: 1fr;
         gap: 1rem;
         padding: 0 1rem;
+        text-align: center;
+    }
+
+    .tab-title {
+        font-size: 1.2rem;
+        justify-self: center;
     }
 
     .tab-buttons {
@@ -423,6 +448,7 @@ header h1 {
         overflow-x: auto;
         padding: 0.2rem;
         gap: 0.25rem;
+        justify-self: center;
     }
 
     .tab-button {
@@ -431,9 +457,22 @@ header h1 {
         min-width: max-content;
     }
 
+    .site-statistics {
+        gap: 0.75rem;
+        justify-content: center;
+        justify-self: center;
+    }
+
+    .stat-item {
+        min-width: 50px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
     .search-input {
         width: 100%;
         max-width: 280px;
+        justify-self: center;
     }
 }
 
