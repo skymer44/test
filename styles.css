@@ -577,6 +577,8 @@ header h1 {
     main {
         padding-bottom: 150px; /* Augmenté encore plus pour éviter que le contenu soit coupé */
         padding-top: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
     
     /* Assurer que les sections spécifiques ont assez d'espace en bas */
@@ -1575,7 +1577,9 @@ main {
 @media (max-width: 768px) {
     .partitions-section-clean {
         padding: 2rem;
-        margin: 0 1rem;
+        margin: 0;
+        max-width: none;
+        border-radius: 0;
     }
     
     .partitions-header h2 {
@@ -1598,6 +1602,7 @@ main {
 @media (max-width: 480px) {
     .partitions-section-clean {
         padding: 1.5rem;
+        margin: 0;
     }
     
     .partitions-header {
