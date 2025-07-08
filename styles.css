@@ -613,6 +613,11 @@ header h1 {
         display: none !important;
     }
     
+    /* Masquer le bouton retour en haut sur mobile */
+    .back-to-top {
+        display: none !important;
+    }
+    
     /* Styles pour que les onglets desktop soient cachés sur mobile */
     .tab-content {
         display: none;

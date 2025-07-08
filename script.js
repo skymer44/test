@@ -329,6 +329,24 @@ function initTabs() {
     
     console.log('Onglets desktop trouvés:', tabButtons.length, 'Onglets mobile trouvés:', mobileNavItems.length, 'Contenus trouvés:', tabContents.length);
     
+    // Debug: Lister tous les éléments trouvés
+    console.log('📱 Éléments mobiles détectés:');
+    mobileNavItems.forEach((item, index) => {
+        const dataTab = item.getAttribute('data-tab');
+        console.log(`  ${index}: data-tab="${dataTab}"`);
+    });
+    
+    console.log('💻 Éléments desktop détectés:');
+    tabButtons.forEach((button, index) => {
+        const dataTab = button.getAttribute('data-tab');
+        console.log(`  ${index}: data-tab="${dataTab}"`);
+    });
+    
+    console.log('📄 Contenus d\'onglets détectés:');
+    tabContents.forEach((content, index) => {
+        console.log(`  ${index}: id="${content.id}"`);
+    });
+    
     // Fonction pour afficher un onglet
     function showTab(targetId) {
         console.log('Affichage onglet:', targetId);
@@ -1255,18 +1273,24 @@ function navigateToPieceInPrograms(pieceName) {
 function switchToTab(targetId) {
     console.log(`🔄 Basculement vers l'onglet: ${targetId}`);
     
-    // Utiliser la logique existante de showTab
+    // Utiliser la logique complète de showTab avec synchronisation mobile
     const tabContents = document.querySelectorAll('.tab-content');
     const tabButtons = document.querySelectorAll('.tab-button');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
     
     // Masquer tous les contenus d'onglets
     tabContents.forEach(content => {
         content.classList.remove('active');
     });
     
-    // Désactiver tous les boutons d'onglets
+    // Désactiver tous les boutons d'onglets desktop
     tabButtons.forEach(button => {
         button.classList.remove('active');
+    });
+    
+    // Désactiver tous les items de navigation mobile
+    mobileNavItems.forEach(item => {
+        item.classList.remove('active');
     });
     
     // Afficher le contenu de l'onglet ciblé
@@ -1276,10 +1300,33 @@ function switchToTab(targetId) {
         console.log(`✅ Onglet ${targetId} activé`);
     }
     
-    // Activer le bouton correspondant
-    const activeButton = document.querySelector(`[data-tab="${targetId}"]`);
+    // Activer le bouton correspondant (desktop)
+    const activeButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
     if (activeButton) {
         activeButton.classList.add('active');
+    }
+    
+    // Activer l'item correspondant (mobile)
+    const activeMobileItem = document.querySelector(`.mobile-nav-item[data-tab="${targetId}"]`);
+    if (activeMobileItem) {
+        activeMobileItem.classList.add('active');
+    }
+    
+    // Déclencher la mise à jour de la visibilité de la recherche
+    const programmesTab = document.getElementById('programmes');
+    const searchContainer = document.querySelector('.search-container');
+    const mobileSearchContainer = document.querySelector('.mobile-search');
+    
+    const isVisible = programmesTab && programmesTab.classList.contains('active');
+    if (searchContainer) {
+        searchContainer.style.display = isVisible ? 'flex' : 'none';
+    }
+    if (mobileSearchContainer) {
+        if (isVisible) {
+            mobileSearchContainer.classList.add('visible');
+        } else {
+            mobileSearchContainer.classList.remove('visible');
+        }
     }
 }
 
@@ -2861,8 +2908,14 @@ function addTooltips() {
     });
 }
 
-// Ajouter un bouton "retour en haut"
+// Ajouter un bouton "retour en haut" (seulement sur desktop)
 function addBackToTopButton() {
+    // Ne pas créer le bouton sur mobile
+    if (window.innerWidth <= 768) {
+        console.log('📱 Bouton retour en haut désactivé sur mobile');
+        return;
+    }
+    
     const backToTopButton = document.createElement('button');
     backToTopButton.innerHTML = '↑';
     backToTopButton.className = 'back-to-top';
