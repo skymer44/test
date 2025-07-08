@@ -416,18 +416,17 @@ class ProgrammeLoader {
         const statsContainer = document.getElementById('site-stats');
         if (statsContainer && data.pieces) {
             const totalPieces = data.pieces.length;
-            const lastSync = data.metadata?.syncDate ? 
-                new Date(data.metadata.syncDate).toLocaleString('fr-FR') : 
-                'Inconnue';
             
-            statsContainer.innerHTML = `
-                <div class="stats-item">
-                    <span class="stats-number">${totalPieces}</span>
-                    <span class="stats-label">pièces</span>
-                </div>
-                <div class="stats-item">
-                    <span class="stats-last-sync">Dernière sync: ${lastSync}</span>
-                </div>`;
+            // ✅ MASQUER TOUTES LES STATISTIQUES POUR LES UTILISATEURS
+            // Interface propre sans informations techniques
+            statsContainer.innerHTML = '';
+            
+            // 🔧 DEBUG: Les infos restent dans la console pour les développeurs
+            console.log(`🔄 [Debug] ${totalPieces} pièces chargées`);
+            if (data.metadata?.syncDate) {
+                const lastSync = new Date(data.metadata.syncDate).toLocaleString('fr-FR');
+                console.log(`🔄 [Debug] Dernière synchronisation: ${lastSync}`);
+            }
         }
     }
 
