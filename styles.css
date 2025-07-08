@@ -3233,63 +3233,63 @@ section:target {
     }
 }
 
-/* Styles pour mode standalone iOS - Interface identique mais sans barre Safari */
+/* 🚨 CORRECTION FORCÉE POUR PWA - iPhone 390px */
 @media all and (display-mode: standalone) {
     /* Support du notch iPhone */
     body {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
+        padding-top: env(safe-area-inset-top) !important;
+        padding-bottom: env(safe-area-inset-bottom) !important;
+        padding-left: env(safe-area-inset-left) !important;
+        padding-right: env(safe-area-inset-right) !important;
     }
     
-    /* 📱 CORRECTION LARGEUR CARTES EN MODE STANDALONE */
-    /* Grid des événements - cartes plus larges */
+    /* 📱 CORRECTION SPÉCIFIQUE IPHONE 390px - Cartes plus larges en PWA */
     .upcoming-events-list {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
-        gap: 1.5rem !important;
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 0.5rem !important;
     }
     
-    /* Cartes d'événements - padding augmenté */
+    /* Forcer la largeur des cartes à utiliser toute la largeur disponible */
     .mini-event-card {
-        padding: 1.5rem !important;
-        min-width: 320px !important;
+        width: calc(100% - 1rem) !important;
+        min-width: calc(100% - 1rem) !important;
+        max-width: none !important;
+        padding: 1.2rem !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
     }
     
-    /* Contenu principal plus large */
+    /* Contenu principal aussi en pleine largeur */
     .main-event-content {
-        padding: 1.5rem !important;
-        min-width: 320px !important;
+        width: calc(100% - 1rem) !important;
+        min-width: calc(100% - 1rem) !important;
+        padding: 1.2rem !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
     }
     
-    /* Container principal plus large */
+    /* Container principal optimisé */
     .next-events-section {
-        padding: 0 1rem !important;
+        padding: 0 0.5rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
-    /* Grid des pièces aussi plus large */
+    /* Grid des pièces en une colonne aussi */
     .pieces-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 0.5rem !important;
     }
     
-    /* Cartes des pièces plus larges */
+    /* Cartes des pièces en pleine largeur */
     .piece-card {
-        min-width: 320px !important;
-        padding: 1.5rem !important;
-    }
-    
-    /* Pour les petits écrans en standalone, assurer une largeur minimale */
-    @media (max-width: 414px) {
-        .upcoming-events-list {
-            grid-template-columns: 1fr !important;
-        }
-        
-        .mini-event-card,
-        .main-event-content,
-        .piece-card {
-            min-width: calc(100vw - 2rem) !important;
-            margin: 0 !important;
-        }
+        width: calc(100% - 1rem) !important;
+        min-width: calc(100% - 1rem) !important;
+        padding: 1.2rem !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
     }
 }
 
@@ -3297,10 +3297,10 @@ section:target {
 @supports (padding: max(0px)) {
     @media all and (display-mode: standalone) {
         body {
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
+            padding-top: max(20px, env(safe-area-inset-top)) !important;
+            padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+            padding-left: max(10px, env(safe-area-inset-left)) !important;
+            padding-right: max(10px, env(safe-area-inset-right)) !important;
         }
     }
 }
