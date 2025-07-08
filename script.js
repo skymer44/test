@@ -76,6 +76,14 @@ function diagnoseDisplayDifferences() {
                 padding: cardStyle.padding,
                 margin: cardStyle.margin
             });
+            
+            // 📱 STOCKER LES DONNÉES POUR L'OVERLAY PWA
+            window.pwaCardData = {
+                width: cardStyle.width,
+                minWidth: cardStyle.minWidth,
+                padding: cardStyle.padding,
+                margin: cardStyle.margin
+            };
         }
         
         if (eventList) {
@@ -85,6 +93,13 @@ function diagnoseDisplayDifferences() {
                 gap: listStyle.gap,
                 padding: listStyle.padding
             });
+            
+            // 📱 STOCKER LES DONNÉES POUR L'OVERLAY PWA
+            window.pwaListData = {
+                gridTemplateColumns: listStyle.gridTemplateColumns,
+                gap: listStyle.gap,
+                padding: listStyle.padding
+            };
         }
     }, 2000);
     
@@ -121,10 +136,78 @@ function diagnoseDisplayDifferences() {
     console.log('🔍 === FIN DIAGNOSTIC ===');
 }
 
-// Lancer le diagnostic au chargement
+// 🚨 DIAGNOSTIC AUTOMATIQUE EN MODE PWA (pas besoin de console)
 window.addEventListener('load', () => {
-    setTimeout(diagnoseDisplayDifferences, 1000);
+    setTimeout(() => {
+        diagnoseDisplayDifferences();
+        
+        // 📱 AFFICHAGE VISUEL DES DONNÉES POUR PWA (sans console)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            setTimeout(showPWADiagnosticOverlay, 3000);
+        }
+    }, 1000);
 });
+
+// 📊 AFFICHER LES DONNÉES DE DIAGNOSTIC À L'ÉCRAN EN MODE PWA
+function showPWADiagnosticOverlay() {
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    if (!isPWA) return; // Seulement en mode PWA
+    
+    // Utiliser les données stockées ou récupérer à nouveau
+    let cardData = 'Chargement...';
+    let listData = 'Chargement...';
+    
+    if (window.pwaCardData) {
+        cardData = `width: ${window.pwaCardData.width}, min: ${window.pwaCardData.minWidth}`;
+    }
+    
+    if (window.pwaListData) {
+        listData = `grid: ${window.pwaListData.gridTemplateColumns}`;
+    }
+    
+    // Créer l'overlay de diagnostic
+    const overlay = document.createElement('div');
+    overlay.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 99999;
+            max-width: 90vw;
+            font-size: 12px;
+            line-height: 1.4;
+        ">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <strong>🔍 DIAGNOSTIC PWA AUTOMATIQUE</strong>
+            </div>
+            
+            <div><strong>📱 Mode:</strong> PWA Standalone ✅</div>
+            <div><strong>📐 Écran:</strong> ${window.innerWidth}x${window.innerHeight}</div>
+            <div><strong>🃏 Cartes:</strong> ${cardData}</div>
+            <div><strong>📋 Liste:</strong> ${listData}</div>
+            <div><strong>📏 Viewport:</strong> ${window.visualViewport ? window.visualViewport.width : window.innerWidth}px</div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: #007AFF;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                ">OK</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+}
 
 // �📱 FONCTIONS MOBILE-FIRST
 function isMobileDevice() {
