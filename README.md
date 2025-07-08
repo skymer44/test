@@ -1,14 +1,38 @@
 # 🎵 Programme Musical 2026 - Site Web
 
-## 📅 Synchronisation automatique Notion
+Site web de programme musical avec synchronisation automatique Notion.
 
-### ⏰ Mise à jour automatique
-- **2 fois par jour** : 6h30 et 22h30 (heure française)
-- **Déclenchement manuel** : Interface GitHub Actions
+## 🚀 Utilisation rapide
 
-### 🔧 Mise à jour manuelle
+### Mise à jour manuelle
+```bash
+npm run sync    # Synchroniser depuis Notion
+npm start       # Serveur local (port 8000)
+```
 
-**Via GitHub :**
+### Mise à jour via GitHub
+1. Aller sur `github.com/skymer44/test`
+2. Actions → "🎵 Notion Sync pour Netlify" → Run workflow
+
+### Mise à jour automatique
+- **6h30** et **22h30** chaque jour (automatique)
+
+## 🏗️ Architecture
+
+**Voir le fichier `ARCHITECTURE.md` pour la documentation technique complète.**
+
+- HTML statique + JSON dynamiques
+- Synchronisation Notion automatique
+- Génération côté client
+- Déploiement Netlify automatique
+
+## 🌐 URLs
+- **Production** : https://fichemusicien.site
+- **Local** : http://localhost:8000
+
+---
+
+📖 **Documentation technique détaillée** → `ARCHITECTURE.md`
 1. Aller sur `github.com/skymer44/test`
 2. Onglet "Actions" → "🎵 Notion Sync pour Netlify"
 3. "Run workflow" → "Run workflow"
