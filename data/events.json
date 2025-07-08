@@ -16,10 +16,6 @@
       ],
       "pieces": [
         {
-          "name": "Ammerland",
-          "color": "blue"
-        },
-        {
           "name": "The Lion King",
           "color": "blue"
         },
@@ -33,7 +29,7 @@
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-811a-b5c1-f430e527b949",
-        "lastModified": "2025-07-07T10:16:00.000Z"
+        "lastModified": "2025-07-08T10:47:00.000Z"
       }
     },
     {
@@ -1126,7 +1122,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-08T10:39:41.193Z",
+    "syncDate": "2025-07-08T10:47:49.309Z",
     "source": "notion",
     "totalEvents": 47
   }
