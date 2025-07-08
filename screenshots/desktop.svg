@@ -1,0 +1,10 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1280" height="720" fill="#f7fafc"/>
+    <rect x="0" y="0" width="1280" height="80" fill="#667eea"/>
+    <text x="640" y="50" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">Programme Musical 2026</text>
+    <rect x="100" y="120" width="1080" height="500" rx="20" fill="white" stroke="#e2e8f0" stroke-width="2"/>
+    <text x="640" y="180" text-anchor="middle" fill="#1a202c" font-family="Arial" font-size="20">🗓️ Prochains événements à venir</text>
+    <rect x="150" y="220" width="980" height="100" rx="10" fill="#667eea" opacity="0.1"/>
+    <text x="170" y="250" fill="#667eea" font-family="Arial" font-size="16" font-weight="bold">Concert du 15 juillet 2026</text>
+    <text x="170" y="280" fill="#4a5568" font-family="Arial" font-size="14">Salle de concert - 20h00</text>
+</svg>

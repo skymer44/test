@@ -2,6 +2,26 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="background-color" content="#f7fafc">
+    
+    <!-- iOS Specific Meta Tags for PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Musical 2026">
+    <link rel="apple-touch-icon" href="icons/icon-152x152.svg">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.svg">
+    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192x192.svg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="icons/icon-192x192.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.svg">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.svg">
+    
     <!-- Cache Busting - Version v20250707_e2cbdb2a -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -23,6 +43,11 @@
     <header>
         <div class="header-content">
             <h1>Programme Musical 2026</h1>
+            <!-- Badge PWA -->
+            <div class="pwa-badge" id="pwa-badge" style="display: none;">
+                <span class="pwa-icon">📱</span>
+                <span class="pwa-text">App installable</span>
+            </div>
             <div id="site-stats" class="site-statistics">
                 <!-- Les statistiques seront mises à jour automatiquement par JavaScript -->
             </div>
