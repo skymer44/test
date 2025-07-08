@@ -12,7 +12,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "21efcf9e-3abc-8032-ac5d-ece973cb7d21",
         "lastModified": "2025-07-07T16:58:00.000Z",
         "order": 1
@@ -30,7 +30,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "21efcf9e-3abc-80ff-8be2-ecaf7bba954d",
         "lastModified": "2025-07-06T12:51:00.000Z",
         "order": 2
@@ -48,7 +48,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "21efcf9e-3abc-80b4-9c8f-da5500be62e4",
         "lastModified": "2025-07-06T12:51:00.000Z",
         "order": 3
@@ -65,7 +65,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "21efcf9e-3abc-80e5-b655-df80bdf99c82",
         "lastModified": "2025-07-06T12:51:00.000Z",
         "order": 4
@@ -82,7 +82,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "223fcf9e-3abc-80c7-889a-fd58b3d6c56a",
         "lastModified": "2025-07-06T12:51:00.000Z",
         "order": 5
@@ -99,7 +99,7 @@
       },
       "source": {
         "notion": true,
-        "database": "Concert du 11 d’avril eric",
+        "database": "Concert du 11 d’avril",
         "pageId": "223fcf9e-3abc-8097-ae0d-e1ae4e40c75c",
         "lastModified": "2025-07-06T12:51:00.000Z",
         "order": 6
@@ -256,7 +256,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-08T10:36:54.088Z",
+    "syncDate": "2025-07-08T10:39:41.193Z",
     "source": "notion",
     "totalPieces": 15
   }
