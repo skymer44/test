@@ -10,7 +10,123 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// 📱 FONCTIONS MOBILE-FIRST
+// � DIAGNOSTIC PWA vs SAFARI - Pour comprendre les différences d'affichage
+function diagnoseDisplayDifferences() {
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    console.log('🔍 === DIAGNOSTIC AFFICHAGE ===');
+    console.log('📱 Mode PWA (standalone):', isPWA);
+    console.log('🍎 Appareil iOS:', isIOS);
+    console.log('📐 Dimensions fenêtre:', {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+        outerWidth: window.outerWidth,
+        outerHeight: window.outerHeight,
+        screenWidth: screen.width,
+        screenHeight: screen.height
+    });
+    console.log('📏 Viewport:', {
+        visualViewport: window.visualViewport ? {
+            width: window.visualViewport.width,
+            height: window.visualViewport.height
+        } : 'Non supporté'
+    });
+    console.log('🎨 Valeurs CSS importantes:', {
+        bodyWidth: document.body?.offsetWidth,
+        bodyHeight: document.body?.offsetHeight,
+        documentWidth: document.documentElement?.clientWidth,
+        documentHeight: document.documentElement?.clientHeight
+    });
+    
+    // Diagnostiquer les safe-area-inset
+    const testEl = document.createElement('div');
+    testEl.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        visibility: hidden;
+    `;
+    document.body.appendChild(testEl);
+    
+    const computedStyle = getComputedStyle(testEl);
+    console.log('📱 Safe Area Insets:', {
+        top: computedStyle.paddingTop,
+        bottom: computedStyle.paddingBottom,
+        left: computedStyle.paddingLeft,
+        right: computedStyle.paddingRight
+    });
+    
+    document.body.removeChild(testEl);
+    
+    // Vérifier les styles appliqués aux cartes
+    setTimeout(() => {
+        const eventCard = document.querySelector('.mini-event-card');
+        const eventList = document.querySelector('.upcoming-events-list');
+        
+        if (eventCard) {
+            const cardStyle = getComputedStyle(eventCard);
+            console.log('🃏 Style carte événement:', {
+                width: cardStyle.width,
+                minWidth: cardStyle.minWidth,
+                padding: cardStyle.padding,
+                margin: cardStyle.margin
+            });
+        }
+        
+        if (eventList) {
+            const listStyle = getComputedStyle(eventList);
+            console.log('📋 Style liste événements:', {
+                gridTemplateColumns: listStyle.gridTemplateColumns,
+                gap: listStyle.gap,
+                padding: listStyle.padding
+            });
+        }
+    }, 2000);
+    
+    // Afficher un indicateur visuel temporaire
+    if (isPWA) {
+        const indicator = document.createElement('div');
+        indicator.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: red;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 99999;
+                font-size: 12px;
+                opacity: 0.8;
+            ">
+                MODE PWA DÉTECTÉ<br>
+                ${window.innerWidth}x${window.innerHeight}
+            </div>
+        `;
+        document.body.appendChild(indicator);
+        
+        // Supprimer après 5 secondes
+        setTimeout(() => {
+            if (indicator.parentNode) {
+                indicator.remove();
+            }
+        }, 5000);
+    }
+    
+    console.log('🔍 === FIN DIAGNOSTIC ===');
+}
+
+// Lancer le diagnostic au chargement
+window.addEventListener('load', () => {
+    setTimeout(diagnoseDisplayDifferences, 1000);
+});
+
+// �📱 FONCTIONS MOBILE-FIRST
 function isMobileDevice() {
     return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
            ('ontouchstart' in window) || 

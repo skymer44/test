@@ -3218,6 +3218,21 @@ section:target {
    PWA iOS SIMPLE - JUSTE POUR MASQUER LA BARRE SAFARI
    ======================================== */
 
+/* 🔍 DIAGNOSTIC TEMPORAIRE - Bordures pour voir les différences */
+@media all and (display-mode: standalone) {
+    body {
+        border: 3px solid red !important;
+    }
+    
+    .upcoming-events-list {
+        border: 2px solid blue !important;
+    }
+    
+    .mini-event-card {
+        border: 1px solid green !important;
+    }
+}
+
 /* Styles pour mode standalone iOS - Interface identique mais sans barre Safari */
 @media all and (display-mode: standalone) {
     /* Support du notch iPhone */
