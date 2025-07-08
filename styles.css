@@ -15,6 +15,15 @@ body {
     line-height: 1.6;
     color: #1a202c;
     background-color: #f7fafc;
+    /* Masquer la barre de statut autant que possible */
+    padding-top: env(safe-area-inset-top);
+}
+
+/* Styles pour application PWA en plein écran */
+@media (display-mode: standalone) {
+    body {
+        padding-top: 0;
+    }
 }
 
 /* ========================================
