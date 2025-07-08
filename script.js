@@ -2649,26 +2649,7 @@ function updateSiteStatistics() {
         `;
     }
     
-    // Mettre à jour l'élément des statistiques mobiles s'il existe
-    const mobileStatsElement = document.getElementById('mobile-site-stats');
-    if (mobileStatsElement) {
-        const timeDisplay = stats.formatTime(stats.totalSeconds);
-            
-        mobileStatsElement.innerHTML = `
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalSections}</span>
-                <span class="stat-label">Concerts</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">${stats.totalPieces}</span>
-                <span class="stat-label">Pièces</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">${timeDisplay}</span>
-                <span class="stat-label">Durée</span>
-            </div>
-        `;
-    }
+    // Les statistiques mobiles ne sont plus nécessaires
     
     // Mettre à jour les durées de chaque section
     Object.keys(stats.sectionDurations).forEach(sectionId => {
