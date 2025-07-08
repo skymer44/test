@@ -275,9 +275,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialiser les onglets en priorité
     initTabs();
     
-    // Initialiser la recherche mobile
-    initMobileSearch();
-    
     // Initialiser les autres fonctionnalités
     try {
         initNextEventsSystem(); // Nouveau système d'événements
@@ -321,67 +318,6 @@ console.log('🚫 SYSTÈME DE RECHARGEMENT AUTOMATIQUE DÉSACTIVÉ - Plus d\'int
     console.log('🛡️ Protection anti-rechargement activée');
 })();
 });
-
-// ===================================
-// 🔍 RECHERCHE MOBILE NATIVE
-// ===================================
-function initMobileSearch() {
-    const searchInput = document.getElementById('mobile-search-input');
-    if (!searchInput) return;
-    
-    console.log('🔍 Initialisation recherche mobile...');
-    
-    // Fonction de recherche avec debounce
-    let searchTimeout;
-    
-    function performSearch(query) {
-        const allCards = document.querySelectorAll('.concert-card, .piece-card, .piece-item, .partition-card');
-        const searchTerm = query.toLowerCase().trim();
-        
-        if (searchTerm === '') {
-            // Réinitialiser tous les éléments
-            allCards.forEach(card => {
-                card.style.display = '';
-                card.classList.remove('search-match');
-            });
-            return;
-        }
-        
-        let matchCount = 0;
-        
-        allCards.forEach(card => {
-            const text = card.textContent.toLowerCase();
-            if (text.includes(searchTerm)) {
-                card.style.display = '';
-                card.classList.add('search-match');
-                matchCount++;
-            } else {
-                card.style.display = 'none';
-                card.classList.remove('search-match');
-            }
-        });
-        
-        console.log(`🔍 Recherche "${query}": ${matchCount} résultats trouvés`);
-    }
-    
-    // Écouter les changements de saisie avec debounce
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            performSearch(e.target.value);
-        }, 300);
-    });
-    
-    // Empêcher la soumission du formulaire
-    searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchInput.blur(); // Fermer le clavier sur mobile
-        }
-    });
-    
-    console.log('✅ Recherche mobile initialisée');
-}
 
 // Initialisation des onglets - VERSION SIMPLE ET ROBUSTE
 function initTabs() {
