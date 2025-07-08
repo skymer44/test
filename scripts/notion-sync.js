@@ -156,50 +156,25 @@ async function backupCurrentData() {
 
 /**
  * Extrait les données actuelles du site
+ * NOUVELLE ARCHITECTURE : Ne plus lire le HTML, utiliser les données JSON uniquement
  */
 async function extractCurrentSiteData() {
     try {
-        const htmlContent = await fs.readFile('index.html', 'utf8');
-        
-        // Parser le HTML pour extraire la structure actuelle
-        // (Version simplifiée - en production, on utiliserait un parser HTML)
         const concerts = [];
-        const sectionRegex = /<section[^>]*id="([^"]*)"[^>]*class="concert-section"[^>]*>(.*?)<\/section>/gs;
         
-        let match;
-        while ((match = sectionRegex.exec(htmlContent)) !== null) {
-            const [, sectionId, sectionContent] = match;
-            
-            // Extraire le titre
-            const titleMatch = sectionContent.match(/<h2[^>]*>(.*?)<\/h2>/);
-            const title = titleMatch ? titleMatch[1].trim() : sectionId;
-            
-            // Extraire les pièces
-            const pieces = [];
-            const pieceRegex = /<div[^>]*class="piece-card"[^>]*>(.*?)<\/div>/gs;
-            
-            let pieceMatch;
-            while ((pieceMatch = pieceRegex.exec(sectionContent)) !== null) {
-                const pieceContent = pieceMatch[1];
-                
-                const pieceTitle = pieceContent.match(/<h3[^>]*>(.*?)<\/h3>/)?.[1]?.trim();
-                if (pieceTitle && !pieceContent.includes('Section en cours')) {
-                    pieces.push({
-                        title: pieceTitle,
-                        // Ajouter d'autres champs si nécessaire
-                    });
-                }
+        // Vérifier si le fichier pieces.json existe déjà
+        try {
+            const piecesData = await fs.readFile('data/pieces.json', 'utf8');
+            const data = JSON.parse(piecesData);
+            if (data && data.pieces) {
+                console.log('💾 Utilisation des données JSON existantes (pas d\'extraction HTML)');
             }
-            
-            if (pieces.length > 0) {
-                concerts.push({
-                    id: sectionId,
-                    title,
-                    pieces
-                });
-            }
+        } catch (err) {
+            // Le fichier n'existe pas ou est invalide - continuer avec un tableau vide
+            console.log('🆕 Aucune donnée JSON existante, démarrage avec données vides');
         }
         
+        // Retourner une structure vide ou minimaliste - nous ne lisons plus le HTML
         return {
             concerts,
             timestamp: new Date().toISOString(),

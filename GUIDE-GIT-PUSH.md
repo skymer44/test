@@ -93,7 +93,7 @@ git push --force-with-lease origin main
 ## 🛡️ **STRATÉGIE ANTI-CONFLIT**
 
 ### **✅ CE QUI NE CAUSERA JAMAIS DE CONFLIT**
-- Modifier `index.html`, `styles.css`, `script.js`
+- Modifier `index.html`, `styles.css`, `script.js`, `scripts/programme-loader.js`
 - Ajouter de nouveaux fichiers dans `scripts/`
 - Modifier la configuration Netlify
 - Créer de nouveaux fichiers de documentation
@@ -104,7 +104,11 @@ git push --force-with-lease origin main
 
 ### **🎯 RÈGLE D'OR DE NOTRE NOUVELLE ARCHITECTURE**
 - **Vous modifiez** : le code (HTML, CSS, JS)
-- **GitHub Actions modifie** : les données (JSON)
+- **GitHub Actions modifie** : uniquement les données JSON (dans `data/`)
+- **Architecture complètement séparée** :
+  - HTML statique + Chargement dynamique des données
+  - Plus de modification HTML par les scripts Notion
+  - `programme-loader.js` génère les sections côté client
 - **Pas d'intersection** = Pas de conflit !
 
 ---
@@ -150,12 +154,19 @@ git push origin main           # Envoyer vos modifs
 
 ## 🎵 **RÉSUMÉ POUR VOUS**
 
-Avec la nouvelle architecture que nous avons mise en place :
+Avec la nouvelle architecture dynamique que nous avons mise en place :
 
 ✅ **La plupart du temps** : Aucun conflit, push direct  
 ✅ **En cas de conflit** : Procédure simple et rapide  
 ✅ **Vos modifications** : Toujours préservées  
-✅ **Données Notion** : Toujours à jour automatiquement  
+✅ **Données Notion** : Toujours à jour automatiquement
+✅ **Noms des bases** : Synchronisés automatiquement, pas besoin de mapping manuel
+
+**Architecture robuste :**
+- `index.html` : Structure statique avec conteneurs vides
+- `scripts/programme-loader.js` : Génère le HTML à partir des données JSON
+- `data/*.json` : Données provenant de Notion, mises à jour par GitHub Actions
+- Tous les slugs et IDs générés automatiquement depuis les noms de bases Notion
 
 **Votre workflow devient :**
 1. `git pull --rebase origin main` 
@@ -163,5 +174,9 @@ Avec la nouvelle architecture que nous avons mise en place :
 3. `git add . && git commit -m "description"`
 4. `git pull --rebase origin main` (sécurité)
 5. `git push origin main`
+
+**Pour ajouter une nouvelle base Notion :**
+1. Créez la base dans Notion
+2. Les scripts font tout le reste automatiquement !
 
 C'est tout ! 🚀
