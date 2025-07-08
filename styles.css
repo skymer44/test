@@ -3215,166 +3215,33 @@ section:target {
 .piece-bubble:nth-child(4) { animation-delay: 150ms; }
 
 /* ========================================
-   PWA iOS SPECIFIC STYLES
+   PWA iOS SIMPLE - JUSTE POUR MASQUER LA BARRE SAFARI
    ======================================== */
 
-/* Badge PWA dans le header */
-.pwa-badge {
-    display: inline-flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 8px 12px;
-    font-size: 12px;
-    color: white;
-    margin-left: 15px;
-    animation: pulse 2s infinite;
-}
-
-.pwa-badge .pwa-icon {
-    margin-right: 5px;
-    font-size: 14px;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
-}
-
-/* Styles pour mode standalone iOS */
+/* Styles pour mode standalone iOS - Interface identique mais sans barre Safari */
 @media all and (display-mode: standalone) {
-    /* Ajuster la hauteur pour compenser l'absence de barre d'adresse */
+    /* Support du notch iPhone */
     body {
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
     }
-    
-    /* Style spécial pour le header en mode app */
-    header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    /* Améliorer les zones tactiles pour iOS */
-    .tab-button, .access-button, .audio-control-btn {
-        min-height: 44px; /* Taille minimale recommandée Apple */
-        min-width: 44px;
-    }
 }
 
 /* Support du notch iPhone */
 @supports (padding: max(0px)) {
-    body {
-        padding-top: max(20px, env(safe-area-inset-top));
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
+    @media all and (display-mode: standalone) {
+        body {
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
+        }
     }
-}
-
-/* Optimisations tactiles iOS */
-* {
-    -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-/* Réactiver la sélection pour les textes */
-p, span, h1, h2, h3, h4, h5, h6, .piece-info, .event-details {
-    -webkit-user-select: text;
-    user-select: text;
-}
-
-/* Optimisation du scroll sur iOS */
-body, main, .tab-content {
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Style du splash screen pendant le chargement */
-.pwa-splash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
-}
-
-.pwa-splash.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.pwa-splash .app-icon {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.pwa-splash .app-name {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.pwa-splash .app-tagline {
-    color: rgba(255,255,255,0.8);
-    font-size: 16px;
-}
-
-/* Animation de chargement */
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255,255,255,0.3);
-    border-top: 4px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-top: 20px;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
-
-/* Animations pour bouton d'installation PWA */
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
 }
