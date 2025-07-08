@@ -3227,6 +3227,55 @@ section:target {
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
     }
+    
+    /* 📱 CORRECTION LARGEUR CARTES EN MODE STANDALONE */
+    /* Grid des événements - cartes plus larges */
+    .upcoming-events-list {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+    
+    /* Cartes d'événements - padding augmenté */
+    .mini-event-card {
+        padding: 1.5rem !important;
+        min-width: 320px !important;
+    }
+    
+    /* Contenu principal plus large */
+    .main-event-content {
+        padding: 1.5rem !important;
+        min-width: 320px !important;
+    }
+    
+    /* Container principal plus large */
+    .next-events-section {
+        padding: 0 1rem !important;
+    }
+    
+    /* Grid des pièces aussi plus large */
+    .pieces-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+    }
+    
+    /* Cartes des pièces plus larges */
+    .piece-card {
+        min-width: 320px !important;
+        padding: 1.5rem !important;
+    }
+    
+    /* Pour les petits écrans en standalone, assurer une largeur minimale */
+    @media (max-width: 414px) {
+        .upcoming-events-list {
+            grid-template-columns: 1fr !important;
+        }
+        
+        .mini-event-card,
+        .main-event-content,
+        .piece-card {
+            min-width: calc(100vw - 2rem) !important;
+            margin: 0 !important;
+        }
+    }
 }
 
 /* Support du notch iPhone */
