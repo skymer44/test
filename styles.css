@@ -577,8 +577,14 @@ header h1 {
     
     /* Ajuster le contenu principal pour la navigation mobile */
     main {
-        padding-bottom: 120px; /* Augmenté pour éviter que le contenu soit coupé */
+        padding-bottom: 150px; /* Augmenté encore plus pour éviter que le contenu soit coupé */
         padding-top: 0;
+    }
+    
+    /* Assurer que les sections spécifiques ont assez d'espace en bas */
+    .partitions-section-clean,
+    .tab-content {
+        margin-bottom: 2rem;
     }
     
     /* Masquer le lecteur audio modal sur mobile */
