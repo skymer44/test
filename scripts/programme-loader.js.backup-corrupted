@@ -13,7 +13,64 @@ class ProgrammeLoader {
         this.loadingStates = new Map();
         
         this.sectionMapping = {
-            // Mapping exact pour des cas spéciaux uniquement
+            
+            // 🎯            // 🎯 CRUCIAL : Gérer les animations selon l'état de visite - STYLE PARTITIONS
+            if (preserveAnimationState) {
+                // Déjà visité : rendre visible immédiatement (comme Partitions)
+                const newElements = container.querySelectorAll('.concert-section, .piece-card');
+                newElements.forEach(element => {
+                    element.dataset.animationPrepared = 'true';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                    element.style.transition = 'none';
+                });
+                console.log(`🛡️ Protection animations: ${newElements.length} éléments marqués comme préparés (style Partitions)`);
+            } else {
+                // Première visite : préparer pour animation mais laisser le script principal les déclencher
+                console.log('🎬 Première visite détectée - Préparation pour animation style Partitions');
+                const newElements = container.querySelectorAll('.concert-section, .piece-card');
+                
+                newElements.forEach(element => {
+                    // Préparer mais ne pas déclencher encore - le script principal s'en charge
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    element.dataset.animationPrepared = 'false'; // Sera changé en 'true' par le script principal
+                });
+                
+                console.log(`⏳ ${newElements.length} éléments préparés pour animation (déclenchement par script principal)`);
+            }
+            
+            // Réactiver les événements après injection
+            this.reactivateEvents(container);r les animations selon l'état de visite - STYLE PARTITIONS
+            if (preserveAnimationState) {
+                // Déjà visité : rendre visible immédiatement (comme Partitions)
+                const newElements = container.querySelectorAll('.concert-section, .piece-card');
+                newElements.forEach(element => {
+                    element.dataset.animationPrepared = 'true';
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                    element.style.transition = 'none';
+                });
+                console.log(`🛡️ Protection animations: ${newElements.length} éléments marqués comme préparés (style Partitions)`);
+            } else {
+                // Première visite : préparer pour animation mais laisser le script principal les déclencher
+                console.log('🎬 Première visite détectée - Préparation pour animation style Partitions');
+                const newElements = container.querySelectorAll('.concert-section, .piece-card');
+                
+                newElements.forEach(element => {
+                    // Préparer mais ne pas déclencher encore - le script principal s'en charge
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    element.dataset.animationPrepared = 'false'; // Sera changé en 'true' par le script principal
+                });
+                
+                console.log(`⏳ ${newElements.length} éléments préparés pour animation (déclenchement par script principal)`);
+            }
+            
+            // Réactiver les événements après injection
+            this.reactivateEvents(container);apping exact pour des cas spéciaux uniquement
             'Ma région virtuose 0': 'ma-region-virtuose', // Cas particulier avec numéro
         };
         
@@ -56,9 +113,18 @@ class ProgrammeLoader {
             // Organiser par sections
             const sections = this.organizePiecesBySection(piecesData.pieces);
             
-            // Générer et injecter le HTML
-            const html = this.generateSectionsHTML(sections);
-            this.injectContent('programmes-content', html);
+            // ✅ NOUVEAU : Ne recharger le contenu que si première visite
+            const isFirstVisit = !window.visitedTabs || !window.visitedTabs.has('programmes');
+            
+            if (isFirstVisit) {
+                console.log('🎬 Première visite - Génération du contenu HTML');
+                // Générer et injecter le HTML
+                const html = this.generateSectionsHTML(sections);
+                this.injectContent('programmes-content', html);
+            } else {
+                console.log('🔄 Onglet déjà visité - Pas de rechargement HTML pour éviter animations répétées');
+                // Le contenu existe déjà, pas besoin de le recréer
+            }
             
             // Mettre à jour les statistiques
             this.updateSiteStats(piecesData);
@@ -393,47 +459,29 @@ class ProgrammeLoader {
     injectContent(containerId, html) {
         const container = document.getElementById(containerId);
         if (container) {
-            // 🎯 Vérifier si c'est la première visite pour gérer les animations
-            const isFirstVisit = !window.visitedTabs || !window.visitedTabs.has('programmes');
+            // 🎯 CRUCIAL : Sauvegarder l'état des animations avant d'écraser le contenu
+            const preserveAnimationState = window.visitedTabs && window.visitedTabs.has('programmes');
             
-            console.log('🔍 DEBUG VISITE:', {
+            console.log('🔍 INJECT CONTENT DEBUG:', {
                 visitedTabs: Array.from(window.visitedTabs || []),
                 hasProgrammes: window.visitedTabs && window.visitedTabs.has('programmes'),
-                isFirstVisit: isFirstVisit
+                preserveAnimationState: preserveAnimationState
             });
             
             container.innerHTML = html;
             
-            // 🎯 Gérer les animations selon l'état de visite (style Partitions)
-            if (isFirstVisit) {
-                console.log('🎬 Première visite - Animation style Partitions');
-                const elements = container.querySelectorAll('.concert-section, .piece-card');
-                elements.forEach((element, index) => {
-                    // Préparer l'animation
-                    element.style.opacity = '0';
-                    element.style.transform = 'translateY(20px)';
-                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    element.style.transitionDelay = `${index * 0.1}s`;
-                    element.dataset.animationPrepared = 'true';
-                    
-                    // Déclencher l'animation immédiatement
-                    setTimeout(() => {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                    }, 100 + (index * 100)); // Délai progressif
-                });
-                console.log(`✨ ${elements.length} éléments avec animation progressive`);
-            } else {
-                console.log('🛡️ Visite répétée - Affichage immédiat (pas d\'animation)');
-                const elements = container.querySelectorAll('.concert-section, .piece-card');
-                elements.forEach(element => {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                    element.style.transition = 'none';
-                    element.dataset.animationPrepared = 'true';
-                });
-                console.log(`✅ ${elements.length} éléments affichés immédiatement`);
-            }
+            // 🎯 CRUCIAL : Gérer les animations selon l'état de visite
+            // 🚫 ANIMATIONS TEMPORAIREMENT DÉSACTIVÉES pour debug
+            console.log('� TOUTES LES ANIMATIONS DÉSACTIVÉES pour debug');
+            
+            const newElements = container.querySelectorAll('.concert-section, .piece-card');
+            newElements.forEach(element => {
+                element.dataset.animationPrepared = 'true';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+                element.style.transition = 'none';
+            });
+            console.log(`🛡️ ${newElements.length} éléments rendus immédiatement visibles (pas d'animation)`);
             
             // Réactiver les événements après injection
             this.reactivateEvents(container);
@@ -497,8 +545,11 @@ class ProgrammeLoader {
             button.addEventListener('click', (e) => {
                 const targetTab = e.target.dataset.tab;
                 if (targetTab === 'programmes') {
-                    // Recharger si nécessaire
-                    this.checkForUpdates();
+                    // Vérifier les mises à jour seulement lors de la première visite
+                    const isFirstVisit = !window.visitedTabs || !window.visitedTabs.has('programmes');
+                    if (isFirstVisit) {
+                        this.checkForUpdates();
+                    }
                 }
             });
         });

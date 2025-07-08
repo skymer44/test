@@ -286,6 +286,9 @@ function createPieceElement(piece) {
     const div = document.createElement('div');
     div.className = 'piece-card';
     
+    // 🎯 Les nouveaux éléments suivent le système d'animation de scroll automatiquement
+    // La fonction setupProgrammeScrollAnimations() s'occupera d'eux au bon moment
+    
     let linksHTML = '';
     if (piece.links) {
         const links = [];
@@ -333,6 +336,9 @@ function updateEventsWithNotionData(events) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Fiche Musicien - Chargement terminé!');
     
+    // 🎯 NOUVEAU : Système de suivi des onglets visités pour les animations
+    window.visitedTabs = new Set();
+    
     // Initialiser les onglets en priorité
     initTabs();
     
@@ -341,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initNextEventsSystem(); // Nouveau système d'événements
         initVideoModal();
         addSearchFunctionality();
-        initScrollAnimations();
+        // initScrollAnimations(); // DÉSACTIVÉ - Plus d'animations pour uniformité
         addTooltips();
         addBackToTopButton();
         initPDFGeneration();
@@ -440,8 +446,23 @@ function initTabs() {
             targetContent.classList.add('active');
             console.log('✅ Onglet', targetId, 'activé');
             
-            // Si on active l'onglet "programmes", recentrer les traits bleus
-            if (targetId === 'programmes') {
+            // 🎯 NOUVEAU : Déclencher les animations seulement la première fois
+            if (!window.visitedTabs.has(targetId)) {
+                console.log(`✨ Première visite de l'onglet "${targetId}" - Déclenchement des animations`);
+                
+                // Déclencher les animations spécifiques à l'onglet AVANT d'ajouter à visitedTabs
+                setTimeout(() => {
+                    triggerTabAnimations(targetId);
+                }, 100);
+                
+                // Marquer comme visité APRÈS le déclenchement des animations
+                window.visitedTabs.add(targetId);
+            } else {
+                console.log(`🔄 Onglet "${targetId}" déjà visité - Pas d'animation`);
+            }
+            
+            // Si on active l'onglet "programmes", recentrer les traits bleus (première fois seulement)
+            if (targetId === 'programmes' && !window.visitedTabs.has('programmes')) {
                 setTimeout(centerBlueLines, 200);
             }
         } else {
@@ -494,7 +515,45 @@ function initTabs() {
     }
 }
 
-// 🌊 FONCTION D'ANIMATION DE L'INDICATEUR D'ONGLET - VAGUE FLUIDE
+// � FONCTION POUR DÉCLENCHER LES ANIMATIONS SPÉCIFIQUES À CHAQUE ONGLET
+function triggerTabAnimations(tabId) {
+    console.log(`🎬 Déclenchement des animations pour l'onglet: ${tabId}`);
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Animation d'apparition
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                
+                // Ne plus observer après animation
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    if (tabId === 'programmes') {
+        // Animations pour l'onglet Programme musical
+        console.log('🎵 Déclenchement des animations pour Programme musical');
+        setupProgrammeScrollAnimations();
+        
+    } else if (tabId === 'events') {
+        // Animations pour l'onglet Prochains événements
+        console.log('📅 Déclenchement des animations pour Prochains événements');
+        setupEventScrollAnimations();
+        
+    } else if (tabId === 'partitions') {
+        // ANIMATIONS DÉSACTIVÉES pour l'onglet Partitions pour uniformité
+        console.log('🎭 Animations désactivées pour l\'onglet Partitions');
+    }
+}
+
+// �🌊 FONCTION D'ANIMATION DE L'INDICATEUR D'ONGLET - VAGUE FLUIDE
 function animateTabIndicator(targetButton) {
     const tabButtonsContainer = document.querySelector('.tab-buttons');
     if (!tabButtonsContainer || !targetButton) return;
@@ -882,14 +941,16 @@ function initProgressiveEventDisplay(events, selectedEvent = null) {
     events.forEach((event, index) => {
         const eventCard = createEventCardElement(event, selectedEvent);
         
-        // 🎯 MODIFICATION : Les 3 premières cartes sont déjà visibles
-        if (index < 3) {
-            // Les 3 premières cartes : déjà visibles (pas d'animation)
+        // 🎯 NOUVEAU SYSTÈME : Vérifier si l'onglet a déjà été visité
+        const alreadyVisited = window.visitedTabs && window.visitedTabs.has('programmes');
+        
+        if (index < 3 || alreadyVisited) {
+            // Les 3 premières cartes OU si déjà visité : déjà visibles (pas d'animation)
             eventCard.style.opacity = '1';
             eventCard.style.transform = 'translateY(0)';
-            eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            eventCard.style.transition = alreadyVisited ? 'none' : 'opacity 0.6s ease, transform 0.6s ease';
         } else {
-            // Les cartes suivantes : préparer l'animation (comme avant)
+            // Les cartes suivantes ET première visite : préparer l'animation
             eventCard.style.opacity = '0';
             eventCard.style.transform = 'translateY(20px)';
             eventCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -900,8 +961,13 @@ function initProgressiveEventDisplay(events, selectedEvent = null) {
     
     console.log(`📊 ${events.length} événements créés (3 premières visibles, ${Math.max(0, events.length - 3)} avec animation scroll)`);
     
-    // Configurer l'observateur comme dans "Programmes Musicaux"
-    setupEventScrollAnimations();
+    // Configurer l'observateur comme dans "Programmes Musicaux" - SEULEMENT la première fois
+    if (!window.visitedTabs || !window.visitedTabs.has('programmes')) {
+        console.log('🎯 Première visite onglet programmes - Configuration animations événements');
+        setupEventScrollAnimations();
+    } else {
+        console.log('🔄 Onglet programmes déjà visité - Pas de configuration d\'animations événements');
+    }
     
     window.displayedEventsCount = events.length; // Pour compatibilité
 }
@@ -917,9 +983,26 @@ function createEventCardElement(event, selectedEvent = null) {
 
 /**
  * Configure les animations au scroll pour les événements - STYLE PROGRAMMES MUSICAUX
+ * NOUVELLE VERSION : Contrôlée par le système de première visite
  */
 function setupEventScrollAnimations() {
-    console.log('🎯 Configuration des animations scroll style "Programmes Musicaux"');
+    // ⚠️ NOUVEAU : Ne s'active que si l'onglet 'programmes' n'a jamais été visité
+    if (window.visitedTabs && window.visitedTabs.has('programmes')) {
+        console.log('🔄 Onglet "programmes" déjà visité - Pas d\'animation pour les événements');
+        
+        // Rendre tous les éléments immédiatement visibles
+        const eventCards = document.querySelectorAll('#upcoming-events-list .mini-event-card');
+        eventCards.forEach((card, index) => {
+            if (index >= 3) {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.style.transition = 'none'; // Pas de transition
+            }
+        });
+        return;
+    }
+    
+    console.log('🎯 Configuration des animations scroll style "Programmes Musicaux" (première visite)');
     
     // Options identiques à celles des Programmes Musicaux
     const observerOptions = {
@@ -2442,8 +2525,16 @@ function showCalendarNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Animations de défilement
-function initScrollAnimations() {
+// Animations de défilement - CONTRÔLÉES PAR LE SYSTÈME DE PREMIÈRE VISITE
+function initScrollAnimations(tabId = 'partitions') {
+    console.log(`🎯 Initialisation du système d'animations de défilement pour: ${tabId}`);
+    
+    // ⚠️ NOUVEAU : Seulement si l'onglet appelant n'a pas encore été visité
+    if (window.visitedTabs && window.visitedTabs.has(tabId)) {
+        console.log(`🔄 Onglet "${tabId}" déjà visité - Pas d'animation initScrollAnimations`);
+        return;
+    }
+    
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -2452,8 +2543,14 @@ function initScrollAnimations() {
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                // ✨ VÉRIFICATION : Ne pas animer si déjà animé
+                if (!entry.target.dataset.animated) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    
+                    // Marquer comme animé pour éviter les répétitions
+                    entry.target.dataset.animated = 'true';
+                }
                 
                 // ✨ AMÉLIORATION : Une fois animé, ne plus observer (animation unique)
                 observer.unobserve(entry.target);
@@ -2461,38 +2558,32 @@ function initScrollAnimations() {
         });
     }, observerOptions);
     
-    // Observer toutes les cartes de pièces
-    document.querySelectorAll('.piece-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(card);
-    });
-    
-    // 🎭 NOUVEAU : Observer les éléments de l'onglet Partitions pour l'animation douce
-    document.querySelectorAll('.warning-section, .examples-section-clean, .access-section').forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(element);
+    // 🎭 SEULEMENT pour l'onglet Partitions
+    document.querySelectorAll('#partitions .warning-section, #partitions .examples-section-clean, #partitions .access-section').forEach(element => {
+        // ✨ VÉRIFICATION : Ne configurer que les éléments non déjà préparés
+        if (!element.dataset.animationPrepared) {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            element.dataset.animationPrepared = 'true';
+            observer.observe(element);
+        }
     });
     
     // Observer aussi les éléments d'exemple individuels pour un effet échelonné
-    document.querySelectorAll('.example-item, .access-card').forEach((item, index) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(20px)';
-        item.style.transition = `opacity 0.6s ease, transform 0.6s ease`;
-        item.style.transitionDelay = `${index * 0.1}s`; // Délai progressif pour effet cascade
-        observer.observe(item);
+    document.querySelectorAll('#partitions .example-item, #partitions .access-card').forEach((item, index) => {
+        // ✨ VÉRIFICATION : Ne configurer que les éléments non déjà préparés
+        if (!item.dataset.animationPrepared) {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(20px)';
+            item.style.transition = `opacity 0.6s ease, transform 0.6s ease`;
+            item.style.transitionDelay = `${index * 0.1}s`; // Délai progressif pour effet cascade
+            item.dataset.animationPrepared = 'true';
+            observer.observe(item);
+        }
     });
     
-    // Observer les sections
-    document.querySelectorAll('.concert-section').forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        observer.observe(section);
-    });
+    console.log('✅ Animations de défilement configurées pour l\'onglet Partitions (première visite)');
 }
 
 // Initialisation du système Notion avec synchronisation automatique via proxy
@@ -3786,3 +3877,83 @@ console.log('🔄 Synchronisation Notion configurée!');
         console.log('✅ Cache-busting mobile ultra-simplifié opérationnel');
     }
 })();
+
+// 🎭 FONCTION D'ANIMATIONS DE SCROLL POUR PROGRAMME MUSICAL (inspirée des événements)
+function setupProgrammeScrollAnimations() {
+    // ⚠️ Ne s'activer que si l'onglet 'programmes' n'a jamais été visité
+    if (window.visitedTabs && window.visitedTabs.has('programmes')) {
+        console.log('🔄 Onglet "programmes" déjà visité - Pas d\'animation pour le programme musical');
+        
+        // Rendre tous les éléments immédiatement visibles
+        const programmeElements = document.querySelectorAll('#programmes .concert-section, #programmes .piece-card, #programmes .section-header');
+        programmeElements.forEach((element) => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+            element.style.transition = 'none'; // Pas de transition
+        });
+        return;
+    }
+    
+    console.log('🎯 Configuration des animations scroll style "Prochains événements" pour Programme musical (première visite)');
+    
+    // Options identiques à celles des événements
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Animation identique aux événements
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                
+                console.log('✨ Élément de programme révélé au scroll');
+                
+                // Ne plus observer après animation
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    // Attendre un peu que le contenu soit chargé
+    setTimeout(() => {
+        const programmeElements = document.querySelectorAll('#programmes .concert-section, #programmes .piece-card, #programmes .section-header');
+        
+        if (programmeElements.length === 0) {
+            console.log('⚠️ Aucun élément trouvé dans programmes - retry dans 500ms');
+            setTimeout(() => setupProgrammeScrollAnimations(), 500);
+            return;
+        }
+        
+        let animatedElementsCount = 0;
+        
+        programmeElements.forEach((element, index) => {
+            // Vérifier si l'élément n'est pas déjà préparé
+            if (!element.dataset.animationPrepared) {
+                // Les 2 premiers éléments sont déjà visibles (pas d'animation)
+                if (index < 2) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                } else {
+                    // Les éléments suivants : préparer l'animation
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(element);
+                    animatedElementsCount++;
+                }
+                
+                element.dataset.animationPrepared = 'true';
+            }
+        });
+        
+        console.log(`🔍 Observation de ${animatedElementsCount} éléments de programme (${programmeElements.length - animatedElementsCount} déjà visibles)`);
+        
+        // Sauvegarder l'observateur
+        window.programmeScrollObserver = observer;
+        
+    }, 300);
+}

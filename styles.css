@@ -2433,7 +2433,8 @@ tbody tr:hover {
     }
 }
 
-.concert-section {
+/* Animation pour première visite seulement - sera activée par JavaScript */
+.concert-section.animate-first-visit {
     animation: fadeInUp 0.6s ease-out;
 }
 
