@@ -9,6 +9,55 @@ if ('serviceWorker' in navigator) {
         }
     });
 }
+
+// Fonction pour centrer les traits bleus sous les titres
+function centerBlueLines() {
+    const sectionHeaders = document.querySelectorAll('.section-header h2');
+    
+    sectionHeaders.forEach(h2 => {
+        // Créer un élément temporaire pour mesurer la largeur du texte
+        const tempSpan = document.createElement('span');
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.fontSize = getComputedStyle(h2).fontSize;
+        tempSpan.style.fontWeight = getComputedStyle(h2).fontWeight;
+        tempSpan.style.fontFamily = getComputedStyle(h2).fontFamily;
+        tempSpan.style.letterSpacing = getComputedStyle(h2).letterSpacing;
+        tempSpan.textContent = h2.textContent;
+        
+        document.body.appendChild(tempSpan);
+        const textWidth = tempSpan.offsetWidth;
+        document.body.removeChild(tempSpan);
+        
+        // Calculer la position pour centrer le trait (60px de large)
+        const traitWidth = 60;
+        const leftPosition = (textWidth - traitWidth) / 2;
+        
+        // Appliquer la position via une variable CSS
+        h2.style.setProperty('--trait-left-position', `${leftPosition}px`);
+    });
+}
+
+// Observer pour détecter quand le contenu Notion est chargé
+const programsObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            // Attendre un peu que le CSS soit appliqué puis centrer les traits
+            setTimeout(centerBlueLines, 100);
+        }
+    });
+});
+
+// Démarrer l'observation du contenu des programmes
+document.addEventListener('DOMContentLoaded', () => {
+    const programmesContent = document.getElementById('programmes-content');
+    if (programmesContent) {
+        programsObserver.observe(programmesContent, { childList: true, subtree: true });
+    }
+    
+    // Aussi appeler au chargement initial au cas où le contenu serait déjà là
+    setTimeout(centerBlueLines, 500);
+});
 // �📱 FONCTIONS MOBILE-FIRST
 function isMobileDevice() {
     return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
@@ -378,11 +427,23 @@ function initTabs() {
             item.classList.remove('active');
         });
         
+        // 🌊 ANIMATION VAGUE FLUIDE - Calculer et animer l'indicateur
+        const targetButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
+        if (targetButton) {
+            animateTabIndicator(targetButton);
+            targetButton.classList.add('active');
+        }
+        
         // Afficher le contenu de l'onglet ciblé
         const targetContent = document.getElementById(targetId);
         if (targetContent) {
             targetContent.classList.add('active');
             console.log('✅ Onglet', targetId, 'activé');
+            
+            // Si on active l'onglet "programmes", recentrer les traits bleus
+            if (targetId === 'programmes') {
+                setTimeout(centerBlueLines, 200);
+            }
         } else {
             console.error('❌ Contenu introuvable pour:', targetId);
         }
@@ -422,9 +483,45 @@ function initTabs() {
     // Activer le premier onglet par défaut
     if (tabButtons.length > 0) {
         const firstTabId = tabButtons[0].getAttribute('data-tab');
+        // Initialiser l'indicateur au premier onglet
+        setTimeout(() => {
+            const firstButton = tabButtons[0];
+            if (firstButton) {
+                animateTabIndicator(firstButton);
+            }
+        }, 100);
         showTab(firstTabId);
     }
 }
+
+// 🌊 FONCTION D'ANIMATION DE L'INDICATEUR D'ONGLET - VAGUE FLUIDE
+function animateTabIndicator(targetButton) {
+    const tabButtonsContainer = document.querySelector('.tab-buttons');
+    if (!tabButtonsContainer || !targetButton) return;
+    
+    // Calculer la position et la taille du bouton cible
+    const containerRect = tabButtonsContainer.getBoundingClientRect();
+    const targetRect = targetButton.getBoundingClientRect();
+    
+    // Position relative dans le conteneur
+    const left = targetRect.left - containerRect.left;
+    const width = targetRect.width;
+    
+    // Appliquer l'animation avec transform pour une performance optimale
+    tabButtonsContainer.style.setProperty('--indicator-left', `${left}px`);
+    tabButtonsContainer.style.setProperty('--indicator-width', `${width}px`);
+    
+    // Utiliser les variables CSS pour l'animation
+    const indicator = tabButtonsContainer;
+    indicator.style.setProperty('--tab-indicator-transform', `translateX(${left}px)`);
+    indicator.style.setProperty('--tab-indicator-width', `${width}px`);
+    
+    console.log(`✨ Animation vague fluide vers: ${targetButton.textContent.trim()} (${left}px, ${width}px)`);
+}
+
+// Mise à jour des variables CSS pour l'indicateur
+document.documentElement.style.setProperty('--indicator-left', '0px');
+document.documentElement.style.setProperty('--indicator-width', '0px');
 
 // ========================================
 // SYSTÈME DE GESTION DES PROCHAINS ÉVÉNEMENTS
@@ -2357,6 +2454,9 @@ function initScrollAnimations() {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
+                
+                // ✨ AMÉLIORATION : Une fois animé, ne plus observer (animation unique)
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -2367,6 +2467,23 @@ function initScrollAnimations() {
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
+    });
+    
+    // 🎭 NOUVEAU : Observer les éléments de l'onglet Partitions pour l'animation douce
+    document.querySelectorAll('.warning-section, .examples-section-clean, .access-section').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(element);
+    });
+    
+    // Observer aussi les éléments d'exemple individuels pour un effet échelonné
+    document.querySelectorAll('.example-item, .access-card').forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = `opacity 0.6s ease, transform 0.6s ease`;
+        item.style.transitionDelay = `${index * 0.1}s`; // Délai progressif pour effet cascade
+        observer.observe(item);
     });
     
     // Observer les sections
