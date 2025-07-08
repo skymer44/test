@@ -17,13 +17,13 @@ on:
   schedule:
     - cron: '30 6,22 * * *'     # 6h30 (matin) et 22h30 (après répétition)
 
-  # Déclenchement automatique sur modifications des scripts Notion
+  # Déclenchement automatique uniquement sur modifications des scripts Notion
   push:
     branches: [ main ]
     paths:
-      - 'scripts/notion-*.js'
+      - 'scripts/notion-sync.js'
       - 'scripts/smart-mapper.js'
-      - 'data/**'
+      # Note: plus de déclenchement sur data/** pour éviter les boucles
 
 jobs:
   sync-data-only:
