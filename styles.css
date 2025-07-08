@@ -30,6 +30,44 @@ body {
    NAVIGATION INTER-ONGLETS POUR LES PIÈCES
    ======================================== */
 
+/* Styles pour les icônes SVG modernes */
+.icon-svg {
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    fill: currentColor;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.tab-button .icon-svg {
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.4em;
+}
+
+.mobile-nav-icon .icon-svg {
+    width: 1.4em;
+    height: 1.4em;
+    margin-right: 0;
+}
+
+/* Couleurs spécifiques selon l'état */
+.tab-button.active .icon-svg {
+    fill: currentColor;
+}
+
+.mobile-nav-item.active .icon-svg {
+    fill: currentColor;
+}
+
+.mobile-nav-item:not(.active) .icon-svg {
+    fill: currentColor;
+    opacity: 0.8;
+}
+
 /* Styles pour les pièces cliquables dans les événements */
 .clickable-piece {
     cursor: pointer;
@@ -281,13 +319,25 @@ header {
 }
 
 .stat-pieces::before {
-    content: "🎵";
-    font-size: 1.1em;
+    content: "";
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.25em;
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z' fill='%234a5568'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
 }
 
 .stat-duration::before {
-    content: "⏱️";
-    font-size: 1.1em;
+    content: "";
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.25em;
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z' fill='%234a5568'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
 }
 
 @media (max-width: 768px) {
@@ -998,6 +1048,12 @@ main {
     border: 1px solid transparent;
 }
 
+.links a svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
 .links a:hover {
     background: #3182ce;
     transform: translateY(-1px);
@@ -1461,6 +1517,16 @@ main {
 
 .warning-icon {
     font-size: 1.5rem;
+    color: #e53e3e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warning-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: #e53e3e;
 }
 
 .warning-header h3 {
@@ -1546,6 +1612,16 @@ main {
 
 .folder-icon {
     font-size: 2.5rem;
+    color: #4299e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.folder-icon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    fill: #4299e1;
 }
 
 .access-text h4 {

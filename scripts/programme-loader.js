@@ -252,7 +252,14 @@ class ProgrammeLoader {
                 <div class="section-header">
                     <h2>${section.title}</h2>
                     <button class="pdf-download-btn" data-section="${section.id}" title="Télécharger ce programme en PDF">
-                        📄 Télécharger PDF
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px; vertical-align: middle;">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Télécharger PDF
                     </button>
                 </div>
                 <div class="pieces-grid">
@@ -292,13 +299,24 @@ class ProgrammeLoader {
         const linkElements = [];
         
         if (links.audio) {
-            linkElements.push(`<a href="${links.audio}" target="_blank" title="Arrangement audio">🎵 Audio</a>`);
+            linkElements.push(`<a href="${links.audio}" target="_blank" title="Arrangement audio">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="currentColor"/>
+                </svg>Audio
+            </a>`);
         }
         if (links.original) {
             linkElements.push(`<a href="${links.original}" target="_blank" title="Œuvre originale">🎬 Original</a>`);
         }
         if (links.purchase) {
-            linkElements.push(`<a href="${links.purchase}" target="_blank" title="Lien d'achat">🛒 Achat</a>`);
+            linkElements.push(`<a href="${links.purchase}" target="_blank" title="Lien d'achat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px; vertical-align: middle;">
+                    <circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="m1 1 4 4 13 1 1.35 7H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+                Achat
+            </a>`);
         }
         
         return linkElements.join('');

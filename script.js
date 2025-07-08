@@ -240,9 +240,21 @@ function createPieceElement(piece) {
     let linksHTML = '';
     if (piece.links) {
         const links = [];
-        if (piece.links.audio) links.push(`<a href="${piece.links.audio}" target="_blank" title="Arrangement audio">🎵 Audio</a>`);
-        if (piece.links.original) links.push(`<a href="${piece.links.original}" target="_blank" title="Œuvre originale">🎬 Original</a>`);
-        if (piece.links.purchase) links.push(`<a href="${piece.links.purchase}" target="_blank" title="Lien d'achat">🛒 Achat</a>`);
+        if (piece.links.audio) links.push(`<a href="${piece.links.audio}" target="_blank" title="Arrangement audio">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="currentColor"/>
+            </svg>Audio
+        </a>`);
+        if (piece.links.original) links.push(`<a href="${piece.links.original}" target="_blank" title="Œuvre originale">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                <path d="M7 4V2C7 1.45 7.45 1 8 1S9 1.45 9 2V4H15C16.1 4 17 4.9 17 6V18C17 19.1 16.1 20 15 20H3C1.9 20 1 19.1 1 18V6C1 4.9 1.9 4 3 4H7ZM3 18H15V8H3V18ZM5 10H13V12H5V10ZM5 14H10V16H5V14Z" fill="currentColor"/>
+            </svg>Original
+        </a>`);
+        if (piece.links.purchase) links.push(`<a href="${piece.links.purchase}" target="_blank" title="Lien d'achat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H5.21L4.27 3H1ZM17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z" fill="currentColor"/>
+            </svg>Achat
+        </a>`);
         
         if (links.length > 0) {
             linksHTML = `<div class="links">${links.join(' ')}</div>`;
@@ -652,14 +664,26 @@ function displayMainEvent(event) {
                     </div>
                     `}
                     <button class="add-to-calendar-btn" onclick="addEventToCalendar('${event.date}', '${eventType}', '${eventTitle}', ${JSON.stringify(extractPieceNames(event.pieces || [])).replace(/"/g, '&quot;')}, '${event.notes || ''}')">
-                        📅
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M16 2v4M8 2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M3 10h18" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 13v3M10.5 14.5l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                     </button>
                 </div>
             </div>
             
             <div class="event-meta">
                 <div class="event-date">
-                    📅 ${formatEventDate(event.date)} - dans
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px; vertical-align: middle;">
+                        <rect x="3" y="4" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M16 2v4M8 2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 10h18" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="8" cy="14" r="1.5" fill="currentColor"/>
+                        <circle cx="16" cy="14" r="1.5" fill="currentColor"/>
+                    </svg>
+                    ${formatEventDate(event.date)} - dans
                 </div>
                 <div class="event-countdown">
                     <span class="countdown-number">${countdownText}</span>
@@ -668,7 +692,14 @@ function displayMainEvent(event) {
             
             ${!isNoRehearsalEvent ? `
             <div class="event-pieces">
-                <h4>🎼 Programme</h4>
+                <h4>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px; vertical-align: middle;">
+                        <path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                        <path d="M14 2v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 13h8M8 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Programme
+                </h4>
                 <div class="pieces-list">
                     ${piecesHtml}
                 </div>
@@ -677,7 +708,13 @@ function displayMainEvent(event) {
             
             ${event.notes ? `
                 <div class="event-notes">
-                    <strong>ℹ️ Informations :</strong> ${event.notes}
+                    <strong>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Informations :
+                    </strong> ${event.notes}
                 </div>
             ` : ''}
         </div>
@@ -927,12 +964,12 @@ function getEventTypeEmoji(type) {
     
     const lowerType = typeStr.toLowerCase();
     
-    if (lowerType.includes('répétition')) return '🎵';
-    if (lowerType.includes('concert')) return '🎼';
-    if (lowerType.includes('pas de répétition') || 
-        lowerType.includes('annulé') ||
-        (lowerType.includes('vacances') && !lowerType.includes('répétition'))) return '🏖️';
-    return '📅';
+    // NOUVELLE LOGIQUE : TOUS les événements ont l'icône note de musique par défaut
+    // Seuls quelques concerts publics spécifiques pourraient avoir l'icône document (aucun pour le moment)
+    // "Concert avec Eric Aubier" = répétition/collaboration = icône note de musique
+    
+    // TOUS LES ÉVÉNEMENTS : note de musique (répétitions, concerts, collaborations, etc.)
+    return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" fill="currentColor"/></svg>`;
 }
 
 function generateCountdownText(event) {
@@ -1068,7 +1105,11 @@ function generateMiniEventCard(event, selectedEvent = null) {
             
             ${event.notes ? `
                 <div class="mini-event-notes">
-                    ℹ️ ${event.notes}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    ${event.notes}
                 </div>
             ` : ''}
         </div>
@@ -2003,7 +2044,15 @@ function showCalendarSelectionModal(title, startTime, endTime, description, loca
     modal.innerHTML = `
         <div class="calendar-modal-content">
             <div class="calendar-modal-header">
-                <h3>📅 Ajouter à votre calendrier</h3>
+                <h3>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px; vertical-align: middle;">
+                        <rect x="3" y="4" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M16 2v4M8 2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M3 10h18" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 13v3M10.5 14.5l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Ajouter à votre calendrier
+                </h3>
                 <button class="calendar-modal-close" onclick="this.closest('.calendar-modal').remove()">×</button>
             </div>
             <div class="calendar-modal-body">
