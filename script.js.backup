@@ -9,6 +9,206 @@ if ('serviceWorker' in navigator) {
         }
     });
 }
+
+// � DIAGNOSTIC PWA vs SAFARI - Pour comprendre les différences d'affichage
+function diagnoseDisplayDifferences() {
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    console.log('🔍 === DIAGNOSTIC AFFICHAGE ===');
+    console.log('📱 Mode PWA (standalone):', isPWA);
+    console.log('🍎 Appareil iOS:', isIOS);
+    console.log('📐 Dimensions fenêtre:', {
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+        outerWidth: window.outerWidth,
+        outerHeight: window.outerHeight,
+        screenWidth: screen.width,
+        screenHeight: screen.height
+    });
+    console.log('📏 Viewport:', {
+        visualViewport: window.visualViewport ? {
+            width: window.visualViewport.width,
+            height: window.visualViewport.height
+        } : 'Non supporté'
+    });
+    console.log('🎨 Valeurs CSS importantes:', {
+        bodyWidth: document.body?.offsetWidth,
+        bodyHeight: document.body?.offsetHeight,
+        documentWidth: document.documentElement?.clientWidth,
+        documentHeight: document.documentElement?.clientHeight
+    });
+    
+    // Diagnostiquer les safe-area-inset
+    const testEl = document.createElement('div');
+    testEl.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        visibility: hidden;
+    `;
+    document.body.appendChild(testEl);
+    
+    const computedStyle = getComputedStyle(testEl);
+    console.log('📱 Safe Area Insets:', {
+        top: computedStyle.paddingTop,
+        bottom: computedStyle.paddingBottom,
+        left: computedStyle.paddingLeft,
+        right: computedStyle.paddingRight
+    });
+    
+    document.body.removeChild(testEl);
+    
+    // Vérifier les styles appliqués aux cartes
+    setTimeout(() => {
+        const eventCard = document.querySelector('.mini-event-card');
+        const eventList = document.querySelector('.upcoming-events-list');
+        
+        if (eventCard) {
+            const cardStyle = getComputedStyle(eventCard);
+            console.log('🃏 Style carte événement:', {
+                width: cardStyle.width,
+                minWidth: cardStyle.minWidth,
+                padding: cardStyle.padding,
+                margin: cardStyle.margin
+            });
+            
+            // 📱 STOCKER LES DONNÉES POUR L'OVERLAY PWA
+            window.pwaCardData = {
+                width: cardStyle.width,
+                minWidth: cardStyle.minWidth,
+                padding: cardStyle.padding,
+                margin: cardStyle.margin
+            };
+        }
+        
+        if (eventList) {
+            const listStyle = getComputedStyle(eventList);
+            console.log('📋 Style liste événements:', {
+                gridTemplateColumns: listStyle.gridTemplateColumns,
+                gap: listStyle.gap,
+                padding: listStyle.padding
+            });
+            
+            // 📱 STOCKER LES DONNÉES POUR L'OVERLAY PWA
+            window.pwaListData = {
+                gridTemplateColumns: listStyle.gridTemplateColumns,
+                gap: listStyle.gap,
+                padding: listStyle.padding
+            };
+        }
+    }, 2000);
+    
+    // Afficher un indicateur visuel temporaire
+    if (isPWA) {
+        const indicator = document.createElement('div');
+        indicator.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: red;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 99999;
+                font-size: 12px;
+                opacity: 0.8;
+            ">
+                MODE PWA DÉTECTÉ<br>
+                ${window.innerWidth}x${window.innerHeight}
+            </div>
+        `;
+        document.body.appendChild(indicator);
+        
+        // Supprimer après 5 secondes
+        setTimeout(() => {
+            if (indicator.parentNode) {
+                indicator.remove();
+            }
+        }, 5000);
+    }
+    
+    console.log('🔍 === FIN DIAGNOSTIC ===');
+}
+
+// 🚨 DIAGNOSTIC AUTOMATIQUE EN MODE PWA (pas besoin de console)
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        diagnoseDisplayDifferences();
+        
+        // 📱 AFFICHAGE VISUEL DES DONNÉES POUR PWA (sans console)
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            setTimeout(showPWADiagnosticOverlay, 3000);
+        }
+    }, 1000);
+});
+
+// 📊 AFFICHER LES DONNÉES DE DIAGNOSTIC À L'ÉCRAN EN MODE PWA
+function showPWADiagnosticOverlay() {
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    
+    if (!isPWA) return; // Seulement en mode PWA
+    
+    // Utiliser les données stockées ou récupérer à nouveau
+    let cardData = 'Chargement...';
+    let listData = 'Chargement...';
+    
+    if (window.pwaCardData) {
+        cardData = `width: ${window.pwaCardData.width}, min: ${window.pwaCardData.minWidth}`;
+    }
+    
+    if (window.pwaListData) {
+        listData = `grid: ${window.pwaListData.gridTemplateColumns}`;
+    }
+    
+    // Créer l'overlay de diagnostic
+    const overlay = document.createElement('div');
+    overlay.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 99999;
+            max-width: 90vw;
+            font-size: 12px;
+            line-height: 1.4;
+        ">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <strong>🔍 DIAGNOSTIC PWA AUTOMATIQUE</strong>
+            </div>
+            
+            <div><strong>📱 Mode:</strong> PWA Standalone ✅</div>
+            <div><strong>📐 Écran:</strong> ${window.innerWidth}x${window.innerHeight}</div>
+            <div><strong>🃏 Cartes:</strong> ${cardData}</div>
+            <div><strong>📋 Liste:</strong> ${listData}</div>
+            <div><strong>📏 Viewport:</strong> ${window.visualViewport ? window.visualViewport.width : window.innerWidth}px</div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    background: #007AFF;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                ">OK</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+}
+
 // �📱 FONCTIONS MOBILE-FIRST
 function isMobileDevice() {
     return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
