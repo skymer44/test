@@ -1,4 +1,4 @@
-# 🏗️ ARCHITECTURE DU SITE - Programme Musical 2026
+# 🏗️ ARCHITECTURE DU SITE - Programme Musical 2026 📚
 
 ## 📋 Vue d'ensemble
 
