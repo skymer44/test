@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Sections Dynamiques</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .section h2 { color: #333; margin-bottom: 10px; }
+        .piece { margin: 10px 0; padding: 5px; background: #f9f9f9; }
+        .database-name { color: #666; font-style: italic; font-size: 0.9em; }
+        .slug { color: #999; font-family: monospace; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test : Synchronisation Dynamique des Noms de Base de Données</h1>
+    
+    <div id="test-results">
+        <p>⏳ Chargement des données...</p>
+    </div>
+
+    <script>
+        // Test de génération de slug
+        function generateSlug(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+
+        // Test des sections dynamiques
+        async function testDynamicSections() {
+            try {
+                const response = await fetch('data/pieces.json');
+                const data = await response.json();
+                
+                console.log('🎯 Données chargées:', data);
+                
+                // Organiser par base de données
+                const sections = {};
+                
+                data.pieces.forEach(piece => {
+                    const dbName = piece.source?.database || 'Inconnu';
+                    const sectionId = generateSlug(dbName);
+                    
+                    if (!sections[sectionId]) {
+                        sections[sectionId] = {
+                            id: sectionId,
+                            title: dbName,
+                            pieces: []
+                        };
+                    }
+                    
+                    sections[sectionId].pieces.push(piece);
+                });
+                
+                // Trier les sections par priorité
+                const priorityOrder = [
+                    'ma-region-virtuose',
+                    'concert-du-11-davril', 
+                    'programme-fete-de-la-musique',
+                    'pieces-qui-nont-pas-trouve-leur-concert'
+                ];
+                
+                const sortedSections = Object.values(sections).sort((a, b) => {
+                    const priorityA = priorityOrder.indexOf(a.id);
+                    const priorityB = priorityOrder.indexOf(b.id);
+                    
+                    if (priorityA !== -1 && priorityB !== -1) {
+                        return priorityA - priorityB;
+                    }
+                    
+                    if (priorityA !== -1) return -1;
+                    if (priorityB !== -1) return 1;
+                    
+                    return a.title.localeCompare(b.title, 'fr');
+                });
+                
+                // Afficher les résultats
+                const container = document.getElementById('test-results');
+                container.innerHTML = `
+                    <h2>✅ Test Réussi !</h2>
+                    <p><strong>Sections trouvées:</strong> ${sortedSections.length}</p>
+                    <p><strong>Total des pièces:</strong> ${data.pieces.length}</p>
+                `;
+                
+                sortedSections.forEach(section => {
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.className = 'section';
+                    sectionDiv.innerHTML = `
+                        <h2>${section.title}</h2>
+                        <div class="database-name">Base de données Notion: "${section.title}"</div>
+                        <div class="slug">ID généré automatiquement: ${section.id}</div>
+                        <p><strong>${section.pieces.length}</strong> pièce(s)</p>
+                        ${section.pieces.map(piece => `
+                            <div class="piece">
+                                🎵 <strong>${piece.title}</strong> - ${piece.composer}
+                                <br><small>Durée: ${piece.duration || 'Non spécifiée'}</small>
+                            </div>
+                        `).join('')}
+                    `;
+                    container.appendChild(sectionDiv);
+                });
+                
+                console.log('✅ Sections générées:', sections);
+                console.log('✅ Ordre final:', sortedSections.map(s => s.title));
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                document.getElementById('test-results').innerHTML = `
+                    <h2>❌ Erreur</h2>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+        
+        // Lancer le test
+        testDynamicSections();
+    </script>
+</body>
+</html>

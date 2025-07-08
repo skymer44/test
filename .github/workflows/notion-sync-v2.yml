@@ -1,4 +1,4 @@
-name: 🎵 Notion Sync - Programme Musical 2026 (Nouvelle Architecture)
+name: 🎵 Notion Sync pour Netlify - Programme Musical 2026
 
 on:
   # Déclenchement manuel via l'interface GitHub
@@ -17,12 +17,16 @@ on:
   schedule:
     - cron: '30 6,22 * * *'     # 6h30 (matin) et 22h30 (après répétition)
 
-  # Déclenchement automatique sur TOUS les push + modifications scripts
+  # Déclenchement automatique sur modifications des scripts Notion
   push:
-    branches: [ main ]  # Sur tous les commits de la branche principale
+    branches: [ main ]
+    paths:
+      - 'scripts/notion-*.js'
+      - 'scripts/smart-mapper.js'
+      - 'data/**'
 
 jobs:
-  sync-and-build:
+  sync-data-only:
     runs-on: ubuntu-latest
     
     permissions:
@@ -44,57 +48,61 @@ jobs:
         run: |
           npm ci || npm install
           
-      - name: 🎯 Sync Notion data (Data Only)
+      - name: 🎯 Sync Notion data (JSON uniquement)
         env:
           NOTION_TOKEN: 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
           SYNC_TYPE: ${{ github.event.inputs.sync_type || 'full' }}
         run: |
-          echo "🚀 Synchronisation des données Notion..."
+          echo "🚀 Synchronisation des données Notion vers JSON..."
           echo "📊 Type de sync: $SYNC_TYPE"
+          echo "🎯 Architecture: Données JSON uniquement, pas de modification HTML"
           node scripts/notion-sync.js
           
-      - name: � Inject Notion content (Secure Architecture)
+      - name: 🔄 Commit et Push des données
         run: |
-          echo "🔄 Injection sécurisée du contenu Notion..."
-          node scripts/notion-content-injector.js
-          echo "✅ Contenu injecté de manière sécurisée dans #programmes-content"
-          
-      - name: 🚀 Deploy to production
-        run: |
-          echo "📁 Déploiement sécurisé..."
-          npm run cache-bust
+          echo "� Commit des données JSON uniquement..."
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "🎵 Auto-sync: Notion data updated [$(date '+%Y-%m-%d %H:%M')]" || echo "No changes to commit"
-          git push
+          git config --local user.name "GitHub Action - Notion Sync"
           
-      - name: 📊 Summary Report
-        run: |
-          echo "📊 === RAPPORT DE SYNCHRONISATION V2 ==="
-          echo "📅 Date: $(TZ='Europe/Paris' date +'%Y-%m-%d %H:%M:%S')"
-          echo "🎯 Horaires personnalisés: 6h30 (réveil) et 22h30 (post-répétition)"
-          echo "🏗️ Architecture: Code/Données séparées"
-          
-          # Vérifier si des changements ont été faits
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "✅ Synchronisation réussie avec changements"
-            
-            # Statistiques
-            if [ -f "data/pieces.json" ]; then
-              PIECES=$(jq '.pieces | length' data/pieces.json 2>/dev/null || echo "0")
-              echo "🎵 Pièces synchronisées: $PIECES"
-            fi
-            
-            echo "🔄 Fréquence optimisée: 2x/jour (6h30 et 22h30) + à chaque commit"
-            echo "🛡️ Code protégé dans /src/ - jamais écrasé par Notion"
+          # Vérifier s'il y a des changements dans le dossier data
+          if git diff --quiet HEAD -- data/; then
+            echo "ℹ️ Aucun changement dans les données Notion"
           else
-            echo "ℹ️ Aucun changement détecté - données à jour"
+            git add data/
+            git commit -m "🎵 Sync Notion data [$(TZ='Europe/Paris' date '+%Y-%m-%d %H:%M')]"
+            git push
+            echo "✅ Données Notion mises à jour et déployées sur Netlify"
           fi
           
-          echo "🌐 Site: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
-          echo "📁 Structure:"
-          echo "  /src/     → Code source (protégé)"
-          echo "  /data/    → Données Notion (auto-sync)"
-          echo "  /build/   → Site généré (auto-build)"
-          echo "========================================="
+      - name: 📊 Rapport de synchronisation
+        run: |
+          echo "📊 === RAPPORT SYNC NETLIFY ==="
+          echo "📅 Date: $(TZ='Europe/Paris' date +'%Y-%m-%d %H:%M:%S')"
+          echo "🎯 Déploiement: Netlify uniquement"
+          echo "� Site production: https://fichemusicien.site"
+          echo "🔄 Fréquence: 2x/jour (6h30 et 22h30) + manuel"
+          echo ""
+          
+          # Statistiques des données
+          if [ -f "data/pieces.json" ]; then
+            PIECES=$(jq '.pieces | length' data/pieces.json 2>/dev/null || echo "0")
+            echo "🎵 Pièces synchronisées: $PIECES"
+          fi
+          
+          if [ -f "data/concerts.json" ]; then
+            CONCERTS=$(jq '.concerts | length' data/concerts.json 2>/dev/null || echo "0")
+            echo "🎭 Concerts synchronisés: $CONCERTS"
+          fi
+          
+          if [ -f "data/events.json" ]; then
+            EVENTS=$(jq '.events | length' data/events.json 2>/dev/null || echo "0")
+            echo "🗓️ Événements synchronisés: $EVENTS"
+          fi
+          
+          echo ""
+          echo "✅ Architecture sécurisée:"
+          echo "  • HTML statique préservé"
+          echo "  • Données JSON dynamiques"
+          echo "  • Déploiement automatique Netlify"
+          echo "  • Pas de conflit Git"
+          echo "================================="

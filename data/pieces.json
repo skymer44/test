@@ -106,7 +106,7 @@
       }
     },
     {
-      "title": "Ammerland",
+      "title": "Ammerland Pour essai 2 bis",
       "composer": "Jacob de Haan",
       "duration": "03:10",
       "info": "Très interessant pour le son mais assez chère",
@@ -118,7 +118,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-07T17:51:00.000Z",
+        "lastModified": "2025-07-08T09:38:00.000Z",
         "order": 1
       }
     },
@@ -256,7 +256,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-08T09:15:00.865Z",
+    "syncDate": "2025-07-08T09:47:10.397Z",
     "source": "notion",
     "totalPieces": 15
   }
