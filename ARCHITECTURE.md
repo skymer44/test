@@ -216,3 +216,5 @@ setInterval(() => this.checkForUpdates(), 5 * 60 * 1000);
 ---
 
 **🎯 Cette architecture garantit une séparation claire, évite les conflits Git et permet une évolutivité maximale avec un minimum de configuration.**
+
+<!-- Version de test: 2025-07-08 -->

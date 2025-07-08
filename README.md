@@ -1,6 +1,6 @@
 # 🎵 Programme Musical 2026 - Site Web
 
-Site web de programme musical avec synchronisation automatique Notion. 🎼
+Site web de programme musical avec synchronisation automatique Notion. 🎼✨
 
 ## 🚀 Utilisation rapide
 
