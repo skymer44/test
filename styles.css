@@ -159,6 +159,11 @@ body {
     font-weight: 600;
     color: #2d3748;
     margin: 0;
+    /* Réserver de l'espace pour la flèche sur mobile */
+    padding-right: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* Responsive pour mobile */
@@ -170,6 +175,13 @@ body {
     .piece-click-indicator {
         opacity: 1 !important; /* Toujours visible sur mobile */
         font-size: 1rem;
+        right: 8px; /* Réduire un peu l'espace depuis le bord */
+    }
+    
+    /* Ajuster le padding du titre pour plus d'espace avec la flèche sur mobile */
+    .piece-item h5 {
+        padding-right: 35px; /* Augmenter l'espace réservé pour la flèche */
+        font-size: 1rem; /* Légèrement plus petit sur mobile */
     }
     
     .piece-highlighted {
@@ -2202,11 +2214,21 @@ tbody tr:hover {
         padding: 0.8rem 1.2rem;
         font-size: 0.9rem;
     }
-    
-    .piece-card {
+     .piece-card {
         padding: 1rem;
     }
     
+    /* Protection supplémentaire pour les très petits écrans */
+    .piece-item h5 {
+        padding-right: 40px; /* Plus d'espace pour éviter la superposition */
+        font-size: 0.95rem; /* Texte légèrement plus petit */
+    }
+    
+    .piece-click-indicator {
+        right: 6px !important; /* Encore plus près du bord */
+        font-size: 0.9rem !important; /* Flèche plus petite */
+    }
+
     .links a {
         font-size: 0.8rem;
         padding: 0.4rem 0.8rem;

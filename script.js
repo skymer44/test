@@ -962,6 +962,14 @@ function formatEventDate(dateString) {
     });
 }
 
+function truncateTitleForMobile(title, maxLength = 35) {
+    // Sur mobile, tronquer les titres trop longs pour éviter la superposition avec la flèche
+    if (window.innerWidth <= 768 && title.length > maxLength) {
+        return title.substring(0, maxLength - 3) + '...';
+    }
+    return title;
+}
+
 function generatePiecesHtml(pieces) {
     if (!pieces || pieces.length === 0) {
         return '<div class="piece-item"><h5>Programme à définir</h5></div>';
@@ -972,14 +980,17 @@ function generatePiecesHtml(pieces) {
         const pieceName = typeof piece === 'object' && piece.name ? piece.name : piece;
         const pieceColor = typeof piece === 'object' && piece.color ? piece.color : null;
         
+        // Tronquer le titre sur mobile pour éviter la superposition avec la flèche
+        const displayName = truncateTitleForMobile(pieceName);
+        
         // Échapper les guillemets pour l'attribut onclick
         const escapedPieceName = pieceName.replace(/'/g, "\\'").replace(/"/g, '\\"');
         
         return `
             <div class="piece-item${pieceColor ? ` piece-${pieceColor}` : ''} clickable-piece" 
                  onclick="navigateToPieceInPrograms('${escapedPieceName}')" 
-                 title="Cliquer pour voir cette pièce dans les programmes musicaux">
-                <h5>${pieceName}</h5>
+                 title="Cliquer pour voir cette pièce dans les programmes musicaux${displayName !== pieceName ? ' - Titre complet: ' + pieceName : ''}">
+                <h5>${displayName}</h5>
                 <span class="piece-click-indicator">→</span>
             </div>
         `;
@@ -1012,7 +1023,9 @@ function generateMiniEventCard(event, selectedEvent = null) {
         const displayPieces = event.pieces.slice(0, 2);
         const piecesBubbles = displayPieces.map(piece => {
             const pieceName = typeof piece === 'object' && piece.name ? piece.name : piece;
-            return `<span class="piece-bubble">${pieceName}</span>`;
+            // Tronquer le nom pour les bulles avec une longueur plus courte
+            const displayName = truncateTitleForMobile(pieceName, 25);
+            return `<span class="piece-bubble" title="${pieceName}">${displayName}</span>`;
         }).join('');
         
         const extraCount = event.pieces.length - 2;
