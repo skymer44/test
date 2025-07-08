@@ -49,7 +49,17 @@
         </div>
     </header>
 
-    <!-- Navigation principale = Header unifié -->
+    <!-- Header mobile simplifié -->
+    <div class="mobile-header">
+        <div class="mobile-search">
+            <input type="text" id="mobile-search-input" placeholder="Rechercher..." class="mobile-search-input">
+        </div>
+        <div class="mobile-stats" id="mobile-site-stats">
+            <!-- Les statistiques mobiles seront mises à jour automatiquement par JavaScript -->
+        </div>
+    </div>
+
+    <!-- Navigation principale = Header unifié (desktop) -->
     <nav class="tab-navigation">
         <div class="tab-container">
             <h1 class="tab-title">Fiche Musicien</h1>
@@ -64,6 +74,22 @@
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Rechercher une pièce, un compositeur..." class="search-input">
             </div>
+        </div>
+    </nav>
+
+    <!-- Navigation mobile en bas -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-item active" data-tab="prochains-evenements">
+            <div class="mobile-nav-icon">📅</div>
+            <div class="mobile-nav-label">Événements</div>
+        </div>
+        <div class="mobile-nav-item" data-tab="programmes">
+            <div class="mobile-nav-icon">🎵</div>
+            <div class="mobile-nav-label">Programme</div>
+        </div>
+        <div class="mobile-nav-item" data-tab="partitions">
+            <div class="mobile-nav-icon">🎼</div>
+            <div class="mobile-nav-label">Partitions</div>
         </div>
     </nav>
 

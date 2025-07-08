@@ -324,9 +324,10 @@ function initTabs() {
     console.log('🔄 Initialisation des onglets...');
     
     const tabButtons = document.querySelectorAll('.tab-button');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
     
-    console.log('Onglets trouvés:', tabButtons.length, 'Contenus trouvés:', tabContents.length);
+    console.log('Onglets desktop trouvés:', tabButtons.length, 'Onglets mobile trouvés:', mobileNavItems.length, 'Contenus trouvés:', tabContents.length);
     
     // Fonction pour afficher un onglet
     function showTab(targetId) {
@@ -337,9 +338,14 @@ function initTabs() {
             content.classList.remove('active');
         });
         
-        // Désactiver tous les boutons d'onglets
+        // Désactiver tous les boutons d'onglets desktop
         tabButtons.forEach(button => {
             button.classList.remove('active');
+        });
+        
+        // Désactiver tous les items de navigation mobile
+        mobileNavItems.forEach(item => {
+            item.classList.remove('active');
         });
         
         // Afficher le contenu de l'onglet ciblé
@@ -351,16 +357,31 @@ function initTabs() {
             console.error('❌ Contenu introuvable pour:', targetId);
         }
         
-        // Activer le bouton correspondant
-        const activeButton = document.querySelector(`[data-tab="${targetId}"]`);
+        // Activer le bouton correspondant (desktop)
+        const activeButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
         if (activeButton) {
             activeButton.classList.add('active');
         }
+        
+        // Activer l'item correspondant (mobile)
+        const activeMobileItem = document.querySelector(`.mobile-nav-item[data-tab="${targetId}"]`);
+        if (activeMobileItem) {
+            activeMobileItem.classList.add('active');
+        }
     }
     
-    // Gérer les clics sur les boutons d'onglets
+    // Gérer les clics sur les boutons d'onglets desktop
     tabButtons.forEach(button => {
         button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('data-tab');
+            showTab(targetId);
+        });
+    });
+    
+    // Gérer les clics sur la navigation mobile
+    mobileNavItems.forEach(item => {
+        item.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('data-tab');
             showTab(targetId);
@@ -2567,7 +2588,7 @@ function calculateTotalDurations() {
 function updateSiteStatistics() {
     const stats = calculateTotalDurations();
     
-    // Mettre à jour l'élément des statistiques globales s'il existe
+    // Mettre à jour l'élément des statistiques globales desktop s'il existe
     const statsElement = document.getElementById('site-stats');
     if (statsElement) {
         const timeDisplay = stats.formatTime(stats.totalSeconds);
@@ -2584,6 +2605,27 @@ function updateSiteStatistics() {
             <div class="stat-item">
                 <span class="stat-number">${timeDisplay}</span>
                 <span class="stat-label">Durée totale</span>
+            </div>
+        `;
+    }
+    
+    // Mettre à jour l'élément des statistiques mobiles s'il existe
+    const mobileStatsElement = document.getElementById('mobile-site-stats');
+    if (mobileStatsElement) {
+        const timeDisplay = stats.formatTime(stats.totalSeconds);
+            
+        mobileStatsElement.innerHTML = `
+            <div class="stat-item">
+                <span class="stat-number">${stats.totalSections}</span>
+                <span class="stat-label">Concerts</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.totalPieces}</span>
+                <span class="stat-label">Pièces</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${timeDisplay}</span>
+                <span class="stat-label">Durée</span>
             </div>
         `;
     }
@@ -2876,12 +2918,29 @@ function addBackToTopButton() {
 // Fonction pour ajouter la recherche
 function addSearchFunctionality() {
     const searchInput = document.getElementById('search-input');
-    if (!searchInput) return;
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    
+    if (!searchInput && !mobileSearchInput) return;
     
     const searchContainer = document.querySelector('.search-container');
+    const mobileSearchContainer = document.querySelector('.mobile-search');
     const programmesTab = document.getElementById('programmes');
     
     if (!programmesTab) return;
+    
+    // Synchroniser les deux champs de recherche
+    function syncSearchInputs(sourceInput, targetInput) {
+        if (sourceInput && targetInput) {
+            sourceInput.addEventListener('input', function() {
+                targetInput.value = this.value;
+                performSearch(this.value);
+            });
+        }
+    }
+    
+    // Synchronisation bidirectionnelle
+    syncSearchInputs(searchInput, mobileSearchInput);
+    syncSearchInputs(mobileSearchInput, searchInput);
     
     // Sauvegarder l'ordre original des sections
     const originalSections = Array.from(programmesTab.querySelectorAll('.concert-section'));
@@ -2892,17 +2951,15 @@ function addSearchFunctionality() {
         if (searchContainer) {
             searchContainer.style.display = isVisible ? 'flex' : 'none';
         }
+        // La recherche mobile est toujours visible sur mobile
     }
     
-    // Initialiser la visibilité
-    toggleSearchVisibility();
-    
-    // Ajouter l'événement de recherche
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
+    // Fonction de recherche centralisée
+    function performSearch(searchTerm) {
         const sections = Array.from(programmesTab.querySelectorAll('.concert-section'));
+        const lowerSearchTerm = searchTerm.toLowerCase();
         
-        if (!searchTerm) {
+        if (!lowerSearchTerm) {
             // Si pas de recherche, remettre l'ordre original et tout afficher
             sections.forEach(section => {
                 const pieces = section.querySelectorAll('.piece-card');
@@ -2931,27 +2988,16 @@ function addSearchFunctionality() {
             // D'abord vérifier si le terme de recherche correspond au titre de la section
             const sectionTitle = section.querySelector('h2')?.textContent.toLowerCase() || '';
             const sectionMatchesSearch = sectionTitle.includes(searchTerm);
-            
-            if (sectionMatchesSearch) {
-                // Si la section correspond, afficher toutes les pièces de cette section
-                pieces.forEach(piece => {
+            pieces.forEach(piece => {
+                const text = piece.textContent.toLowerCase();
+                if (text.includes(lowerSearchTerm)) {
                     piece.style.display = 'block';
                     piece.style.opacity = '1';
-                });
-                hasResults = true;
-            } else {
-                // Sinon, vérifier pièce par pièce
-                pieces.forEach(piece => {
-                    const text = piece.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        piece.style.display = 'block';
-                        piece.style.opacity = '1';
-                        hasResults = true;
-                    } else {
-                        piece.style.display = 'none';
-                    }
-                });
-            }
+                    hasResults = true;
+                } else {
+                    piece.style.display = 'none';
+                }
+            });
             
             if (hasResults) {
                 sectionsWithResults.push(section);
@@ -2969,10 +3015,27 @@ function addSearchFunctionality() {
         allSections.forEach(section => {
             programmesTab.appendChild(section);
         });
-    });
+    }
+    
+    // Initialiser la visibilité
+    toggleSearchVisibility();
+    
+    // Ajouter l'événement de recherche pour le champ desktop
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            performSearch(this.value);
+        });
+    }
+    
+    // Ajouter l'événement de recherche pour le champ mobile
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', function() {
+            performSearch(this.value);
+        });
+    }
     
     // Écouter les changements d'onglets pour ajuster la visibilité
-    document.querySelectorAll('.tab-button').forEach(button => {
+    document.querySelectorAll('.tab-button, .mobile-nav-item').forEach(button => {
         button.addEventListener('click', function() {
             setTimeout(toggleSearchVisibility, 10);
         });
