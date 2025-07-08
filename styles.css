@@ -3218,28 +3218,9 @@ section:target {
    PWA iOS SIMPLE - INTERFACE IDENTIQUE À SAFARI
    ======================================== */
 
-/* 🎯 RÉINITIALISATION COMPLÈTE POUR PWA - Interface 100% identique */
+/* 🎯 AJUSTEMENTS PWA PRÉCIS - Interface identique avec contrôle largeur */
 @media all and (display-mode: standalone) {
-    /* Supprimer TOUS les styles spéciaux PWA pour forcer l'identique */
-    body,
-    .upcoming-events-list,
-    .mini-event-card,
-    .main-event-content,
-    .next-events-section,
-    .pieces-grid,
-    .piece-card {
-        /* Réinitialiser tous les overrides PWA */
-        width: unset !important;
-        min-width: unset !important;
-        max-width: unset !important;
-        padding: unset !important;
-        margin: unset !important;
-        grid-template-columns: unset !important;
-        gap: unset !important;
-        box-sizing: unset !important;
-    }
-    
-    /* Juste le support du notch - minimal */
+    /* Support du notch - essentiel */
     body {
         padding-top: env(safe-area-inset-top) !important;
         padding-bottom: env(safe-area-inset-bottom) !important;
@@ -3247,8 +3228,41 @@ section:target {
         padding-right: env(safe-area-inset-right) !important;
     }
     
-    /* 🚫 DÉSACTIVER toutes les modifications PWA spéciales */
-    /* Laisser les styles par défaut s'appliquer normalement */
+    /* 🎯 CONTRÔLE PRÉCIS DES LARGEURS - Éviter débordement */
+    .upcoming-events-list {
+        /* Assurer que les cartes ne débordent pas */
+        max-width: 100% !important;
+        padding: 0 10px !important; /* Marges internes pour éviter que ça touche les bords */
+        box-sizing: border-box !important;
+    }
+    
+    .mini-event-card {
+        /* Largeur contrôlée pour éviter débordement */
+        max-width: calc(100% - 4px) !important; /* Légère marge pour sécurité */
+        box-sizing: border-box !important;
+    }
+    
+    .pieces-grid {
+        /* Contrôle largeur des programmes musicaux */
+        max-width: 100% !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .piece-card {
+        /* Largeur contrôlée pour éviter débordement */
+        max-width: calc(100% - 4px) !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Conteneur principal - s'assurer qu'il reste dans les limites */
+    .main-event-content,
+    .next-events-section {
+        max-width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+    }
 }
 
 /* Support du notch iPhone - version minimale */
