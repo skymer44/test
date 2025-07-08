@@ -3215,27 +3215,31 @@ section:target {
 .piece-bubble:nth-child(4) { animation-delay: 150ms; }
 
 /* ========================================
-   PWA iOS SIMPLE - JUSTE POUR MASQUER LA BARRE SAFARI
+   PWA iOS SIMPLE - INTERFACE IDENTIQUE À SAFARI
    ======================================== */
 
-/* 🔍 DIAGNOSTIC TEMPORAIRE - Bordures pour voir les différences */
+/* 🎯 RÉINITIALISATION COMPLÈTE POUR PWA - Interface 100% identique */
 @media all and (display-mode: standalone) {
-    body {
-        border: 3px solid red !important;
+    /* Supprimer TOUS les styles spéciaux PWA pour forcer l'identique */
+    body,
+    .upcoming-events-list,
+    .mini-event-card,
+    .main-event-content,
+    .next-events-section,
+    .pieces-grid,
+    .piece-card {
+        /* Réinitialiser tous les overrides PWA */
+        width: unset !important;
+        min-width: unset !important;
+        max-width: unset !important;
+        padding: unset !important;
+        margin: unset !important;
+        grid-template-columns: unset !important;
+        gap: unset !important;
+        box-sizing: unset !important;
     }
     
-    .upcoming-events-list {
-        border: 2px solid blue !important;
-    }
-    
-    .mini-event-card {
-        border: 1px solid green !important;
-    }
-}
-
-/* 🚨 CORRECTION FORCÉE POUR PWA - iPhone 390px */
-@media all and (display-mode: standalone) {
-    /* Support du notch iPhone */
+    /* Juste le support du notch - minimal */
     body {
         padding-top: env(safe-area-inset-top) !important;
         padding-bottom: env(safe-area-inset-bottom) !important;
@@ -3243,64 +3247,18 @@ section:target {
         padding-right: env(safe-area-inset-right) !important;
     }
     
-    /* 📱 CORRECTION SPÉCIFIQUE IPHONE 390px - Cartes plus larges en PWA */
-    .upcoming-events-list {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-        padding: 0 0.5rem !important;
-    }
-    
-    /* Forcer la largeur des cartes à utiliser toute la largeur disponible */
-    .mini-event-card {
-        width: calc(100% - 1rem) !important;
-        min-width: calc(100% - 1rem) !important;
-        max-width: none !important;
-        padding: 1.2rem !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* Contenu principal aussi en pleine largeur */
-    .main-event-content {
-        width: calc(100% - 1rem) !important;
-        min-width: calc(100% - 1rem) !important;
-        padding: 1.2rem !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* Container principal optimisé */
-    .next-events-section {
-        padding: 0 0.5rem !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* Grid des pièces en une colonne aussi */
-    .pieces-grid {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-        padding: 0 0.5rem !important;
-    }
-    
-    /* Cartes des pièces en pleine largeur */
-    .piece-card {
-        width: calc(100% - 1rem) !important;
-        min-width: calc(100% - 1rem) !important;
-        padding: 1.2rem !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-    }
+    /* 🚫 DÉSACTIVER toutes les modifications PWA spéciales */
+    /* Laisser les styles par défaut s'appliquer normalement */
 }
 
-/* Support du notch iPhone */
+/* Support du notch iPhone - version minimale */
 @supports (padding: max(0px)) {
     @media all and (display-mode: standalone) {
         body {
-            padding-top: max(20px, env(safe-area-inset-top)) !important;
-            padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
-            padding-left: max(10px, env(safe-area-inset-left)) !important;
-            padding-right: max(10px, env(safe-area-inset-right)) !important;
+            padding-top: max(env(safe-area-inset-top), 0px) !important;
+            padding-bottom: max(env(safe-area-inset-bottom), 0px) !important;
+            padding-left: max(env(safe-area-inset-left), 0px) !important;
+            padding-right: max(env(safe-area-inset-right), 0px) !important;
         }
     }
 }
