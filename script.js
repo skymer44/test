@@ -1312,21 +1312,13 @@ function switchToTab(targetId) {
         activeMobileItem.classList.add('active');
     }
     
-    // Déclencher la mise à jour de la visibilité de la recherche
+    // Déclencher la mise à jour de la visibilité de la recherche (desktop seulement)
     const programmesTab = document.getElementById('programmes');
     const searchContainer = document.querySelector('.search-container');
-    const mobileSearchContainer = document.querySelector('.mobile-search');
     
     const isVisible = programmesTab && programmesTab.classList.contains('active');
     if (searchContainer) {
         searchContainer.style.display = isVisible ? 'flex' : 'none';
-    }
-    if (mobileSearchContainer) {
-        if (isVisible) {
-            mobileSearchContainer.classList.add('visible');
-        } else {
-            mobileSearchContainer.classList.remove('visible');
-        }
     }
 }
 
@@ -2972,29 +2964,13 @@ function addBackToTopButton() {
 // Fonction pour ajouter la recherche
 function addSearchFunctionality() {
     const searchInput = document.getElementById('search-input');
-    const mobileSearchInput = document.getElementById('mobile-search-input');
     
-    if (!searchInput && !mobileSearchInput) return;
+    if (!searchInput) return;
     
     const searchContainer = document.querySelector('.search-container');
-    const mobileSearchContainer = document.querySelector('.mobile-search');
     const programmesTab = document.getElementById('programmes');
     
     if (!programmesTab) return;
-    
-    // Synchroniser les deux champs de recherche
-    function syncSearchInputs(sourceInput, targetInput) {
-        if (sourceInput && targetInput) {
-            sourceInput.addEventListener('input', function() {
-                targetInput.value = this.value;
-                performSearch(this.value);
-            });
-        }
-    }
-    
-    // Synchronisation bidirectionnelle
-    syncSearchInputs(searchInput, mobileSearchInput);
-    syncSearchInputs(mobileSearchInput, searchInput);
     
     // Sauvegarder l'ordre original des sections
     const originalSections = Array.from(programmesTab.querySelectorAll('.concert-section'));
@@ -3005,15 +2981,7 @@ function addSearchFunctionality() {
         if (searchContainer) {
             searchContainer.style.display = isVisible ? 'flex' : 'none';
         }
-        // Gérer la visibilité de la recherche mobile
-        const mobileSearchContainer = document.querySelector('.mobile-search');
-        if (mobileSearchContainer) {
-            if (isVisible) {
-                mobileSearchContainer.classList.add('visible');
-            } else {
-                mobileSearchContainer.classList.remove('visible');
-            }
-        }
+        // Plus de recherche mobile à gérer
     }
     
     // Fonction de recherche centralisée
@@ -3085,13 +3053,6 @@ function addSearchFunctionality() {
     // Ajouter l'événement de recherche pour le champ desktop
     if (searchInput) {
         searchInput.addEventListener('input', function() {
-            performSearch(this.value);
-        });
-    }
-    
-    // Ajouter l'événement de recherche pour le champ mobile
-    if (mobileSearchInput) {
-        mobileSearchInput.addEventListener('input', function() {
             performSearch(this.value);
         });
     }
