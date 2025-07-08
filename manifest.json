@@ -1,7 +1,7 @@
 {
-  "name": "Programme Musical 2026",
-  "short_name": "Musical 2026",
-  "description": "Programme Musical 2026 - Concerts, partitions et événements",
+  "name": "Fiche Musicien",
+  "short_name": "Fiche Musicien",
+  "description": "Fiche Musicien - Toutes les informations du musicien d'orchestre",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -65,14 +65,14 @@
       "sizes": "1280x720",
       "type": "image/svg+xml",
       "form_factor": "wide",
-      "label": "Vue desktop du Programme Musical 2026"
+      "label": "Vue desktop de Fiche Musicien"
     },
     {
       "src": "screenshots/mobile.svg",
       "sizes": "390x844",
       "type": "image/svg+xml",
       "form_factor": "narrow",
-      "label": "Vue mobile du Programme Musical 2026"
+      "label": "Vue mobile de Fiche Musicien"
     }
   ],
   "categories": ["music", "entertainment", "education"],

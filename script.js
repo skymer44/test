@@ -270,7 +270,7 @@ function updateEventsWithNotionData(events) {
 
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Programme Musical 2026 - Chargement terminé!');
+    console.log('Fiche Musicien - Chargement terminé!');
     
     // Initialiser les onglets en priorité
     initTabs();
@@ -1205,12 +1205,12 @@ function findPieceInPrograms(pieceName) {
 }
 
 /**
- * Navigue vers une pièce spécifique dans l'onglet Programmes Musicaux
+ * Navigue vers une pièce spécifique dans l'onglet Programme musical
  */
 function navigateToPieceInPrograms(pieceName) {
     console.log(`🎯 Navigation vers la pièce: "${pieceName}"`);
     
-    // 1. Basculer vers l'onglet Programmes Musicaux
+    // 1. Basculer vers l'onglet Programme musical
     switchToTab('programmes');
     
     // 2. Attendre que l'onglet soit actif, puis chercher la pièce
@@ -2613,7 +2613,7 @@ function updateSiteStatistics() {
     
     // Mettre à jour le titre de la page avec les statistiques
     const timeForTitle = stats.formatTime(stats.totalSeconds);
-    document.title = `Programme Musical 2026 - ${stats.totalPieces} pièces, ${timeForTitle}`;
+    document.title = `Fiche Musicien - ${stats.totalPieces} pièces, ${timeForTitle}`;
     
     console.log(`📊 Statistiques mises à jour: ${stats.totalPieces} pièces, ${stats.totalSections} concerts, ${stats.formatTime(stats.totalSeconds)} au total`);
 }
@@ -2648,7 +2648,7 @@ function generatePDF(sectionId) {
         // En-tête du document
         doc.setFontSize(18);
         doc.setFont(undefined, 'bold');
-        doc.text('Programme Musical 2026', pageWidth / 2, currentY, { align: 'center' });
+        doc.text('Fiche Musicien', pageWidth / 2, currentY, { align: 'center' });
         currentY += 15;
         
         doc.setFontSize(14);
@@ -2790,7 +2790,7 @@ function generatePDF(sectionId) {
         const footerY = pageHeight - 15;
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
-        doc.text('Programme Musical 2026', pageWidth / 2, footerY, { align: 'center' });
+        doc.text('Fiche Musicien', pageWidth / 2, footerY, { align: 'center' });
         
         // Générer le nom de fichier
         const fileName = `Programme_${sectionTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;

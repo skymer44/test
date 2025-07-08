@@ -2,10 +2,10 @@
 
 # Instructions pour GitHub Copilot
 
-Ce projet est un site web simple pour afficher les informations d'un programme musical 2026.
+Ce projet est un site web simple pour afficher les informations d'un programme musical.
 
 ## Structure du projet
-- `index.html` : Page principale avec toutes les informations musicales
+- `index.html` : Page principale avec toutes les fiches musicales
 - `styles.css` : Styles CSS avec design moderne et responsive
 - `script.js` : Fonctionnalités JavaScript interactives
 
