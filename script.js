@@ -44,9 +44,52 @@ const programsObserver = new MutationObserver((mutations) => {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             // Attendre un peu que le CSS soit appliqué puis centrer les traits
             setTimeout(centerBlueLines, 100);
+            // Restructurer les headers sur mobile
+            setTimeout(restructureMobileHeaders, 150);
         }
     });
 });
+
+/**
+ * Restructure les headers sur mobile pour avoir titre + icône côte à côte
+ */
+function restructureMobileHeaders() {
+    // Seulement sur mobile (largeur <= 768px)
+    if (window.innerWidth <= 768) {
+        const sectionHeaders = document.querySelectorAll('#programmes .section-header');
+        
+        sectionHeaders.forEach(header => {
+            const h2 = header.querySelector('h2');
+            const pdfBtn = header.querySelector('.pdf-download-btn');
+            
+            if (h2 && pdfBtn && !header.querySelector('.title-with-pdf')) {
+                // Créer le conteneur titre + PDF
+                const titleWithPdf = document.createElement('div');
+                titleWithPdf.className = 'title-with-pdf';
+                
+                // Cloner et modifier le bouton PDF
+                const newPdfBtn = pdfBtn.cloneNode(true);
+                newPdfBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                `;
+                
+                // Assembler titre + PDF
+                titleWithPdf.appendChild(h2.cloneNode(true));
+                titleWithPdf.appendChild(newPdfBtn);
+                
+                // Remplacer le contenu du header
+                header.innerHTML = '';
+                header.appendChild(titleWithPdf);
+            }
+        });
+    }
+}
 
 // Démarrer l'observation du contenu des programmes
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,6 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Aussi appeler au chargement initial au cas où le contenu serait déjà là
     setTimeout(centerBlueLines, 500);
+    // Appliquer la restructuration mobile
+    setTimeout(restructureMobileHeaders, 500);
+});
+
+// Appliquer la restructuration mobile au resize
+window.addEventListener('resize', function() {
+    setTimeout(restructureMobileHeaders, 100);
 });
 // �📱 FONCTIONS MOBILE-FIRST
 function isMobileDevice() {
@@ -1610,8 +1660,6 @@ function highlightPiece(pieceElement, pieceTitle) {
         setTimeout(() => {
             pieceElement.classList.remove('piece-highlighted');
         }, 4000);
-        
-        // Pas de notification - l'animation suffit
         
     }, 800); // Attendre que le scroll soit terminé
 }
@@ -4091,4 +4139,72 @@ document.addEventListener('DOMContentLoaded', function() {
 window.addEventListener('resize', fixPWANavigation);
 window.addEventListener('orientationchange', function() {
     setTimeout(fixPWANavigation, 100);
+});
+
+// ========================================
+// 🔧 CORRECTION SCROLL AUTOMATIQUE POUR ÉVÉNEMENTS
+// ========================================
+
+/**
+ * Fonction pour faire remonter automatiquement quand on clique sur un événement
+ */
+function autoScrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+/**
+ * Ajouter les écouteurs de clic sur les événements pour le scroll automatique
+ */
+function addEventClickListeners() {
+    // Événements principaux (main-next-event)
+    const mainEvents = document.querySelectorAll('.main-next-event');
+    mainEvents.forEach(event => {
+        if (!event.hasAttribute('data-scroll-listener')) {
+            event.addEventListener('click', function(e) {
+                // Ne pas déclencher sur les boutons calendrier
+                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn')) {
+                    setTimeout(autoScrollToTop, 100);
+                }
+            });
+            event.setAttribute('data-scroll-listener', 'true');
+        }
+    });
+    
+    // Mini événements
+    const miniEvents = document.querySelectorAll('.mini-event-card');
+    miniEvents.forEach(event => {
+        if (!event.hasAttribute('data-scroll-listener')) {
+            event.addEventListener('click', function(e) {
+                // Ne pas déclencher sur les boutons calendrier
+                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn')) {
+                    setTimeout(autoScrollToTop, 100);
+                }
+            });
+            event.setAttribute('data-scroll-listener', 'true');
+        }
+    });
+}
+
+// Ajouter les écouteurs au chargement initial
+document.addEventListener('DOMContentLoaded', addEventClickListeners);
+
+// Observer pour ajouter les écouteurs quand de nouveaux événements sont chargés
+const eventsObserver = new MutationObserver(() => {
+    addEventClickListeners();
+});
+
+// Observer les conteneurs d'événements
+document.addEventListener('DOMContentLoaded', function() {
+    const nextEventsSection = document.querySelector('.next-events-section');
+    const upcomingEventsList = document.querySelector('.upcoming-events-list');
+    
+    if (nextEventsSection) {
+        eventsObserver.observe(nextEventsSection, { childList: true, subtree: true });
+    }
+    if (upcomingEventsList) {
+        eventsObserver.observe(upcomingEventsList, { childList: true, subtree: true });
+    }
 });

@@ -3584,7 +3584,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     
     /* 📱 REDESIGN MOBILE POUR L'ONGLET PROGRAMMES - Version délicate */
     
-    /* Header mobile simplifié - SANS encadré */
+    /* Header mobile avec titre et icône PDF côte à côte */
     #programmes .section-header {
         background: transparent;
         padding: 1.5rem 1rem 1rem;
@@ -3594,7 +3594,20 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         border: none;
         flex-direction: column;
         align-items: center;
+        gap: 0;
+    }
+    
+    /* Container pour titre + icône PDF */
+    #programmes .section-header .title-with-pdf {
+        display: flex;
+        align-items: center;
         gap: 0.8rem;
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        position: relative;
     }
     
     #programmes .section-header h2 {
@@ -3605,33 +3618,45 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         font-weight: 600;
         letter-spacing: -0.02em;
         position: relative;
-        background: #f8fafc;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        flex: 1;
     }
     
     #programmes .section-header h2:after {
-        display: none; /* Suppression de la petite barre */
+        display: none;
     }
     
-    /* Bouton PDF mobile délicat */
+    /* Icône PDF élégant */
     #programmes .pdf-download-btn {
         background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
         color: white;
-        padding: 0.6rem 1.2rem;
-        border-radius: 8px;
-        font-size: 0.85rem;
-        font-weight: 600;
+        padding: 0.5rem;
+        border-radius: 6px;
+        font-size: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
-        margin-top: 0;
+        margin: 0;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
     }
     
     #programmes .pdf-download-btn:hover {
         background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
-        transform: translateY(-1px);
+        transform: translateY(-1px) scale(1.05);
         box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+    }
+    
+    /* Masquer le texte du bouton PDF, garder seulement l'icône */
+    #programmes .pdf-download-btn .btn-text {
+        display: none;
     }
     
     /* Container de pièces mobile délicat */
