@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui">
+    <title>🔍 Test Safe Areas PWA</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            /* IMPORTANT: Zone sûre en haut */
+            padding-top: env(safe-area-inset-top);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            min-height: 200vh;
+        }
+        
+        .debug-zone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 0, 0, 0.3);
+            height: env(safe-area-inset-top);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .content {
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            margin: 1rem;
+            border-radius: 12px;
+        }
+        
+        .test-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.9);
+            padding: 1rem calc(1rem + env(safe-area-inset-left)) calc(1rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-right));
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* Mode PWA */
+        @media (display-mode: standalone) {
+            .debug-zone::after {
+                content: " (PWA MODE)";
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-zone">
+        Zone Safe Area Top
+    </div>
+    
+    <div class="content">
+        <h1>🔍 Test des Safe Areas</h1>
+        <p><strong>Safe Area Top:</strong> <span id="safe-top"></span></p>
+        <p><strong>Safe Area Bottom:</strong> <span id="safe-bottom"></span></p>
+        <p><strong>Safe Area Left:</strong> <span id="safe-left"></span></p>
+        <p><strong>Safe Area Right:</strong> <span id="safe-right"></span></p>
+    </div>
+    
+    <div class="content">
+        <h2>Instructions de test</h2>
+        <p>1. En mode Safari normal : la zone rouge en haut doit être invisible ou très fine</p>
+        <p>2. En mode PWA : la zone rouge doit correspondre à la hauteur de l'encoche iPhone</p>
+        <p>3. Ce texte ne doit jamais être caché par l'encoche</p>
+    </div>
+    
+    <div class="content">
+        <h2>Test de scroll</h2>
+        <p>Scrollez pour voir si le contenu reste toujours visible</p>
+    </div>
+    
+    <div class="content">
+        <h2>Plus de contenu</h2>
+        <p>Pour forcer le scroll et tester</p>
+    </div>
+    
+    <div class="content">
+        <h2>Fin du test</h2>
+        <p>La navigation en bas doit respecter les zones sûres</p>
+    </div>
+    
+    <div class="test-nav">
+        📱 Navigation Test - Safe Areas
+    </div>
+
+    <script>
+        function updateSafeAreas() {
+            // Récupérer les valeurs des safe areas via getComputedStyle
+            const bodyStyle = getComputedStyle(document.body);
+            
+            document.getElementById('safe-top').textContent = bodyStyle.paddingTop || 'N/A';
+            document.getElementById('safe-bottom').textContent = 'env(safe-area-inset-bottom)';
+            document.getElementById('safe-left').textContent = bodyStyle.paddingLeft || 'N/A';
+            document.getElementById('safe-right').textContent = bodyStyle.paddingRight || 'N/A';
+        }
+        
+        updateSafeAreas();
+    </script>
+</body>
+</html>
