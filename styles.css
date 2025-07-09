@@ -110,6 +110,19 @@ body {
     z-index: 5;
 }
 
+/* Version renforcée pour mobile - garantit visibilité */
+.piece-highlighted-important {
+    border: 3px solid #764ba2 !important;
+    box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5) !important;
+    z-index: 10;
+    animation: strongPieceHighlight 1s infinite alternate !important;
+}
+
+@keyframes strongPieceHighlight {
+    0% { box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5); }
+    100% { box-shadow: 0 6px 32px rgba(118, 75, 162, 0.8); }
+}
+
 .piece-highlighted::before {
     content: '';
     position: absolute;

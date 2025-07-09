@@ -1365,6 +1365,8 @@ function displayEventError() {
  * Affiche un événement spécifique en tant qu'événement principal
  */
 function displaySpecificEvent(eventData) {
+    console.log(`📱 displaySpecificEvent - Affichage de l'événement: ${extractCleanTitle(eventData.title)}`);
+    
     // Sauvegarder l'événement sélectionné pour la mise en évidence
     window.selectedEventForHighlight = eventData;
     
@@ -1376,20 +1378,59 @@ function displaySpecificEvent(eventData) {
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
     displayUpcomingEventsPreview(currentUpcomingEvents, eventData);
     
-    // Scroller vers le haut seulement si l'événement principal n'est pas visible
-    // OPTIMISATION: scroll plus doux pour éviter le flash
-    const mainEventContainer = document.getElementById('main-next-event');
-    if (mainEventContainer) {
-        const rect = mainEventContainer.getBoundingClientRect();
-        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+    // Sur mobile, on force toujours le défilement vers le haut
+    if (window.innerWidth <= 768) {
+        console.log('📱 displaySpecificEvent - Forçage du défilement sur mobile');
         
-        // Scroll seulement si l'événement n'est pas visible dans la partie haute de l'écran
-        if (!isVisible) {
-            // Utiliser un scroll plus doux avec une transition CSS
-            window.scrollTo({ 
-                top: 0, 
-                behavior: 'smooth' 
-            });
+        // Défilement immédiat en haut puis smooth scroll
+        setTimeout(() => {
+            window.scrollTo(0, 0); // Défilement instantané d'abord
+            
+            // Puis smooth scroll pour renforcer
+            setTimeout(() => {
+                window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+                
+                // Fallback pour les appareils mobiles qui ne supportent pas 'behavior: smooth'
+                if (!('scrollBehavior' in document.documentElement.style)) {
+                    console.log('📱 displaySpecificEvent - Utilisation du fallback de défilement');
+                    // Force scroll progressif sur 300ms
+                    const startPosition = window.pageYOffset;
+                    let startTime = null;
+                    
+                    function animation(currentTime) {
+                        if (startTime === null) startTime = currentTime;
+                        const timeElapsed = currentTime - startTime;
+                        const progress = Math.min(timeElapsed / 300, 1);
+                        const ease = t => t<.5 ? 2*t*t : -1+(4-2*t)*t; // fonction d'easing
+                        
+                        window.scrollTo(0, startPosition * (1 - ease(progress)));
+                        
+                        if (timeElapsed < 300) {
+                            window.requestAnimationFrame(animation);
+                        }
+                    }
+                    
+                    window.requestAnimationFrame(animation);
+                }
+            }, 50);
+        }, 50);
+    } else {
+        // Sur desktop, comportement normal: scroller seulement si nécessaire
+        const mainEventContainer = document.getElementById('main-next-event');
+        if (mainEventContainer) {
+            const rect = mainEventContainer.getBoundingClientRect();
+            const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+            
+            // Scroll seulement si l'événement n'est pas visible dans la partie haute de l'écran
+            if (!isVisible) {
+                window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                });
+            }
         }
     }
 }
@@ -1448,6 +1489,8 @@ function backToCurrentEvent() {
  * Gère la sélection d'un mini-événement
  */
 function selectMiniEvent(eventId) {
+    console.log(`📱 selectMiniEvent - Sélection de l'événement avec ID: ${eventId}`);
+    
     // Trouver l'événement correspondant dans les données globales
     const selectedEvent = window.currentAllEvents.find(event => {
         const eventTitle = extractCleanTitle(event.title);
@@ -1457,7 +1500,32 @@ function selectMiniEvent(eventId) {
     });
     
     if (selectedEvent) {
-        displaySpecificEvent(selectedEvent);
+        // Sur mobile, faire défiler d'abord vers le haut
+        if (window.innerWidth <= 768) {
+            console.log('📱 selectMiniEvent - Défilement vers le haut sur mobile avant affichage');
+            // Défilement immédiat en haut
+            window.scrollTo(0, 0);
+            
+            // Attendre que le défilement soit terminé avant d'afficher
+            setTimeout(() => {
+                displaySpecificEvent(selectedEvent);
+                
+                // Défilement supplémentaire pour assurer la visibilité
+                setTimeout(() => {
+                    const mainEventContainer = document.getElementById('main-next-event');
+                    if (mainEventContainer) {
+                        console.log('📱 Forcer un second défilement pour assurer la visibilité');
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 300);
+            }, 400);
+        } else {
+            // Comportement normal sur desktop
+            displaySpecificEvent(selectedEvent);
+        }
     } else {
         console.warn('⚠️ Événement non trouvé pour ID:', eventId);
         console.log('📊 IDs disponibles:', window.currentAllEvents?.map(event => {
@@ -1535,23 +1603,62 @@ function findPieceInPrograms(pieceName) {
  * Navigue vers une pièce spécifique dans l'onglet Programme musical
  */
 function navigateToPieceInPrograms(pieceName) {
-    console.log(`🎯 Navigation vers la pièce: "${pieceName}"`);
+    console.log(`📱 Navigation vers la pièce: "${pieceName}"`);
     
     // 1. Basculer vers l'onglet Programme musical
     switchToTab('programmes');
     
-    // 2. Attendre que l'onglet soit actif, puis chercher la pièce
+    // 2. Attendre que l'onglet soit actif, délai significativement plus long sur mobile
+    const delay = window.innerWidth <= 768 ? 1000 : 300;
+    
+    console.log(`📱 navigateToPieceInPrograms - Délai initial utilisé: ${delay}ms`);
+    
+    // Sur mobile, faire un scroll immédiat vers le haut pour aider au chargement de l'onglet
+    if (window.innerWidth <= 768) {
+        window.scrollTo(0, 0);
+    }
+    
     setTimeout(() => {
         const pieceInfo = findPieceInPrograms(pieceName);
         
         if (pieceInfo) {
             // 3. Scroller vers la pièce et la mettre en évidence
-            highlightPiece(pieceInfo.element, pieceInfo.title);
+            console.log(`📱 Pièce trouvée: "${pieceInfo.title}" - Préparation du défilement`);
+            
+            // Sur mobile, traitement spécial avec multiples tentatives
+            if (window.innerWidth <= 768) {
+                // Scroller d'abord en haut de l'onglet pour que la structure DOM soit complètement chargée
+                window.scrollTo(0, 0);
+                
+                // Première tentative de mise en évidence avec délai court
+                setTimeout(() => {
+                    console.log('📱 navigateToPieceInPrograms - Première tentative de mise en évidence');
+                    highlightPiece(pieceInfo.element, pieceInfo.title);
+                    
+                    // Vérification et seconde tentative si nécessaire
+                    setTimeout(() => {
+                        // Vérifier si la pièce est visible dans l'écran
+                        const rect = pieceInfo.element.getBoundingClientRect();
+                        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.7;
+                        
+                        console.log(`📱 navigateToPieceInPrograms - Vérification de visibilité: ${isVisible ? 'OK' : 'NON VISIBLE'}`);
+                        
+                        if (!isVisible) {
+                            console.log('📱 navigateToPieceInPrograms - Seconde tentative de défilement');
+                            // Forcer un nouveau défilement vers la pièce
+                            scrollToPiece(pieceInfo.element);
+                        }
+                    }, 800);
+                }, 500);
+            } else {
+                // Sur desktop, comportement normal
+                highlightPiece(pieceInfo.element, pieceInfo.title);
+            }
         } else {
             // 4. Afficher une notification si la pièce n'est pas trouvée
             showPieceNotFoundNotification(pieceName);
         }
-    }, 300); // Délai pour laisser l'onglet se charger
+    }, delay); // Délai plus long pour mobile
 }
 
 /**
@@ -1631,27 +1738,81 @@ function switchToTab(targetId) {
  * Met en évidence une pièce avec animation et scroll amélioré
  */
 function highlightPiece(pieceElement, pieceTitle) {
-    console.log(`✨ Mise en évidence de la pièce: "${pieceTitle}"`);
+    console.log(`📱 highlightPiece - Mise en évidence de la pièce: "${pieceTitle}"`);
+    const isMobile = window.innerWidth <= 768;
     
-    // Supprimer toute mise en évidence précédente
-    const previousHighlight = document.querySelector('.piece-highlighted');
-    if (previousHighlight) {
-        previousHighlight.classList.remove('piece-highlighted');
-    }
-    
-    // Scroller vers la pièce avec un offset amélioré
-    scrollToPiece(pieceElement);
-    
-    // Attendre le scroll, puis appliquer la mise en évidence
-    setTimeout(() => {
-        pieceElement.classList.add('piece-highlighted');
+    try {
+        // Supprimer toute mise en évidence précédente
+        const previousHighlights = document.querySelectorAll('.piece-highlighted');
+        if (previousHighlights.length > 0) {
+            console.log(`📱 highlightPiece - Suppression de ${previousHighlights.length} mise(s) en évidence précédente(s)`);
+            previousHighlights.forEach(element => {
+                element.classList.remove('piece-highlighted');
+            });
+        }
         
-        // Supprimer la mise en évidence après 4 secondes
+        // Vérifier que l'élément existe bien
+        if (!pieceElement) {
+            console.warn('📱 highlightPiece - Élément de pièce non trouvé!');
+            return;
+        }
+        
+        // Sur mobile, être encore plus patient pour que le DOM soit prêt
+        // Avant de scroller, ajouter déjà la classe highlighted pour la rendre visible
+        if (isMobile) {
+            console.log('📱 highlightPiece - Ajout immédiat de la classe sur mobile');
+            pieceElement.classList.add('piece-highlighted');
+            
+            // Ajouter une classe temporaire pour garantir la visibilité (style plus fort)
+            pieceElement.classList.add('piece-highlighted-important');
+        }
+        
+        // Scroller vers la pièce avec un offset amélioré
+        scrollToPiece(pieceElement);
+        
+        // Attendre le scroll, puis appliquer ou renforcer la mise en évidence
+        // Délai plus long sur mobile pour être sûr que le scroll est terminé
+        const highlightDelay = isMobile ? 1200 : 500;
+        console.log(`📱 highlightPiece - Délai d'animation: ${highlightDelay}ms`);
+        
         setTimeout(() => {
-            pieceElement.classList.remove('piece-highlighted');
-        }, 4000);
-        
-    }, 1000); // Attendre plus longtemps que le scroll soit terminé
+            // Sur desktop on met la classe ici, sur mobile on l'a déjà fait
+            if (!isMobile) {
+                pieceElement.classList.add('piece-highlighted');
+            } else {
+                // Sur mobile, on force une animation supplémentaire en retirant puis ajoutant la classe
+                pieceElement.classList.remove('piece-highlighted');
+                setTimeout(() => {
+                    pieceElement.classList.add('piece-highlighted');
+                    
+                    // Vérifier si la pièce est bien visible après l'animation
+                    setTimeout(() => {
+                        const rect = pieceElement.getBoundingClientRect();
+                        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.7;
+                        console.log(`📱 highlightPiece - Vérification de visibilité après animation: ${isVisible ? 'Visible' : 'Non visible'}`);
+                        
+                        // Si toujours pas visible, tenter un nouveau scroll
+                        if (!isVisible) {
+                            console.log('📱 highlightPiece - Tentative supplémentaire de défilement');
+                            scrollToPiece(pieceElement);
+                        }
+                        
+                        // Enlever la classe d'importance après l'animation
+                        pieceElement.classList.remove('piece-highlighted-important');
+                    }, 300);
+                }, 50);
+            }
+            
+            // Supprimer la mise en évidence après un délai plus long sur mobile
+            const removeDelay = isMobile ? 5000 : 4000;
+            setTimeout(() => {
+                pieceElement.classList.remove('piece-highlighted');
+            }, removeDelay);
+            
+        }, highlightDelay);
+    } catch (e) {
+        console.error('📱 Erreur dans highlightPiece:', e);
+    }
 }
 
 /**
@@ -4139,25 +4300,162 @@ window.addEventListener('orientationchange', function() {
  * Fonction améliorée pour faire remonter automatiquement quand on clique sur un événement
  */
 function autoScrollToTop() {
-    // Scroller vers le haut avec un offset pour éviter la navigation mobile
-    const offset = window.innerWidth <= 768 ? 100 : 50;
-    window.scrollTo({
-        top: offset,
-        behavior: 'smooth'
-    });
+    console.log('📱 autoScrollToTop - Démarrage du défilement vers le haut');
+    const isMobile = window.innerWidth <= 768;
+    
+    // Sur mobile, commencer par un scroll instantané pour réactivité immédiate
+    if (isMobile) {
+        console.log('📱 autoScrollToTop - Défilement instantané initial sur mobile');
+        window.scrollTo(0, 0);
+    }
+    
+    // Délai plus important sur mobile pour laisser le DOM se mettre à jour
+    const delay = isMobile ? 300 : 50;
+    
+    setTimeout(() => {
+        try {
+            // Scroller vers le haut avec un petit offset pour éviter la navigation mobile
+            const offset = isMobile ? 50 : 0;
+            
+            console.log(`📱 autoScrollToTop - Défilement smooth vers position: ${offset}`);
+            
+            // Premier scroll avec comportement smooth
+            window.scrollTo({
+                top: offset,
+                behavior: 'smooth'
+            });
+            
+            // Fallback pour les appareils qui ne supportent pas 'behavior: smooth'
+            if (!('scrollBehavior' in document.documentElement.style)) {
+                console.log('📱 autoScrollToTop - Utilisation du fallback d\'animation progressive');
+                // Force scroll progressif sur 350ms (un peu plus lent pour être plus fluide)
+                const startPosition = window.pageYOffset;
+                const targetPosition = offset;
+                const distance = targetPosition - startPosition;
+                let startTime = null;
+                const duration = isMobile ? 350 : 300;
+                
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    // Fonction d'easing améliorée pour un défilement plus naturel
+                    const ease = t => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
+                    
+                    window.scrollTo(0, startPosition + distance * ease(progress));
+                    
+                    if (timeElapsed < duration) {
+                        window.requestAnimationFrame(animation);
+                    }
+                }
+                
+                window.requestAnimationFrame(animation);
+            }
+            
+            // Sur mobile, vérification supplémentaire et second scroll si nécessaire
+            if (isMobile) {
+                setTimeout(() => {
+                    const currentPosition = window.pageYOffset;
+                    console.log(`📱 autoScrollToTop - Vérification de position: ${currentPosition}`);
+                    
+                    // Si on n'est pas déjà en haut, forcer un second défilement
+                    if (currentPosition > 100) {
+                        console.log('📱 autoScrollToTop - Défilement forcé supplémentaire');
+                        window.scrollTo(0, 0);
+                    }
+                }, 600);
+            }
+        } catch (e) {
+            console.error('📱 Erreur dans autoScrollToTop:', e);
+            // Fallback d'urgence en cas d'erreur
+            window.scrollTo(0, 0);
+        }
+    }, delay);
 }
 
 /**
- * Fonction améliorée pour scroll vers une pièce
+ * Fonction améliorée pour scroll vers une pièce - VERSION CORRIGÉE POUR MOBILE
  */
 function scrollToPiece(element) {
-    const rect = element.getBoundingClientRect();
-    const offset = window.innerWidth <= 768 ? 150 : 100; // Plus d'offset sur mobile
+    // Attendre significativement plus pour mobile afin que le DOM soit bien mis à jour
+    const delay = window.innerWidth <= 768 ? 400 : 100;
+    const isMobile = window.innerWidth <= 768;
     
-    window.scrollTo({
-        top: window.pageYOffset + rect.top - offset,
-        behavior: 'smooth'
-    });
+    console.log(`📱 scrollToPiece - Démarrage avec délai: ${delay}ms, mobile: ${isMobile}`);
+    
+    // Sur mobile, on peut tenter un premier défilement rapide pour aider le DOM
+    if (isMobile) {
+        try {
+            // Pré-calcul de la position cible
+            const preRect = element.getBoundingClientRect();
+            const preScrollPosition = window.pageYOffset + preRect.top;
+            const preOffset = 200;
+            
+            console.log(`📱 scrollToPiece - Pré-défilement vers: ${preScrollPosition - preOffset}`);
+            window.scrollTo(0, preScrollPosition - preOffset);
+        } catch (e) {
+            console.warn('📱 Erreur lors du pré-défilement:', e);
+        }
+    }
+    
+    setTimeout(() => {
+        try {
+            // Recalculer la position après le délai (crucial sur mobile)
+            const rect = element.getBoundingClientRect();
+            const scrollPosition = window.pageYOffset + rect.top;
+            const offset = isMobile ? 180 : 100; // Offset ajusté pour mobile
+            
+            console.log(`📱 scrollToPiece - Défilement principal vers position: ${scrollPosition - offset}`);
+            
+            window.scrollTo({
+                top: scrollPosition - offset,
+                behavior: 'smooth'
+            });
+            
+            // Fallback pour les appareils qui ne supportent pas 'behavior: smooth'
+            if (!('scrollBehavior' in document.documentElement.style)) {
+                console.log('📱 scrollToPiece - Utilisation du fallback d\'animation');
+                // Force scroll progressif sur 400ms (plus lent pour mobile)
+                const startPosition = window.pageYOffset;
+                const targetPosition = scrollPosition - offset;
+                const distance = targetPosition - startPosition;
+                let startTime = null;
+                const duration = isMobile ? 400 : 300;
+                
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    // Fonction d'easing améliorée pour un mouvement plus naturel
+                    const ease = t => t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1;
+                    
+                    window.scrollTo(0, startPosition + distance * ease(progress));
+                    
+                    if (timeElapsed < duration) {
+                        window.requestAnimationFrame(animation);
+                    } else {
+                        // Vérification finale de position sur mobile après l'animation
+                        if (isMobile) {
+                            setTimeout(() => {
+                                const finalRect = element.getBoundingClientRect();
+                                console.log(`📱 Position finale: top=${finalRect.top}, visible=${finalRect.top >= 0 && finalRect.top <= window.innerHeight * 0.7}`);
+                            }, 200);
+                        }
+                    }
+                }
+                
+                window.requestAnimationFrame(animation);
+            } else if (isMobile) {
+                // Pour mobile avec smooth scroll natif, vérifier aussi la position finale
+                setTimeout(() => {
+                    const finalRect = element.getBoundingClientRect();
+                    console.log(`📱 Position finale après scroll natif: top=${finalRect.top}`);
+                }, 600);
+            }
+        } catch (e) {
+            console.error('📱 Erreur lors du défilement:', e);
+        }
+    }, delay);
 }
 
 /**
