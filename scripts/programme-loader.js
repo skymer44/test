@@ -449,16 +449,10 @@ class ProgrammeLoader {
      * Réactive les événements après injection de contenu
      */
     reactivateEvents(container) {
-        // Réactiver les boutons PDF
-        const pdfButtons = container.querySelectorAll('.pdf-download-btn');
-        pdfButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const sectionId = e.target.dataset.section;
-                if (window.generatePDF && typeof window.generatePDF === 'function') {
-                    window.generatePDF(sectionId);
-                }
-            });
-        });
+        // ❌ SUPPRIMÉ: Les boutons PDF sont maintenant gérés exclusivement par initPDFGeneration() dans script.js
+        // Cela évite la duplication d'event listeners qui causait les clics multiples sur mobile
+        
+        console.log('🔧 ProgrammeLoader: Event listeners configurés (PDF géré par script.js)');
         
         // Réactiver les liens audio/vidéo si nécessaire
         const audioLinks = container.querySelectorAll('a[title*="audio"], a[title*="Audio"]');

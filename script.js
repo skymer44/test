@@ -3312,18 +3312,33 @@ window.pdfPreloader = {
     }
 };
 
-// Fonction pour générer un PDF - VERSION SIMPLIFIÉE FIABLE
+// Fonction pour générer un PDF - VERSION ULTRA-ROBUSTE ANTI-DOUBLE-APPEL
 function generatePDF(sectionId) {
-    console.log('🎯 Génération PDF demandée pour:', sectionId);
+    // 🛡️ PROTECTION GLOBALE: Empêcher les appels multiples simultanés
+    if (!window.pdfGenerationLock) {
+        window.pdfGenerationLock = new Set();
+    }
+    
+    if (window.pdfGenerationLock.has(sectionId)) {
+        console.log('🚫 Génération PDF déjà en cours pour:', sectionId);
+        return;
+    }
+    
+    // Verrouiller cette section
+    window.pdfGenerationLock.add(sectionId);
+    
+    console.log('🎯 Génération PDF démarrée pour:', sectionId);
     
     const section = document.getElementById(sectionId);
     if (!section) {
-        console.error('Section non trouvée:', sectionId);
+        console.error('❌ Section non trouvée:', sectionId);
+        window.pdfGenerationLock.delete(sectionId);
         return;
     }
 
     if (typeof window.jspdf === 'undefined') {
         alert('Erreur: jsPDF non disponible');
+        window.pdfGenerationLock.delete(sectionId);
         return;
     }
 
@@ -3334,6 +3349,7 @@ function generatePDF(sectionId) {
             console.log('⚡ Utilisation du PDF en cache pour:', sectionId);
             cachedPDF.doc.save(cachedPDF.fileName);
             console.log(`✅ PDF téléchargé instantanément: ${cachedPDF.fileName}`);
+            window.pdfGenerationLock.delete(sectionId);
             return;
         }
         
@@ -3505,11 +3521,15 @@ function generatePDF(sectionId) {
         // Télécharger le PDF
         doc.save(fileName);
         
-        console.log(`✅ PDF généré: ${fileName}`);
+        console.log(`✅ PDF généré et téléchargé: ${fileName}`);
         
     } catch (error) {
         console.error('❌ Erreur lors de la génération PDF:', error);
-        alert('Erreur lors de la génération du PDF');
+        alert('Erreur lors de la génération du PDF: ' + error.message);
+    } finally {
+        // 🛡️ TOUJOURS libérer le verrou
+        window.pdfGenerationLock.delete(sectionId);
+        console.log('🔓 Verrou PDF libéré pour:', sectionId);
     }
 }
 
@@ -3891,68 +3911,137 @@ function initPDFGeneration() {
         return typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined';
     }
     
-    // Fonction pour configurer les boutons PDF - VERSION SIMPLIFIÉE
+    // 🎯 FONCTION ROBUSTE POUR CONFIGURER LES BOUTONS PDF - ANTI-DOUBLE-CLIC
     function setupPDFButtons() {
+        console.log('🔧 Configuration des boutons PDF (protection anti-double-clic)...');
+        
         document.querySelectorAll('.pdf-download-btn').forEach(button => {
-            // Supprimer l'ancien listener s'il existe
-            button.removeEventListener('click', button._pdfClickHandler);
+            // 🛡️ PROTECTION 1: Supprimer tous les anciens listeners
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
             
-            // Créer un nouveau handler simplifié
-            button._pdfClickHandler = function(e) {
+            // 🛡️ PROTECTION 2: Handler unique avec verrouillage robuste
+            newButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
+                e.stopImmediatePropagation(); // Empêcher autres handlers
                 
                 const sectionId = this.getAttribute('data-section');
                 console.log('🎯 Clic PDF détecté pour:', sectionId);
                 
-                // Protection simple : désactiver le bouton pendant la génération
-                if (button.disabled) {
-                    console.log('🚫 Bouton déjà désactivé, génération en cours');
-                    return;
+                // 🛡️ PROTECTION 3: Vérifier si déjà en cours avec attribut data
+                if (this.dataset.generating === 'true') {
+                    console.log('🚫 Génération déjà en cours, clic ignoré');
+                    return false;
                 }
                 
-                // Désactiver temporairement le bouton avec feedback visuel
-                const originalText = button.textContent;
-                button.textContent = '⏳ Génération...';
-                button.disabled = true;
+                // 🛡️ PROTECTION 4: Marquer comme en cours et désactiver
+                this.dataset.generating = 'true';
+                this.disabled = true;
+                
+                // 🛡️ PROTECTION 5: Feedback visuel immédiat
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '⏳ Génération...';
+                this.style.opacity = '0.6';
                 
                 console.log('📄 Lancement génération PDF pour:', sectionId);
                 
-                try {
-                    generatePDF(sectionId);
-                } catch (error) {
-                    console.error('Erreur PDF:', error);
-                    alert('Erreur lors de la génération du PDF');
-                } finally {
-                    // Réactiver le bouton après un délai court
-                    setTimeout(() => {
-                        button.disabled = false;
-                        button.textContent = originalText;
-                    }, 1000); // 1 seconde pour être sûr
-                }
-            };
-            
-            // Ajouter le nouveau listener
-            button.addEventListener('click', button._pdfClickHandler);
+                // 🛡️ PROTECTION 6: Timeout de sécurité
+                const timeoutId = setTimeout(() => {
+                    console.warn('⚠️ Timeout génération PDF');
+                    resetButton();
+                }, 10000); // 10 secondes max
+                
+                // Fonction de reset du bouton
+                const resetButton = () => {
+                    clearTimeout(timeoutId);
+                    this.dataset.generating = 'false';
+                    this.disabled = false;
+                    this.innerHTML = originalHTML;
+                    this.style.opacity = '1';
+                };
+                
+                // 📱 OPTIMISATION MOBILE: Délai adaptatif
+                const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                                ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.innerWidth <= 768;
+                
+                const delay = isMobile ? 300 : 50; // 300ms sur mobile, 50ms sur desktop
+                
+                setTimeout(() => {
+                    try {
+                        // Appeler la génération PDF
+                        generatePDF(sectionId);
+                        
+                        // Reset après délai adaptatif
+                        const resetDelay = isMobile ? 3000 : 2000; // Plus long sur mobile
+                        setTimeout(resetButton, resetDelay);
+                        
+                    } catch (error) {
+                        console.error('❌ Erreur génération PDF:', error);
+                        alert('Erreur lors de la génération du PDF');
+                        resetButton();
+                    }
+                }, delay);
+                
+                return false; // Empêcher toute propagation
+            }, { passive: false }); // passive: false pour pouvoir faire preventDefault
         });
+        
+        console.log(`✅ ${document.querySelectorAll('.pdf-download-btn').length} boutons PDF configurés avec protection anti-double-clic`);
+    }
+    
+    // 🔄 OBSERVER POUR DÉTECTER LES NOUVEAUX BOUTONS (contenu dynamique)
+    function observeNewButtons() {
+        const observer = new MutationObserver((mutations) => {
+            let hasNewButtons = false;
+            
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            const newButtons = node.querySelectorAll('.pdf-download-btn');
+                            if (newButtons.length > 0) {
+                                hasNewButtons = true;
+                            }
+                        }
+                    });
+                }
+            });
+            
+            if (hasNewButtons) {
+                console.log('🔄 Nouveaux boutons PDF détectés, reconfiguration...');
+                setTimeout(setupPDFButtons, 100); // Petit délai pour que le DOM soit stable
+            }
+        });
+        
+        // Observer les changements dans la zone des programmes
+        const programmesContainer = document.getElementById('programmes-content');
+        if (programmesContainer) {
+            observer.observe(programmesContainer, {
+                childList: true,
+                subtree: true
+            });
+            console.log('👁️ Observateur activé pour les nouveaux boutons PDF');
+        }
     }
     
     // Vérifier immédiatement
     if (checkJsPDF()) {
         console.log('✅ jsPDF chargé avec succès');
         setupPDFButtons();
+        observeNewButtons();
     } else {
         console.log('⏳ En attente du chargement de jsPDF...');
         // Réessayer après un délai
         setTimeout(() => {
             if (checkJsPDF()) {
                 setupPDFButtons();
+                observeNewButtons();
             } else {
                 console.warn('❌ jsPDF non disponible');
                 // Désactiver les boutons PDF
                 document.querySelectorAll('.pdf-download-btn').forEach(button => {
                     button.disabled = true;
-                    button.textContent = '❌ PDF indisponible';
+                    button.innerHTML = '❌ PDF indisponible';
                     button.style.opacity = '0.5';
                 });
             }
