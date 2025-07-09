@@ -3600,12 +3600,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         gap: 0;
     }
     
-    /* Bulle conteneur pour titre + PDF - RESPONSIVE POUR TEXTE LONG */
+    /* Bulle conteneur pour titre + PDF - TITRE CENTRÉ ET BOUTON SUR CÔTÉ */
     #programmes .section-header .header-bubble {
         display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 0.75rem !important; /* 🔄 RÉDUIT: de 1rem à 0.75rem pour économiser de l'espace */
+        align-items: center !important; /* ✨ RÉTABLI: alignement centré verticalement */
+        justify-content: center !important; /* ✨ RÉTABLI: centrage général */
+        gap: 0.5rem !important;
         background: #f8fafc !important;
         padding: 0.75rem 1.25rem !important;
         border-radius: 20px !important;
@@ -3615,12 +3615,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
         min-height: auto !important;
-        width: 90% !important; /* 🔄 CHANGÉ: de "fit-content" à "90%" pour limiter la largeur */
-        max-width: 500px !important; /* 🔄 AJOUTÉ: limite maximum pour les grands écrans */
+        width: 90% !important;
+        max-width: 500px !important;
         margin: 0 auto !important;
         height: auto !important;
         box-sizing: border-box !important;
-        flex-wrap: wrap !important; /* 🔄 AJOUTÉ: permet le passage à la ligne si nécessaire */
+        flex-wrap: nowrap !important;
     }
     
     #programmes .section-header h2 {
@@ -3695,27 +3695,32 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         display: none !important;
     }
     
-    /* Règle spéciale pour les écrans très étroits (<350px) */
+    /* Règle spéciale pour les écrans très étroits (<350px) - BOUTON TOUJOURS À DROITE */
     @media (max-width: 350px) {
         #programmes .section-header .header-bubble {
-            flex-direction: column !important;
             padding: 0.75rem 1rem !important;
-            gap: 0.5rem !important;
+            gap: 0.3rem !important; /* ✨ RÉDUIT: encore plus serré pour petits écrans */
             width: 95% !important;
         }
         
         #programmes .header-bubble h2 {
-            font-size: 1.15rem !important;
-            text-align: center !important;
-            width: 100% !important;
+            font-size: 1.1rem !important; /* ✨ RÉDUIT: de 1.15rem à 1.1rem */
+            max-width: calc(100% - 40px) !important; /* ✨ MODIFIÉ: pour laisser de l'espace au bouton */
+        }
+        
+        #programmes .header-bubble .pdf-download-btn {
+            width: 28px !important; /* ✨ RÉDUIT: de 32px à 28px pour les petits écrans */
+            height: 28px !important;
+            min-width: 28px !important;
+            min-height: 28px !important;
         }
     }
     
-    /* Neutraliser les styles h2 conflictuels dans la bulle - AVEC GESTION TEXTE LONG */
+    /* Neutraliser les styles h2 conflictuels dans la bulle - TEXTE ALIGNÉ À GAUCHE SI SUR PLUSIEURS LIGNES */
     #programmes .header-bubble h2 {
         color: #2d3748 !important;
-        font-size: 1.25rem !important; /* 🔄 RÉDUIT: de 1.4rem à 1.25rem pour économiser de l'espace */
-        text-align: center !important;
+        font-size: 1.25rem !important;
+        text-align: left !important; /* ✨ MODIFIÉ: alignement à gauche pour les titres longs sur plusieurs lignes */
         margin: 0 !important;
         font-weight: 600 !important;
         letter-spacing: -0.02em !important;
@@ -3725,15 +3730,16 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: none !important;
-        flex: 1 1 auto !important; /* 🔄 CHANGÉ: de "0 0 auto" à "1 1 auto" pour permettre le rétrécissement */
+        flex: 1 1 auto !important;
         line-height: 1.2 !important;
-        white-space: normal !important; /* 🔄 CHANGÉ: de "nowrap" à "normal" pour permettre le retour à la ligne */
+        white-space: normal !important;
         height: auto !important;
         min-height: auto !important;
         display: block !important;
-        overflow-wrap: break-word !important; /* 🔄 AJOUTÉ: pour casser les mots trop longs */
-        word-wrap: break-word !important; /* 🔄 AJOUTÉ: pour meilleure compatibilité */
-        max-width: 100% !important; /* 🔄 AJOUTÉ: pour éviter le débordement */
+        overflow-wrap: break-word !important;
+        word-wrap: break-word !important;
+        max-width: calc(100% - 50px) !important; 
+        padding-right: 0.5rem !important;
     }
     
     /* Container de pièces mobile délicat */
