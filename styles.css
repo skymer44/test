@@ -3022,12 +3022,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     background: #f8fafc;
     padding: 0.8rem;
     border-radius: 10px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #48bb78;
     transition: all 0.2s ease;
 }
 
 .piece-item:hover {
-    background: #edf2f7;
+    background: #f0fff4;
     transform: translateX(2px);
 }
 
