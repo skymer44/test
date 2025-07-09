@@ -41,14 +41,67 @@ function fixPWAStyles() {
             window.__pwaDebugBarUpdate = function(msg) {
                 debugBar.innerHTML = msg;
             };
+
+            // Ajout : détecter dynamiquement l'élément qui scroll (scrollTop change)
+            let lastScrollTops = new Map();
+            let lastScrollElement = null;
+            function detectScrollingElement() {
+                let candidates = [window, document.documentElement, document.body];
+                // Ajouter tous les parents du main
+                const main = document.querySelector('main');
+                let el = main;
+                while (el && el !== document.body && el !== document.documentElement) {
+                    if (el.parentElement) candidates.push(el.parentElement);
+                    el = el.parentElement;
+                }
+                let found = null;
+                for (let c of candidates) {
+                    let st = (c === window) ? window.scrollY : c.scrollTop;
+                    if (lastScrollTops.has(c)) {
+                        if (lastScrollTops.get(c) !== st) {
+                            found = c;
+                        }
+                    }
+                    lastScrollTops.set(c, st);
+                }
+                if (found) lastScrollElement = found;
+                return lastScrollElement;
+            }
+            // Sur chaque scroll, détecter qui scroll
+            window.addEventListener('scroll', function() {
+                detectScrollingElement();
+            }, { passive: true });
+            document.addEventListener('scroll', function() {
+                detectScrollingElement();
+            }, { passive: true, capture: true });
+
+            // Afficher dans la debug bar l'élément qui scroll
+            function getElementName(el) {
+                if (el === window) return 'window';
+                if (el === document.body) return 'body';
+                if (el === document.documentElement) return 'html';
+                if (el && el.tagName) return el.tagName.toLowerCase() + (el.className ? '.' + el.className.replace(/\s+/g, '.') : '');
+                return 'unknown';
+            }
+            // Patch la debug bar pour afficher l'élément qui scroll
+            const oldUpdate = window.__pwaDebugBarUpdate;
+            window.__pwaDebugBarUpdate = function(msg) {
+                const scroller = detectScrollingElement();
+                const scrollerName = getElementName(scroller);
+                debugBar.innerHTML = msg + `<br><b>Scroller détecté :</b> ${scrollerName}`;
+            };
         }
-        // 2bis. Supprimer tout overflow/height sur main et .container (pour iOS PWA)
+        // 2bis. Supprimer tout overflow/height sur main, .container ET tous les parents jusqu'à html (pour iOS PWA)
         const main = document.querySelector('main');
         if (main) {
-            main.style.overflow = 'visible';
-            main.style.overflowY = 'visible';
-            main.style.height = 'auto';
-            main.style.minHeight = '0';
+            let el = main;
+            while (el && el !== document.documentElement) {
+                el.style.overflow = 'visible';
+                el.style.overflowY = 'visible';
+                el.style.height = 'auto';
+                el.style.minHeight = '0';
+                el = el.parentElement;
+            }
         }
         const containers = document.querySelectorAll('.container');
         containers.forEach(c => {
