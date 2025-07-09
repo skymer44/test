@@ -4444,15 +4444,29 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('pdf-download-btn') || e.target.closest('.pdf-download-btn')) {
         const button = e.target.classList.contains('pdf-download-btn') ? e.target : e.target.closest('.pdf-download-btn');
         
-        // Détecter le type d'appareil
+        // Détecter le type d'appareil et le mode PWA
         const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                         ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        // Détecter si on est en mode PWA (plus strict sur les délais)
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+                     window.navigator.standalone === true ||
+                     document.referrer.includes('android-app://');
         
         const now = Date.now();
         const lastClick = button.dataset.lastPdfClick;
         
-        // Protection adaptative selon l'appareil : quasi-instantané sur mobile, protection desktop
-        const protectionDelay = isMobile ? 50 : 800; // 50ms sur mobile (quasi-instantané), 800ms sur desktop
+        // Protection ultra-adaptative : quasi-instantané en PWA mobile, minimal sur mobile navigateur
+        let protectionDelay;
+        if (isMobile && isPWA) {
+            protectionDelay = 25; // PWA mobile : quasi-instantané (25ms)
+        } else if (isMobile) {
+            protectionDelay = 50; // Mobile navigateur : très rapide (50ms)
+        } else {
+            protectionDelay = 800; // Desktop : protection normale (800ms)
+        }
+        
+        console.log(`🛡️ Protection PDF: ${isMobile ? 'Mobile' : 'Desktop'} ${isPWA ? '(PWA)' : '(Navigateur)'} - Délai: ${protectionDelay}ms`);
         
         if (lastClick && (now - parseInt(lastClick)) < protectionDelay) {
             console.log(`🚫 Clic PDF ignoré - Protection anti-double-clic active (${protectionDelay}ms)`);
