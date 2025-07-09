@@ -76,31 +76,69 @@ class ProgrammeLoader {
      */
     async fetchData(url) {
         try {
-            // Ajouter un timestamp pour éviter le cache
-            const cacheBuster = `?t=${Date.now()}`;
-            const response = await fetch(url + cacheBuster);
+            // 🛡️ PROTECTION: Essayer plusieurs stratégies pour contourner les erreurs 503
+            const strategies = [
+                // Stratégie 1: URL normale avec cache-buster
+                () => fetch(url + `?t=${Date.now()}`),
+                // Stratégie 2: URL sans cache-buster (au cas où le service worker pose problème)
+                () => fetch(url),
+                // Stratégie 3: Forcer bypass du cache
+                () => fetch(url, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } })
+            ];
             
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+            let lastError = null;
+            
+            for (let i = 0; i < strategies.length; i++) {
+                try {
+                    console.log(`🔄 Tentative ${i + 1}/3 pour charger ${url}`);
+                    const response = await strategies[i]();
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Mettre en cache
+                        this.dataCache[url] = {
+                            data,
+                            timestamp: Date.now()
+                        };
+                        
+                        console.log(`✅ Succès stratégie ${i + 1} pour ${url}`);
+                        return data;
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`⚠️ Stratégie ${i + 1} échouée:`, error.message);
+                    
+                    // Petit délai avant la stratégie suivante
+                    if (i < strategies.length - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    }
+                }
             }
             
-            const data = await response.json();
+            // 🛡️ FALLBACK: Si toutes les stratégies échouent, essayer le cache
+            if (this.dataCache[url]) {
+                console.warn(`🔄 Toutes les stratégies ont échoué, utilisation du cache pour ${url}`);
+                return this.dataCache[url].data;
+            }
             
-            // Mettre en cache
-            this.dataCache[url] = {
-                data,
-                timestamp: Date.now()
-            };
-            
-            return data;
+            throw lastError || new Error('Toutes les tentatives ont échoué');
             
         } catch (error) {
-            console.error(`Erreur chargement ${url}:`, error);
+            console.error(`❌ Erreur finale pour ${url}:`, error);
             
-            // Fallback sur le cache si disponible
-            if (this.dataCache[url]) {
-                console.warn(`Utilisation cache pour ${url}`);
-                return this.dataCache[url].data;
+            // 🛡️ FALLBACK ULTIME: Données par défaut pour éviter le crash complet
+            if (url.includes('pieces.json')) {
+                console.warn('🔄 Utilisation des données de fallback pour pieces.json');
+                return {
+                    pieces: [],
+                    metadata: {
+                        syncDate: new Date().toISOString(),
+                        source: 'fallback'
+                    }
+                };
             }
             
             throw error;

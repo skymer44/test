@@ -559,9 +559,14 @@ function initTabs() {
             return;
         }
         
-        // Approche plus simple : utiliser la position réelle des éléments
+        // 🛡️ PROTECTION: Vérifier que les éléments ont des dimensions valides
         const containerRect = container.getBoundingClientRect();
         const activeItemRect = activeItem.getBoundingClientRect();
+        
+        if (containerRect.width <= 0 || activeItemRect.width <= 0) {
+            console.warn('🎨 animateMobileIndicator: dimensions invalides, abandon');
+            return;
+        }
         
         // Position relative de l'onglet actif par rapport au conteneur
         const relativeLeft = activeItemRect.left - containerRect.left;
@@ -574,6 +579,12 @@ function initTabs() {
         const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
         const indicatorWidth = (containerRect.width * 0.33333) - (0.33 * remToPx);
         
+        // 🛡️ PROTECTION: Vérifier que l'indicateur a une largeur positive
+        if (indicatorWidth <= 0) {
+            console.warn('🎨 animateMobileIndicator: largeur indicateur invalide');
+            return;
+        }
+        
         // Pour centrer l'indicateur sur l'onglet :
         // Position = position de l'onglet + (largeur onglet - largeur indicateur) / 2
         const centeredPosition = relativeLeft + (itemWidth - indicatorWidth) / 2;
@@ -582,15 +593,16 @@ function initTabs() {
         const leftOffset = 0.5 * remToPx;
         const finalPosition = centeredPosition - leftOffset;
         
+        // 🛡️ PROTECTION: S'assurer que la position est un nombre valide
+        if (isNaN(finalPosition)) {
+            console.warn('🎨 animateMobileIndicator: position finale invalide');
+            return;
+        }
+        
         // Appliquer la position en pixels
         container.style.setProperty('--nav-indicator-position', `${finalPosition}px`);
         
-        console.log(`🎨 Animation indicateur mobile vers onglet ${activeIndex}:`);
-        console.log(`   - Position onglet: ${relativeLeft}px`);
-        console.log(`   - Largeur onglet: ${itemWidth}px`);
-        console.log(`   - Largeur indicateur: ${indicatorWidth}px`);
-        console.log(`   - Position centrée: ${centeredPosition}px`);
-        console.log(`   - Position finale (après offset): ${finalPosition}px`);
+        console.log(`🎨 Animation indicateur mobile vers onglet ${activeIndex} (${finalPosition.toFixed(1)}px)`);
     };
     
     // Gérer les clics sur les boutons d'onglets desktop
@@ -674,6 +686,9 @@ function triggerTabAnimations(tabId) {
     }, observerOptions);
     
     if (tabId === 'programmes') {
+        // 🔄 RÉINITIALISER le flag d'animation pour permettre la reconfiguration
+        window.programmeAnimationsSetup = false;
+        
         // Animations pour l'onglet Programme musical
         console.log('🎵 Déclenchement des animations pour Programme musical');
         setupProgrammeScrollAnimations();
@@ -4437,6 +4452,12 @@ console.log('🔄 Synchronisation Notion configurée!');
 function setupProgrammeScrollAnimations() {
     console.log('🎯 Configuration des animations scroll pour Programme musical');
     
+    // 🛡️ PROTECTION ANTI-BOUCLE INFINIE
+    if (window.programmeAnimationsSetup) {
+        console.log('🛡️ Animations déjà configurées, éviter la duplication');
+        return;
+    }
+    
     // Options pour l'animation au scroll
     const observerOptions = {
         threshold: 0.1,
@@ -4458,16 +4479,27 @@ function setupProgrammeScrollAnimations() {
         });
     }, observerOptions);
     
-    // Attendre un peu que le contenu soit chargé
-    setTimeout(() => {
+    // 🎯 TENTATIVES LIMITÉES pour éviter la boucle infinie
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    const trySetupAnimations = () => {
+        attempts++;
+        
         const programmeElements = document.querySelectorAll('#programmes .concert-section, #programmes .piece-card, #programmes .section-header');
         
         if (programmeElements.length === 0) {
-            console.log('⚠️ Aucun élément trouvé dans programmes - retry dans 500ms');
-            setTimeout(() => setupProgrammeScrollAnimations(), 500);
+            if (attempts < maxAttempts) {
+                console.log(`⚠️ Tentative ${attempts}/${maxAttempts} - Aucun élément trouvé dans programmes - retry dans 500ms`);
+                setTimeout(trySetupAnimations, 500);
+            } else {
+                console.warn('❌ Abandon après 10 tentatives - Contenu programme non trouvé');
+                window.programmeAnimationsSetup = true; // Marquer comme "fait" pour éviter les répétitions
+            }
             return;
         }
         
+        // ✅ CONTENU TROUVÉ - Configurer les animations
         let animatedElementsCount = 0;
         
         programmeElements.forEach((element, index) => {
@@ -4489,12 +4521,15 @@ function setupProgrammeScrollAnimations() {
             }
         });
         
-        console.log(`🔍 Observation de ${animatedElementsCount} éléments de programme (${programmeElements.length - animatedElementsCount} déjà visibles)`);
+        console.log(`✅ ${programmeElements.length} éléments trouvés - ${animatedElementsCount} avec animation scroll`);
         
-        // Sauvegarder l'observateur
+        // Sauvegarder l'observateur et marquer comme configuré
         window.programmeScrollObserver = observer;
-        
-    }, 300);
+        window.programmeAnimationsSetup = true;
+    };
+    
+    // Démarrer avec un délai initial
+    setTimeout(trySetupAnimations, 300);
 }
 
 // ========================================
