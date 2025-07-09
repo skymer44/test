@@ -50,20 +50,43 @@ function fixPWAStyles() {
         style.id = 'pwa-fixes';
         style.textContent = `
             @media (display-mode: standalone) {
-                /* Forcer le scroll normal en PWA */
-                html, body {
+                /* 🔧 CORRECTION CRITIQUE : Forcer le scroll fluide en PWA */
+                html {
+                    scroll-behavior: smooth !important;
                     overflow-y: auto !important;
                     -webkit-overflow-scrolling: touch !important;
                 }
                 
-                /* Navigation mobile toujours fixe */
-                .mobile-bottom-nav {
-                    position: fixed !important;
-                    bottom: 0 !important;
-                    z-index: 9999 !important;
+                body {
+                    overflow-y: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
                 }
                 
-                /* Contenu principal avec espace suffisant */
+                /* 🔧 CORRECTION CRITIQUE : Navigation mobile TOUJOURS visible et fixe */
+                .mobile-bottom-nav {
+                    display: flex !important;
+                    position: fixed !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    z-index: 9999 !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    transform: none !important;
+                    /* Empêcher toute animation qui pourrait masquer le dock */
+                    transition: none !important;
+                    will-change: auto !important;
+                }
+                
+                /* S'assurer que le container est aussi visible */
+                .mobile-nav-container {
+                    display: flex !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                }
+                
+                /* Contenu principal avec espace suffisant GARANTI */
                 main {
                     padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
                     min-height: auto !important;
@@ -72,6 +95,11 @@ function fixPWAStyles() {
                 /* Corriger les conteneurs qui pourraient poser problème */
                 .container {
                     min-height: auto !important;
+                }
+                
+                /* 🔧 NOUVEAU : Empêcher les transformations qui pourraient cacher le dock */
+                .mobile-bottom-nav * {
+                    transform: none !important;
                 }
             }
         `;
@@ -95,39 +123,72 @@ function fixPWAStyles() {
  * 🔧 Correction du comportement de scroll spécifique PWA
  */
 function fixPWAScrollBehavior() {
-    // Intercepter et corriger les problèmes de scroll PWA
-    let isScrolling = false;
+    const isStandalone = isPWAStandalone();
     
-    // Éviter les conflits de scroll multiples
+    if (!isStandalone) return;
+    
+    logPWA('🔧 Configuration scroll PWA...');
+    
+    // 🔧 CORRECTION : Scroll fluide au lieu de téléportation
     const originalScrollTo = window.scrollTo;
     window.scrollTo = function(x, y) {
-        if (isScrolling) return;
-        isScrolling = true;
-        
-        // En PWA, forcer le scroll immédiat
         if (typeof x === 'object') {
-            // scrollTo({ top: y, behavior: 'smooth' })
-            originalScrollTo.call(window, x.left || 0, x.top || 0);
+            // scrollTo({ top: y, behavior: 'smooth' }) -> forcer smooth même en PWA
+            const options = {
+                left: x.left || 0,
+                top: x.top || 0,
+                behavior: 'smooth' // Force smooth au lieu d'instant
+            };
+            originalScrollTo.call(window, options);
         } else {
-            // scrollTo(x, y)
-            originalScrollTo.call(window, x, y);
+            // scrollTo(x, y) -> conversion en smooth
+            originalScrollTo.call(window, {
+                left: x || 0,
+                top: y || 0,
+                behavior: 'smooth'
+            });
         }
-        
-        setTimeout(() => { isScrolling = false; }, 100);
     };
     
-    // 🔧 AJOUT : Surveillance de la navigation mobile
-    setInterval(() => {
+    // 🔧 CORRECTION CRITIQUE : Surveillance active du dock
+    let dockCheckInterval = setInterval(() => {
         const mobileNav = document.querySelector('.mobile-bottom-nav');
-        if (mobileNav && getComputedStyle(mobileNav).position !== 'fixed') {
-            logPWA('⚠️ Navigation mobile perdue - restauration');
+        if (!mobileNav) return;
+        
+        const computedStyle = getComputedStyle(mobileNav);
+        
+        // Vérifier si le dock a perdu sa position fixe
+        if (computedStyle.position !== 'fixed') {
+            logPWA('⚠️ Dock perdu - restauration position fixe');
             mobileNav.style.position = 'fixed';
             mobileNav.style.bottom = '0';
+            mobileNav.style.left = '0';
+            mobileNav.style.right = '0';
             mobileNav.style.zIndex = '9999';
         }
-    }, 2000); // Vérification toutes les 2 secondes
+        
+        // Vérifier si le dock est visible
+        if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+            logPWA('⚠️ Dock invisible - restauration visibilité');
+            mobileNav.style.display = 'flex';
+            mobileNav.style.visibility = 'visible';
+        }
+        
+        // Vérifier la valeur de bottom
+        if (computedStyle.bottom !== '0px') {
+            logPWA('⚠️ Dock mal positionné - correction bottom');
+            mobileNav.style.bottom = '0';
+        }
+        
+    }, 1000); // Vérification chaque seconde
     
-    logPWA('✅ Comportement de scroll PWA corrigé');
+    // Nettoyer l'interval après 30 secondes (le dock devrait être stable)
+    setTimeout(() => {
+        clearInterval(dockCheckInterval);
+        logPWA('🔧 Surveillance dock terminée');
+    }, 30000);
+    
+    logPWA('✅ Comportement de scroll PWA corrigé avec surveillance dock');
 }
 
 // Fonction pour centrer les traits bleus sous les titres
@@ -4475,10 +4536,13 @@ function autoScrollToTop() {
     const isStandalone = isPWAStandalone();
     logPWA(`autoScrollToTop - Mode détecté: ${isStandalone ? 'PWA' : 'Navigateur'}`);
     
-    // En mode PWA, utiliser seulement un scroll instantané simple
+    // 🔧 CORRECTION : Scroll fluide même en mode PWA
     if (isStandalone) {
-        logPWA('Scroll instantané vers le haut');
-        window.scrollTo(0, 0);
+        logPWA('Scroll fluide vers le haut en PWA');
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Fluide au lieu d'instantané
+        });
         return;
     }
     
@@ -4509,46 +4573,20 @@ function scrollToPiece(element) {
         return;
     }
     
-    // En mode PWA, approche renforcée multi-stratégies
+    // En mode PWA, scroll fluide (pas instantané)
     if (isStandalone) {
-        logPWA('Mode PWA - Scroll renforcé multi-stratégies');
-        
+        logPWA('Mode PWA - Scroll fluide');
         try {
-            // Stratégie 1 : Position immédiate calculée
             const rect = element.getBoundingClientRect();
             const targetPosition = window.pageYOffset + rect.top - 100;
-            
-            // Scroll instantané en PWA
-            window.scrollTo(0, Math.max(0, targetPosition));
-            logPWA(`Stratégie 1 - Position: ${targetPosition}, scroll vers: ${Math.max(0, targetPosition)}`);
-            
-            // Stratégie 2 : Vérification et correction après 100ms
-            setTimeout(() => {
-                const newRect = element.getBoundingClientRect();
-                if (newRect.top > window.innerHeight || newRect.top < 0) {
-                    logPWA('Stratégie 2 - Correction nécessaire');
-                    const correctedPosition = window.pageYOffset + newRect.top - 100;
-                    window.scrollTo(0, Math.max(0, correctedPosition));
-                }
-            }, 100);
-            
-            // Stratégie 3 : Backup avec scrollIntoView après 250ms
-            setTimeout(() => {
-                const finalRect = element.getBoundingClientRect();
-                if (finalRect.top > window.innerHeight || finalRect.top < 50) {
-                    logPWA('Stratégie 3 - Backup scrollIntoView');
-                    element.scrollIntoView({ 
-                        behavior: 'auto', // Force auto en PWA
-                        block: 'center'
-                    });
-                }
-            }, 250);
-            
+            window.scrollTo({
+                top: Math.max(0, targetPosition),
+                behavior: 'smooth'
+            });
         } catch (e) {
             console.warn('📱 Erreur scroll PWA:', e);
-            // Fallback ultime
             try {
-                element.scrollIntoView({ block: 'start' });
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } catch (fallbackError) {
                 console.error('📱 Erreur fallback:', fallbackError);
             }
