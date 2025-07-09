@@ -429,6 +429,12 @@ function initTabs() {
         mobileNavItems.forEach(item => {
             item.classList.remove('active');
         });
+
+        // 🎨 COULEURS DYNAMIQUES - Mettre à jour l'attribut pour les couleurs d'onglet
+        const tabButtonsContainer = document.querySelector('.tab-buttons');
+        if (tabButtonsContainer) {
+            tabButtonsContainer.setAttribute('data-active-tab', targetId);
+        }
         
         // 🌊 ANIMATION VAGUE FLUIDE - Calculer et animer l'indicateur
         const targetButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);

@@ -56,11 +56,13 @@ body {
 
 /* Couleurs spécifiques selon l'état */
 .tab-button.active .icon-svg {
-    fill: currentColor;
+    fill: url(#gradient-active);
+    stroke: url(#gradient-active);
 }
 
 .mobile-nav-item.active .icon-svg {
-    fill: currentColor;
+    fill: url(#gradient-active);
+    stroke: url(#gradient-active);
 }
 
 .mobile-nav-item:not(.active) .icon-svg {
@@ -435,7 +437,7 @@ header h1 {
     overflow: hidden;
 }
 
-/* 🌊 ANIMATION VAGUE FLUIDE - Indicateur mobile */
+/* 🌊 ANIMATION VAGUE FLUIDE - Indicateur mobile avec couleurs dynamiques */
 .tab-buttons::before {
     content: '';
     position: absolute;
@@ -443,13 +445,29 @@ header h1 {
     bottom: 0.25rem;
     left: 0.25rem;
     width: var(--tab-indicator-width, 0px);
-    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+    background: var(--tab-indicator-color, linear-gradient(135deg, #4299e1 0%, #667eea 100%));
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+    box-shadow: var(--tab-indicator-shadow, 0 2px 8px rgba(66, 153, 225, 0.3));
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     transform: var(--tab-indicator-transform, translateX(0));
     z-index: 1;
     opacity: 1;
+}
+
+/* Couleurs spécifiques selon l'onglet actif */
+.tab-buttons[data-active-tab="prochains-evenements"]::before {
+    --tab-indicator-color: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    --tab-indicator-shadow: 0 2px 8px rgba(72, 187, 120, 0.3);
+}
+
+.tab-buttons[data-active-tab="programmes"]::before {
+    --tab-indicator-color: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+    --tab-indicator-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+}
+
+.tab-buttons[data-active-tab="partitions"]::before {
+    --tab-indicator-color: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    --tab-indicator-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
 }
 
 .tab-button {
@@ -837,7 +855,7 @@ main {
 }
 
 .audio-control-btn {
-    background: #4299e1;
+    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
     color: white;
     border: none;
     width: 42px;
@@ -853,7 +871,7 @@ main {
 }
 
 .audio-control-btn:hover {
-    background: #3182ce;
+    background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(66, 153, 225, 0.4);
 }
@@ -959,7 +977,7 @@ main {
 
 /* Bouton de téléchargement PDF */
 .pdf-download-btn {
-    background: #4299e1;
+    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -971,7 +989,7 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
     white-space: nowrap;
     height: fit-content;
     margin-top: 0.15rem;
@@ -981,9 +999,9 @@ main {
 }
 
 .pdf-download-btn:hover {
-    background: #3182ce;
+    background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
 }
 
 .pdf-download-btn:active {
@@ -1093,7 +1111,7 @@ main {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.25rem;
-    background: #4299e1;
+    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -1101,6 +1119,7 @@ main {
     font-weight: 500;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
 }
 
 .links a svg {
@@ -1110,9 +1129,9 @@ main {
 }
 
 .links a:hover {
-    background: #3182ce;
+    background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
 }
 
 /* Section financement */
@@ -1694,7 +1713,7 @@ main {
 }
 
 .access-button {
-    background: #4299e1;
+    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
     color: white;
     text-decoration: none;
     padding: 1rem 2rem;
@@ -1706,14 +1725,15 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
 }
 
 .access-button:hover {
-    background: #3182ce;
+    background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.25);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
 }
 
 /* Responsive pour la section partitions clean */
@@ -2483,6 +2503,40 @@ section:target {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     position: relative;
     overflow: hidden;
+}
+
+/* ========================================
+   COULEURS SPÉCIFIQUES SELON L'ONGLET ACTIF
+   ======================================== */
+
+/* 🟢 ONGLET ÉVÉNEMENTS - Couleurs vertes */
+/* Seulement la carte principale en vert */
+#prochains-evenements .main-next-event::before {
+    background: linear-gradient(90deg, #48bb78, #38a169) !important;
+}
+
+/* Les lignes verticales des pièces en vert */
+#prochains-evenements .piece-item {
+    border-left-color: #48bb78 !important;
+}
+
+/* Les mini-cartes gardent leurs couleurs d'origine selon le type d'événement */
+/* (pas de surcharge, elles utilisent les couleurs définies plus bas dans le CSS) */
+
+/* 🔵 ONGLET PROGRAMMES - Couleurs bleues (inchangées, pour référence) */
+#programmes .section-header h2:after,
+#programmes .concert-section h2:after {
+    background: #4299e1;
+}
+
+#programmes .piece-card:before {
+    background: #4299e1;
+}
+
+/* 🔴 ONGLET PARTITIONS - Couleurs rouges */
+#partitions .partitions-header h2:after,
+#partitions .warning-section {
+    border-left-color: #e53e3e;
 }
 
 .main-next-event::before {
