@@ -3126,7 +3126,296 @@ function updateSiteStatistics() {
     console.log(`📊 Statistiques mises à jour: ${stats.totalPieces} pièces, ${stats.totalSections} concerts, ${stats.formatTime(stats.totalSeconds)} au total`);
 }
 
-// Fonction pour générer un PDF
+// 🚀 SYSTÈME DE PRÉCHARGEMENT PDF
+window.pdfPreloader = {
+    cache: new Map(),
+    isPreloading: false,
+    
+    // Précharger un PDF en arrière-plan
+    async preloadPDF(sectionId) {
+        if (this.cache.has(sectionId) || this.isPreloading) {
+            return this.cache.get(sectionId);
+        }
+        
+        console.log('🔄 Préchargement PDF en cours pour:', sectionId);
+        this.isPreloading = true;
+        
+        // 🎨 Ajouter un indicateur visuel discret
+        this.addPreloadIndicator(sectionId);
+        
+        try {
+            const pdfData = await this.generatePDFData(sectionId);
+            this.cache.set(sectionId, pdfData);
+            console.log('✅ PDF préchargé et mis en cache pour:', sectionId);
+            
+            // 🎨 Mettre à jour l'indicateur visuel
+            this.updatePreloadIndicator(sectionId, true);
+            
+            return pdfData;
+        } catch (error) {
+            console.error('❌ Erreur préchargement PDF:', error);
+            this.updatePreloadIndicator(sectionId, false);
+            return null;
+        } finally {
+            this.isPreloading = false;
+        }
+    },
+    
+    // Ajouter un indicateur de préchargement
+    addPreloadIndicator(sectionId) {
+        const section = document.getElementById(sectionId);
+        const pdfButton = section?.querySelector('.pdf-download-btn');
+        if (pdfButton && !pdfButton.querySelector('.preload-indicator')) {
+            const indicator = document.createElement('span');
+            indicator.className = 'preload-indicator';
+            indicator.innerHTML = '🔄';
+            indicator.style.cssText = `
+                margin-left: 8px;
+                font-size: 12px;
+                opacity: 0.7;
+                animation: spin 2s linear infinite;
+            `;
+            
+            // Ajouter l'animation CSS si elle n'existe pas
+            if (!document.querySelector('#preload-animations')) {
+                const style = document.createElement('style');
+                style.id = 'preload-animations';
+                style.textContent = `
+                    @keyframes spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            pdfButton.appendChild(indicator);
+        }
+    },
+    
+    // Mettre à jour l'indicateur de préchargement
+    updatePreloadIndicator(sectionId, success) {
+        const section = document.getElementById(sectionId);
+        const indicator = section?.querySelector('.preload-indicator');
+        if (indicator) {
+            if (success) {
+                indicator.innerHTML = '⚡';
+                indicator.style.animation = 'none';
+                indicator.style.color = '#38a169';
+                indicator.title = 'PDF préchargé - téléchargement instantané';
+                
+                // Masquer l'indicateur après 3 secondes
+                setTimeout(() => {
+                    if (indicator.parentNode) {
+                        indicator.style.opacity = '0';
+                        setTimeout(() => indicator.remove(), 300);
+                    }
+                }, 3000);
+            } else {
+                indicator.remove();
+            }
+        }
+    },
+    
+    // Précharger tous les PDFs visibles
+    preloadAllVisible() {
+        const visibleSections = document.querySelectorAll('.concert-section[id]');
+        visibleSections.forEach(section => {
+            const sectionId = section.id;
+            if (!this.cache.has(sectionId)) {
+                // Délai progressif pour éviter la surcharge
+                setTimeout(() => this.preloadPDF(sectionId), Math.random() * 2000);
+            }
+        });
+    },
+    
+    // Générer les données PDF (sans téléchargement)
+    async generatePDFData(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section || typeof window.jspdf === 'undefined') {
+            throw new Error('Section ou jsPDF non disponible');
+        }
+
+        return new Promise((resolve, reject) => {
+            try {
+                // Créer une nouvelle instance jsPDF
+                const doc = new window.jspdf.jsPDF();
+                
+                // Configuration de base
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 20;
+                let currentY = margin;
+                
+                // Récupérer le titre de la section
+                const titleElement = section.querySelector('h2');
+                const sectionTitle = titleElement ? titleElement.textContent.trim() : 'Programme Musical';
+                
+                // En-tête du document
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                doc.text('Fiche Musicien', pageWidth / 2, currentY, { align: 'center' });
+                currentY += 15;
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text(sectionTitle, pageWidth / 2, currentY, { align: 'center' });
+                currentY += 10;
+                
+                // Ligne de séparation
+                doc.setLineWidth(0.5);
+                doc.line(margin, currentY, pageWidth - margin, currentY);
+                currentY += 15;
+                
+                // Date de génération
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'italic');
+                const currentDate = new Date().toLocaleDateString('fr-FR');
+                const currentTime = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                doc.text(`Document généré le ${currentDate} à ${currentTime}`, pageWidth / 2, currentY, { align: 'center' });
+                currentY += 20;
+                
+                // Récupérer toutes les pièces de la section
+                const pieces = section.querySelectorAll('.piece-card');
+                const realPieces = Array.from(pieces).filter(piece => {
+                    const title = piece.querySelector('h3');
+                    return title && !piece.textContent.includes('Aucune pièce ajoutée') && !piece.textContent.includes('Section en cours');
+                });
+                
+                // Calculer la durée totale de cette section
+                let sectionTotalSeconds = 0;
+                realPieces.forEach(piece => {
+                    const durationElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                        p.textContent.includes('Durée:')
+                    );
+                    if (durationElement) {
+                        const durationText = durationElement.textContent.match(/Durée:\s*([0-9:]+)/);
+                        if (durationText) {
+                            const duration = durationText[1];
+                            const timeComponents = duration.split(':');
+                            if (timeComponents.length >= 2) {
+                                const minutes = parseInt(timeComponents[0]) || 0;
+                                const seconds = parseInt(timeComponents[1]) || 0;
+                                sectionTotalSeconds += minutes * 60 + seconds;
+                            }
+                        }
+                    }
+                });
+                
+                currentY += 5; // Espacement avant la liste des pièces
+                
+                if (realPieces.length === 0) {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'italic');
+                    doc.text('Cette section ne contient pas encore de pièces musicales.', pageWidth / 2, currentY, { align: 'center' });
+                } else {
+                    // Traiter chaque pièce
+                    realPieces.forEach((piece, index) => {
+                        const title = piece.querySelector('h3')?.textContent.trim() || 'Titre non spécifié';
+                        
+                        // Chercher le compositeur
+                        const composerElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                            p.textContent.includes('Compositeur:')
+                        );
+                        const composer = composerElement ? 
+                            composerElement.textContent.replace('Compositeur:', '').trim() : 
+                            'Compositeur non spécifié';
+                        
+                        // Chercher la durée
+                        const durationElement = Array.from(piece.querySelectorAll('p')).find(p => 
+                            p.textContent.includes('Durée:')
+                        );
+                        const duration = durationElement ? 
+                            durationElement.textContent.replace('Durée:', '').trim() : '';
+                        
+                        // Ajouter un espacement entre les pièces
+                        if (index > 0) {
+                            currentY += 8;
+                        }
+                        
+                        // Vérifier si on a besoin d'une nouvelle page
+                        if (currentY > pageHeight - 40) {
+                            doc.addPage();
+                            currentY = margin;
+                        }
+                        
+                        // Titre de la pièce
+                        doc.setFontSize(13);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${index + 1}. ${title}`, margin, currentY);
+                        currentY += 6;
+                        
+                        // Compositeur
+                        doc.setFontSize(10);
+                        doc.setFont(undefined, 'normal');
+                        doc.text(`Compositeur : ${composer}`, margin + 10, currentY);
+                        currentY += 5;
+                        
+                        // Durée (si disponible)
+                        if (duration) {
+                            doc.text(`Durée : ${duration}`, margin + 10, currentY);
+                            currentY += 5;
+                        }
+                    });
+                }
+                
+                // Ajouter un divider et les statistiques après les pièces
+                if (realPieces.length > 0) {
+                    currentY += 15; // Espacement avant le divider
+                    
+                    // Vérifier si on a besoin d'une nouvelle page
+                    if (currentY > pageHeight - 60) {
+                        doc.addPage();
+                        currentY = margin;
+                    }
+                    
+                    // Divider (ligne de séparation)
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(100, 100, 100); // Gris
+                    doc.line(margin, currentY, pageWidth - margin, currentY);
+                    currentY += 10;
+                    
+                    // Statistiques sous le divider - alignées à droite
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`Nombre de pieces : ${realPieces.length}`, pageWidth - margin, currentY, { align: 'right' });
+                    currentY += 6;
+                    
+                    if (sectionTotalSeconds > 0) {
+                        const totalMinutes = Math.floor(sectionTotalSeconds / 60);
+                        const remainingSeconds = sectionTotalSeconds % 60;
+                        const timeDisplay = totalMinutes > 0 ? 
+                            `${totalMinutes}min ${remainingSeconds.toString().padStart(2, '0')}s` : 
+                            `${remainingSeconds}s`;
+                        doc.text(`Duree totale estimee : ${timeDisplay}`, pageWidth - margin, currentY, { align: 'right' });
+                        currentY += 6;
+                    }
+                }
+                
+                // Pied de page
+                const footerY = pageHeight - 15;
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text('Fiche Musicien', pageWidth / 2, footerY, { align: 'center' });
+                
+                // Générer le nom de fichier
+                const fileName = `Programme_${sectionTitle.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+                
+                // Retourner les données PDF et le nom de fichier
+                resolve({
+                    doc: doc,
+                    fileName: fileName,
+                    timestamp: Date.now()
+                });
+                
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+};
+
+// Fonction pour générer un PDF (version optimisée avec cache)
 function generatePDF(sectionId) {
     // PROTECTION GLOBALE contre les appels multiples
     const lockKey = `pdf-generation-${sectionId}`;
@@ -3153,6 +3442,17 @@ function generatePDF(sectionId) {
     }
 
     try {
+        // 🚀 UTILISER LE CACHE si disponible
+        const cachedPDF = window.pdfPreloader.cache.get(sectionId);
+        if (cachedPDF && (Date.now() - cachedPDF.timestamp < 300000)) { // Cache valable 5 min
+            console.log('⚡ Utilisation du PDF en cache pour:', sectionId);
+            cachedPDF.doc.save(cachedPDF.fileName);
+            console.log(`✅ PDF téléchargé instantanément: ${cachedPDF.fileName}`);
+            return;
+        }
+        
+        console.log('📄 Génération PDF temps réel pour:', sectionId);
+        
         // Créer une nouvelle instance jsPDF
         const doc = new window.jspdf.jsPDF();
         
@@ -3320,6 +3620,16 @@ function generatePDF(sectionId) {
         doc.save(fileName);
         
         console.log(`✅ PDF généré: ${fileName}`);
+        
+        // 🚀 PRÉCHARGER LE PROCHAIN PDF potentiel en arrière-plan
+        setTimeout(() => {
+            const allSections = Array.from(document.querySelectorAll('.concert-section[id]'));
+            const currentIndex = allSections.findIndex(s => s.id === sectionId);
+            const nextSection = allSections[currentIndex + 1];
+            if (nextSection && !window.pdfPreloader.cache.has(nextSection.id)) {
+                window.pdfPreloader.preloadPDF(nextSection.id);
+            }
+        }, 500);
     } catch (error) {
         console.error('❌ Erreur lors de la génération PDF:', error);
         alert('Erreur lors de la génération du PDF');
@@ -3733,16 +4043,27 @@ function initPDFGeneration() {
                 
                 button.dataset.lastPdfClick = now.toString();
                 
-                // Désactiver temporairement le bouton
+                // Désactiver temporairement le bouton avec indicateur intelligent
                 const originalText = button.textContent;
-                button.textContent = 'Génération...';
+                const btnSectionId = button.getAttribute('data-section');
+                
+                // 🚀 Vérifier si le PDF est en cache
+                const isPreloaded = window.pdfPreloader && window.pdfPreloader.cache.has(btnSectionId);
+                
+                if (isPreloaded) {
+                    button.textContent = '⚡ Téléchargement...';
+                    button.style.background = 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)';
+                } else {
+                    button.textContent = '📄 Génération...';
+                    button.style.background = 'linear-gradient(135deg, #d69e2e 0%, #b7791f 100%)';
+                }
+                
                 button.disabled = true;
                 
-                const sectionId = this.getAttribute('data-section');
-                console.log('📄 Génération PDF pour:', sectionId);
+                console.log('📄 Génération PDF pour:', btnSectionId);
                 
                 try {
-                    generatePDF(sectionId);
+                    generatePDF(btnSectionId);
                 } catch (error) {
                     console.error('Erreur PDF:', error);
                 } finally {
@@ -3750,7 +4071,8 @@ function initPDFGeneration() {
                     setTimeout(() => {
                         button.disabled = false;
                         button.textContent = originalText;
-                    }, 500); // Délai réduit pour une meilleure UX
+                        button.style.background = ''; // Reset background
+                    }, 500);
                 }
             };
             
@@ -4431,6 +4753,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (upcomingEventsList) {
         eventsObserver.observe(upcomingEventsList, { childList: true, subtree: true });
     }
+    
+    // 🚀 INITIALISER LE PRÉCHARGEMENT PDF
+    setTimeout(() => {
+        if (window.pdfPreloader && typeof window.jspdf !== 'undefined') {
+            console.log('🔄 Démarrage du préchargement PDF intelligent...');
+            // Précharger le premier PDF visible après 2 secondes
+            const firstSection = document.querySelector('.concert-section[id]');
+            if (firstSection) {
+                window.pdfPreloader.preloadPDF(firstSection.id);
+                
+                // Précharger les autres après 5 secondes
+                setTimeout(() => {
+                    window.pdfPreloader.preloadAllVisible();
+                }, 3000);
+            }
+        }
+    }, 2000);
 });
 
 // DÉLÉGATION GLOBALE TEMPORAIREMENT DÉSACTIVÉE pour diagnostic
