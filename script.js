@@ -10,405 +10,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-/**
- * 🔧 CORRECTION PWA : Fonction pour corriger les styles PWA dynamiquement
- * Résout les problèmes de scroll et de navigation qui "disparaît"
- */
-function fixPWAStyles() {
-        // 2ter. Forcer html/body/main à min-height et height auto, et injecter un div invisible en bas pour forcer le scroll
-        document.documentElement.style.minHeight = '100vh';
-        document.documentElement.style.height = 'auto';
-        document.body.style.minHeight = '100vh';
-        document.body.style.height = 'auto';
-        const main2 = document.querySelector('main');
-        if (main2) {
-            main2.style.minHeight = '120vh'; // Forcer un débordement
-            main2.style.height = 'auto';
-        }
-        // Ajouter un div invisible en bas pour forcer le scroll si besoin
-        let forceScrollDiv = document.getElementById('force-scroll-div');
-        if (!forceScrollDiv) {
-            forceScrollDiv = document.createElement('div');
-            forceScrollDiv.id = 'force-scroll-div';
-            forceScrollDiv.style.width = '100%';
-            forceScrollDiv.style.height = '200px';
-            forceScrollDiv.style.pointerEvents = 'none';
-            forceScrollDiv.style.opacity = '0';
-            document.body.appendChild(forceScrollDiv);
-        }
-        // 0. Ajout d'un bandeau de debug visuel flottant (uniquement en PWA iOS)
-        if (isPWAStandalone() && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            let debugBar = document.getElementById('pwa-debug-bar');
-            if (!debugBar) {
-                debugBar = document.createElement('div');
-                debugBar.id = 'pwa-debug-bar';
-                debugBar.style.position = 'fixed';
-                debugBar.style.left = '0';
-                debugBar.style.right = '0';
-                debugBar.style.bottom = '0';
-                debugBar.style.zIndex = '10000';
-                debugBar.style.background = 'rgba(0,0,0,0.85)';
-                debugBar.style.color = '#fff';
-                debugBar.style.fontSize = '13px';
-                debugBar.style.fontFamily = 'monospace';
-                debugBar.style.padding = '6px 8px 8px 8px';
-                debugBar.style.pointerEvents = 'none';
-                debugBar.style.textAlign = 'left';
-                debugBar.style.borderTop = '2px solid #f00';
-                debugBar.style.maxWidth = '100vw';
-                debugBar.style.wordBreak = 'break-all';
-                document.body.appendChild(debugBar);
-            }
-            window.__pwaDebugBarUpdate = function(msg) {
-                debugBar.innerHTML = msg;
-            };
-
-            // Ajout : détecter dynamiquement l'élément qui scroll (scrollTop change)
-            let lastScrollTops = new Map();
-            let lastScrollElement = null;
-            function detectScrollingElement() {
-                let candidates = [window, document.documentElement, document.body];
-                // Ajouter tous les parents du main
-                const main = document.querySelector('main');
-                let el = main;
-                while (el && el !== document.body && el !== document.documentElement) {
-                    if (el.parentElement) candidates.push(el.parentElement);
-                    el = el.parentElement;
-                }
-                let found = null;
-                for (let c of candidates) {
-                    let st = (c === window) ? window.scrollY : c.scrollTop;
-                    if (lastScrollTops.has(c)) {
-                        if (lastScrollTops.get(c) !== st) {
-                            found = c;
-                        }
-                    }
-                    lastScrollTops.set(c, st);
-                }
-                if (found) lastScrollElement = found;
-                return lastScrollElement;
-            }
-            // Sur chaque scroll, détecter qui scroll
-            window.addEventListener('scroll', function() {
-                detectScrollingElement();
-            }, { passive: true });
-            document.addEventListener('scroll', function() {
-                detectScrollingElement();
-            }, { passive: true, capture: true });
-
-            // Afficher dans la debug bar l'élément qui scroll
-            function getElementName(el) {
-                if (el === window) return 'window';
-                if (el === document.body) return 'body';
-                if (el === document.documentElement) return 'html';
-                if (el && el.tagName) return el.tagName.toLowerCase() + (el.className ? '.' + el.className.replace(/\s+/g, '.') : '');
-                return 'unknown';
-            }
-            // Patch la debug bar pour afficher l'élément qui scroll
-            const oldUpdate = window.__pwaDebugBarUpdate;
-            window.__pwaDebugBarUpdate = function(msg) {
-                const scroller = detectScrollingElement();
-                const scrollerName = getElementName(scroller);
-                debugBar.innerHTML = msg + `<br><b>Scroller détecté :</b> ${scrollerName}`;
-            };
-        }
-        // 2bis. SUPPRIMER TOUT OVERFLOW/HEIGHT SUR TOUS LES ÉLÉMENTS DU DOM (diagnostic maximal)
-        function forceAllOverflowVisible() {
-            const all = document.querySelectorAll('*');
-            all.forEach(el => {
-                el.style.overflow = 'visible';
-                el.style.overflowY = 'visible';
-                el.style.overflowX = 'visible';
-                el.style.height = 'auto';
-                el.style.minHeight = '0';
-                el.style.maxHeight = 'none';
-            });
-            document.body.style.overflow = 'visible';
-            document.body.style.overflowY = 'visible';
-            document.body.style.overflowX = 'visible';
-            document.body.style.height = 'auto';
-            document.body.style.minHeight = '0';
-            document.body.style.maxHeight = 'none';
-            document.documentElement.style.overflow = 'visible';
-            document.documentElement.style.overflowY = 'visible';
-            document.documentElement.style.overflowX = 'visible';
-            document.documentElement.style.height = 'auto';
-            document.documentElement.style.minHeight = '100vh';
-            document.documentElement.style.maxHeight = 'none';
-        }
-        forceAllOverflowVisible();
-
-        // Diagnostic : lister tous les éléments qui scrollent ou qui ont overflow non visible
-        function getScrollableElements() {
-            const all = document.querySelectorAll('*');
-            let scrolls = [];
-            all.forEach(el => {
-                const st = el.scrollTop;
-                const so = getComputedStyle(el).overflow;
-                const soy = getComputedStyle(el).overflowY;
-                if (st > 0 || (so && so !== 'visible') || (soy && soy !== 'visible')) {
-                    let desc = el.tagName.toLowerCase();
-                    if (el.id) desc += '#' + el.id;
-                    if (el.className) desc += '.' + el.className.toString().replace(/\s+/g, '.');
-                    scrolls.push(desc + ` (scrollTop:${st}, overflow:${so}, overflowY:${soy})`);
-                }
-            });
-            return scrolls;
-        }
-
-        // Patch la debug bar pour afficher la liste des scrollables et les hauteurs du document
-        const oldUpdate2 = window.__pwaDebugBarUpdate;
-        window.__pwaDebugBarUpdate = function(msg) {
-            let scrollables = getScrollableElements();
-            let scrollInfo = scrollables.length ? `<br><b>Scrollables:</b><br>${scrollables.join('<br>')}` : '<br><b>Scrollables:</b> aucun';
-            let docH = document.documentElement.scrollHeight;
-            let bodyH = document.body.scrollHeight;
-            let winH = window.innerHeight;
-            let heightInfo = `<br><b>Hauteur doc:</b> ${docH} | <b>body:</b> ${bodyH} | <b>win:</b> ${winH}`;
-            if (typeof oldUpdate2 === 'function') {
-                oldUpdate2(msg + heightInfo + scrollInfo);
-            } else {
-                let debugBar = document.getElementById('pwa-debug-bar');
-                if (debugBar) debugBar.innerHTML = msg + heightInfo + scrollInfo;
-            }
-        };
-        // 4bis. Debug visuel : log la position du dock et du scroll à chaque scroll
-        window.addEventListener('scroll', function() {
-            const dock = document.querySelector('.mobile-bottom-nav');
-            const scrollY = window.scrollY || window.pageYOffset;
-            const viewportH = window.innerHeight;
-            let dockRect = { top: 'n/a', bottom: 'n/a', height: 'n/a' };
-            if (dock) {
-                const r = dock.getBoundingClientRect();
-                dockRect = { top: Math.round(r.top), bottom: Math.round(r.bottom), height: Math.round(r.height) };
-            }
-            const msg = `🟦 <b>ScrollY:</b> ${scrollY} | <b>ViewportH:</b> ${viewportH}<br>` +
-                        `<b>Dock top:</b> ${dockRect.top} | <b>Dock bottom:</b> ${dockRect.bottom} | <b>Dock height:</b> ${dockRect.height}`;
-            if (window.__pwaDebugBarUpdate) window.__pwaDebugBarUpdate(msg);
-        }, { passive: true });
-        // Premier affichage
-        setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 500);
-    const isStandalone = isPWAStandalone();
-    
-    if (isStandalone) {
-        logPWA('🔧 Application des corrections CSS PWA...');
-
-
-    // 1. Forcer html/body à overflow/height auto/initial (aucune restriction)
-    document.body.style.overflow = 'auto';
-    document.body.style.overflowY = 'auto';
-    document.body.style.height = 'auto';
-    document.body.style.minHeight = '0';
-    document.body.style.webkitOverflowScrolling = 'touch';
-    document.documentElement.style.overflow = 'auto';
-    document.documentElement.style.overflowY = 'auto';
-    document.documentElement.style.height = 'auto';
-    document.documentElement.style.minHeight = '0';
-    document.documentElement.style.webkitOverflowScrolling = 'touch';
-
-        // 3. Corriger main pour avoir le bon padding
-        const mainElement = document.querySelector('main');
-        if (mainElement) {
-            mainElement.style.paddingBottom = 'calc(120px + env(safe-area-inset-bottom))';
-            mainElement.style.minHeight = 'auto'; // Laisser la hauteur naturelle
-        }
-
-        // 4. S'assurer que la navigation reste FIXÉE EN BAS même en PWA iOS
-        let mobileNav = document.querySelector('.mobile-bottom-nav');
-        if (mobileNav) {
-            // Déplacer le dock tout en bas du body (portal)
-            if (mobileNav.parentNode !== document.body) {
-                document.body.appendChild(mobileNav);
-            }
-            // Fixe le dock en bas avec le safe-area iOS
-            mobileNav.style.position = 'fixed';
-            mobileNav.style.left = '0';
-            mobileNav.style.right = '0';
-            mobileNav.style.zIndex = '9999';
-            mobileNav.style.bottom = 'env(safe-area-inset-bottom)';
-            mobileNav.style.width = '100vw';
-            mobileNav.style.transform = 'translateY(0)';
-            mobileNav.style.visibility = 'visible';
-            mobileNav.style.opacity = '1';
-            mobileNav.style.height = '';
-            // Debug visuel temporaire
-            mobileNav.style.outline = '2px solid red';
-        }
-
-        // 5. 🔧 AJOUT : Injecter CSS correctif pour PWA
-        const style = document.createElement('style');
-        style.id = 'pwa-fixes';
-        style.textContent = `
-            @media (display-mode: standalone) {
-                html, body {
-                    scroll-behavior: smooth !important;
-                    overflow-y: auto !important;
-                    -webkit-overflow-scrolling: touch !important;
-                    height: 100vh !important;
-                    min-height: 100vh !important;
-                }
-                main {
-                    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
-                    min-height: auto !important;
-                }
-                .mobile-bottom-nav {
-                    display: flex !important;
-                    position: fixed !important;
-                    bottom: env(safe-area-inset-bottom) !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    z-index: 9999 !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    width: 100vw !important;
-                    transform: translateY(0) !important;
-                    transition: none !important;
-                    will-change: auto !important;
-                }
-                .mobile-nav-container {
-                    display: flex !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    pointer-events: auto !important;
-                }
-                .container {
-                    min-height: auto !important;
-                }
-                .mobile-bottom-nav * {
-                    transform: none !important;
-                }
-            }
-        `;
-
-        // Supprimer l'ancien style s'il existe
-        const existingStyle = document.getElementById('pwa-fixes');
-        if (existingStyle) {
-            existingStyle.remove();
-        }
-
-        document.head.appendChild(style);
-
-        logPWA('✅ Corrections CSS PWA appliquées');
-
-        // 6. Corriger les problèmes de scroll spécifiques PWA
-        fixPWAScrollBehavior();
-    }
-// Correction du scroll automatique vers une pièce en PWA iOS
-function scrollToPiece(pieceId) {
-    const isStandalone = isPWAStandalone();
-    const el = document.getElementById(pieceId);
-    if (!el) return;
-
-    // Calculer la hauteur du dock + safe-area pour éviter de masquer la pièce
-    const dock = document.querySelector('.mobile-bottom-nav');
-    let dockHeight = 0;
-    let safeArea = 0;
-    // Mesure réelle du safe-area
-    if (window.CSS && CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
-        // Crée un élément temporaire pour mesurer la valeur réelle
-        const temp = document.createElement('div');
-        temp.style.position = 'fixed';
-        temp.style.bottom = 'env(safe-area-inset-bottom)';
-        temp.style.height = '1px';
-        temp.style.width = '1px';
-        temp.style.visibility = 'hidden';
-        document.body.appendChild(temp);
-        const tempRect = temp.getBoundingClientRect();
-        safeArea = window.innerHeight - tempRect.bottom;
-        document.body.removeChild(temp);
-        if (safeArea < 0) safeArea = 0;
-    }
-    if (dock && getComputedStyle(dock).display !== 'none') {
-        dockHeight = dock.offsetHeight || 64;
-    }
-
-    // Calculer la position cible en tenant compte du dock ET du safe-area
-    const rect = el.getBoundingClientRect();
-    const scrollTop = window.scrollY || window.pageYOffset;
-    const targetY = rect.top + scrollTop - dockHeight - safeArea - 16; // 16px de marge
-
-    if (isStandalone && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        // iOS PWA : utiliser window.scrollTo avec options
-        window.scrollTo({ top: targetY, behavior: 'smooth' });
-    } else {
-        // Autres cas : scroll classique
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-}
-
-/**
- * 🔧 Correction du comportement de scroll spécifique PWA
- */
-function fixPWAScrollBehavior() {
-    const isStandalone = isPWAStandalone();
-    
-    if (!isStandalone) return;
-    
-    logPWA('🔧 Configuration scroll PWA...');
-    
-    // 🔧 CORRECTION : Scroll fluide au lieu de téléportation
-    const originalScrollTo = window.scrollTo;
-    window.scrollTo = function(x, y) {
-        if (typeof x === 'object') {
-            // scrollTo({ top: y, behavior: 'smooth' }) -> forcer smooth même en PWA
-            const options = {
-                left: x.left || 0,
-                top: x.top || 0,
-                behavior: 'smooth' // Force smooth au lieu d'instant
-            };
-            originalScrollTo.call(window, options);
-        } else {
-            // scrollTo(x, y) -> conversion en smooth
-            originalScrollTo.call(window, {
-                left: x || 0,
-                top: y || 0,
-                behavior: 'smooth'
-            });
-        }
-    };
-    
-    // 🔧 CORRECTION CRITIQUE : Surveillance active du dock
-    let dockCheckInterval = setInterval(() => {
-        const mobileNav = document.querySelector('.mobile-bottom-nav');
-        if (!mobileNav) return;
-        
-        const computedStyle = getComputedStyle(mobileNav);
-        
-        // Vérifier si le dock a perdu sa position fixe
-        if (computedStyle.position !== 'fixed') {
-            logPWA('⚠️ Dock perdu - restauration position fixe');
-            mobileNav.style.position = 'fixed';
-            mobileNav.style.bottom = '0';
-            mobileNav.style.left = '0';
-            mobileNav.style.right = '0';
-            mobileNav.style.zIndex = '9999';
-        }
-        
-        // Vérifier si le dock est visible
-        if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
-            logPWA('⚠️ Dock invisible - restauration visibilité');
-            mobileNav.style.display = 'flex';
-            mobileNav.style.visibility = 'visible';
-        }
-        
-        // Vérifier la valeur de bottom
-        if (computedStyle.bottom !== '0px') {
-            logPWA('⚠️ Dock mal positionné - correction bottom');
-            mobileNav.style.bottom = '0';
-        }
-        
-    }, 1000); // Vérification chaque seconde
-    
-    // Nettoyer l'interval après 30 secondes (le dock devrait être stable)
-    setTimeout(() => {
-        clearInterval(dockCheckInterval);
-        logPWA('🔧 Surveillance dock terminée');
-    }, 30000);
-    
-    logPWA('✅ Comportement de scroll PWA corrigé avec surveillance dock');
-}
-
 // Fonction pour centrer les traits bleus sous les titres
 function centerBlueLines() {
     const sectionHeaders = document.querySelectorAll('.section-header h2');
@@ -782,9 +383,6 @@ function updateEventsWithNotionData(events) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Fiche Musicien - Chargement terminé!');
     
-    // 🔧 CORRECTION PWA : Appliquer les corrections CSS avant tout
-    fixPWAStyles();
-    
     // Initialiser les onglets en priorité
     initTabs();
     
@@ -941,28 +539,13 @@ function initTabs() {
         // Trouver l'index de l'item actif
         const activeIndex = Array.from(items).indexOf(activeItem);
         
-        // 🔧 CORRECTION PROFONDE : Calculer la position en pixels, pas en pourcentage
-        const containerRect = container.getBoundingClientRect();
-        const containerWidth = containerRect.width;
-        const paddingLeft = 8; // 0.5rem padding du container
-        const paddingRight = 8; // 0.5rem padding du container
+        // Calculer la position de l'indicateur (33.333% par item)
+        const indicatorPosition = `${activeIndex * 100}%`;
         
-        // Largeur d'un item (diviser l'espace disponible par le nombre d'items)
-        const availableWidth = containerWidth - paddingLeft - paddingRight;
-        const itemWidth = availableWidth / items.length;
+        // Appliquer l'animation CSS custom property
+        container.style.setProperty('--nav-indicator-position', indicatorPosition);
         
-        // Position de l'indicateur (décalage depuis le bord gauche du container)
-        const indicatorPosition = activeIndex * itemWidth;
-        
-        // Appliquer la position ET la largeur
-        container.style.setProperty('--nav-indicator-position', `${indicatorPosition}px`);
-        container.style.setProperty('--nav-indicator-width', `${itemWidth}px`);
-        
-        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex}:`);
-        console.log(`   - Container width: ${containerWidth}px`);
-        console.log(`   - Available width: ${availableWidth}px`);
-        console.log(`   - Item width: ${itemWidth}px`);
-        console.log(`   - Indicator position: ${indicatorPosition}px`);
+        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
     }
     
     // Gérer les clics sur les boutons d'onglets desktop
@@ -987,37 +570,15 @@ function initTabs() {
     // Activer le premier onglet par défaut
     if (tabButtons.length > 0) {
         const firstTabId = tabButtons[0].getAttribute('data-tab');
-        // Initialiser les indicateurs au premier onglet
+        // Initialiser l'indicateur au premier onglet
         setTimeout(() => {
             const firstButton = tabButtons[0];
-            const firstMobileItem = document.querySelector('.mobile-nav-item.active');
-            
             if (firstButton) {
                 animateTabIndicator(firstButton);
-            }
-            
-            if (firstMobileItem) {
-                animateMobileIndicator(firstMobileItem);
             }
         }, 100);
         showTab(firstTabId);
     }
-    
-    // 🔧 CORRECTION : Recalculer les indicateurs lors du redimensionnement
-    window.addEventListener('resize', () => {
-        setTimeout(() => {
-            const activeButton = document.querySelector('.tab-button.active');
-            const activeMobileItem = document.querySelector('.mobile-nav-item.active');
-            
-            if (activeButton) {
-                animateTabIndicator(activeButton);
-            }
-            
-            if (activeMobileItem) {
-                animateMobileIndicator(activeMobileItem);
-            }
-        }, 100);
-    });
 }
 
 // � FONCTION POUR DÉCLENCHER LES ANIMATIONS SPÉCIFIQUES À CHAQUE ONGLET
@@ -1986,8 +1547,8 @@ function navigateToPieceInPrograms(pieceName) {
     // 1. Basculer vers l'onglet Programme musical
     switchToTab('programmes');
     
-    // 2. 🔧 CORRECTION PWA : Délai réduit et adapté
-    const delay = isStandalone ? 400 : 300; // Réduit de 800ms à 400ms pour PWA
+    // 2. Délai simple selon le mode
+    const delay = isStandalone ? 800 : 300;
     logPWA(`Délai utilisé: ${delay}ms`);
     
     setTimeout(() => {
@@ -1996,26 +1557,14 @@ function navigateToPieceInPrograms(pieceName) {
         if (pieceInfo) {
             logPWA(`Pièce trouvée: "${pieceInfo.title}"`);
             
-            // 🔧 CORRECTION PWA : Approche renforcée
+            // Approche simplifiée pour PWA
             if (isStandalone) {
-                logPWA('Traitement PWA renforcé');
-                
-                // Multiple stratégies pour PWA
-                // Stratégie 1 : Scroll immédiat
+                // En mode PWA, seulement scroller et mettre en évidence
+                logPWA('Traitement PWA: scroll puis highlight');
                 scrollToPiece(pieceInfo.element);
-                
-                // Stratégie 2 : Highlight immédiat
-                highlightPiece(pieceInfo.element, pieceInfo.title);
-                
-                // Stratégie 3 : Vérification et correction après 300ms
                 setTimeout(() => {
-                    const rect = pieceInfo.element.getBoundingClientRect();
-                    if (rect.top > window.innerHeight || rect.top < 0) {
-                        logPWA('Correction nécessaire - nouveau scroll');
-                        scrollToPiece(pieceInfo.element);
-                    }
-                }, 300);
-                
+                    highlightPiece(pieceInfo.element, pieceInfo.title);
+                }, 200);
             } else {
                 // Mode navigateur normal
                 highlightPiece(pieceInfo.element, pieceInfo.title);
@@ -2092,30 +1641,13 @@ function switchToTab(targetId) {
             // Trouver l'index de l'item actif
             const activeIndex = Array.from(allMobileItems).indexOf(activeMobileItem);
             if (activeIndex !== -1) {
-                // 🔧 CORRECTION PROFONDE : Calculer la position en pixels, pas en pourcentage
-                // L'indicateur doit se déplacer selon la largeur réelle de chaque item
+                // Calculer la position de l'indicateur (33.333% par item sur 3 onglets)
+                const indicatorPosition = `${activeIndex * (100 / allMobileItems.length)}%`;
                 
-                const containerRect = mobileContainer.getBoundingClientRect();
-                const containerWidth = containerRect.width;
-                const paddingLeft = 8; // 0.5rem padding du container
-                const paddingRight = 8; // 0.5rem padding du container
+                // Appliquer l'animation CSS custom property
+                mobileContainer.style.setProperty('--nav-indicator-position', indicatorPosition);
                 
-                // Largeur d'un item (diviser l'espace disponible par le nombre d'items)
-                const availableWidth = containerWidth - paddingLeft - paddingRight;
-                const itemWidth = availableWidth / allMobileItems.length;
-                
-                // Position de l'indicateur (décalage depuis le bord gauche du container)
-                const indicatorPosition = activeIndex * itemWidth;
-                
-                // Appliquer la position ET la largeur
-                mobileContainer.style.setProperty('--nav-indicator-position', `${indicatorPosition}px`);
-                mobileContainer.style.setProperty('--nav-indicator-width', `${itemWidth}px`);
-                
-                console.log(`🎨 Animation indicateur mobile vers position ${activeIndex}:`);
-                console.log(`   - Container width: ${containerWidth}px`);
-                console.log(`   - Available width: ${availableWidth}px`);
-                console.log(`   - Item width: ${itemWidth}px`);
-                console.log(`   - Indicator position: ${indicatorPosition}px`);
+                console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
             }
         }
     }
@@ -4754,13 +4286,10 @@ function autoScrollToTop() {
     const isStandalone = isPWAStandalone();
     logPWA(`autoScrollToTop - Mode détecté: ${isStandalone ? 'PWA' : 'Navigateur'}`);
     
-    // 🔧 CORRECTION : Scroll fluide même en mode PWA
+    // En mode PWA, utiliser seulement un scroll instantané simple
     if (isStandalone) {
-        logPWA('Scroll fluide vers le haut en PWA');
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth' // Fluide au lieu d'instantané
-        });
+        logPWA('Scroll instantané vers le haut');
+        window.scrollTo(0, 0);
         return;
     }
     
@@ -4780,7 +4309,7 @@ function autoScrollToTop() {
  * Fonction améliorée pour scroll vers une pièce - VERSION CORRIGÉE POUR MOBILE
  */
 /**
- * Fonction simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE RENFORCÉE
+ * Fonction simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE
  */
 function scrollToPiece(element) {
     const isStandalone = isPWAStandalone();
@@ -4791,23 +4320,22 @@ function scrollToPiece(element) {
         return;
     }
     
-    // En mode PWA, scroll fluide (pas instantané)
+    // En mode PWA, approche ultra-simple
     if (isStandalone) {
-        logPWA('Mode PWA - Scroll fluide');
+        logPWA('Scroll simple vers élément');
+        
         try {
+            // Calcul simple de la position
             const rect = element.getBoundingClientRect();
-            const targetPosition = window.pageYOffset + rect.top - 100;
-            window.scrollTo({
-                top: Math.max(0, targetPosition),
-                behavior: 'smooth'
-            });
+            const targetPosition = window.pageYOffset + rect.top - 100; // Offset fixe de 100px
+            
+            // Scroll instantané en PWA pour éviter les problèmes
+            window.scrollTo(0, Math.max(0, targetPosition));
+            logPWA(`Position calculée: ${targetPosition}, scroll vers: ${Math.max(0, targetPosition)}`);
         } catch (e) {
             console.warn('📱 Erreur scroll PWA:', e);
-            try {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (fallbackError) {
-                console.error('📱 Erreur fallback:', fallbackError);
-            }
+            // Fallback: essayer juste scrollIntoView
+            element.scrollIntoView({ block: 'start' });
         }
         return;
     }
