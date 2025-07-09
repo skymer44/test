@@ -569,18 +569,18 @@ header h1 {
         display: none !important;
     }
     
-    /* 🎨 Navigation mobile moderne style "floating pill" */
+    /* 🎨 Navigation mobile moderne style "floating pill" FIXE */
     .mobile-bottom-nav {
         display: flex !important;
         justify-content: center;
         align-items: center;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        position: fixed !important; /* ✅ TOUJOURS fixe en bas */
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
         background: transparent;
         padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
-        z-index: 1000;
+        z-index: 1000 !important; /* ✅ Au-dessus de tout */
         pointer-events: none; /* Les éléments enfants auront pointer-events: auto */
     }
     
@@ -3878,4 +3878,71 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   🏠 CORRECTION DOCK MOBILE FIXE + MASQUAGE BARRE IPHONE
+   ======================================== */
+
+/* 🔧 Masquer définitivement la barre iPhone noire */
+@media all and (display-mode: standalone) {
+    /* ✨ Pseudo-élément pour masquer la barre iPhone */
+    body::after {
+        content: '';
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 34px !important; /* Hauteur de la barre iPhone */
+        background: #f7fafc !important; /* Même couleur que le fond */
+        z-index: 9998 !important;
+        pointer-events: none !important;
+    }
+    
+    /* ✨ Forcer la couleur de fond partout */
+    html, body {
+        background-color: #f7fafc !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+    }
+    
+    /* 🔧 Navigation mobile VRAIMENT fixe en bas */
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important; /* Au-dessus du masque */
+        padding: 1rem 1.5rem 0.25rem !important; /* Padding minimal en bas */
+        background: linear-gradient(to top, 
+                    #f7fafc 0%, 
+                    #f7fafc 50%, 
+                    rgba(247, 250, 252, 0.8) 80%, 
+                    transparent 100%) !important;
+    }
+    
+    /* ✨ Container plus opaque pour bien masquer */
+    .mobile-nav-container {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(30px) !important;
+        -webkit-backdrop-filter: blur(30px) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                    0 2px 8px rgba(0, 0, 0, 0.08),
+                    0 -8px 24px #f7fafc !important; /* Grande ombre vers le haut */
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* 🔧 Ajuster le contenu principal */
+    main {
+        padding-bottom: 90px !important; /* Réduit pour que le dock soit plus bas */
+    }
+}
+
+/* 🔧 Renforcement pour tous les modes mobiles */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        z-index: 9999 !important;
+    }
 }
