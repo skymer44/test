@@ -15,6 +15,27 @@ if ('serviceWorker' in navigator) {
  * Résout les problèmes de scroll et de navigation qui "disparaît"
  */
 function fixPWAStyles() {
+        // 2ter. Forcer html/body/main à min-height et height auto, et injecter un div invisible en bas pour forcer le scroll
+        document.documentElement.style.minHeight = '100vh';
+        document.documentElement.style.height = 'auto';
+        document.body.style.minHeight = '100vh';
+        document.body.style.height = 'auto';
+        const main2 = document.querySelector('main');
+        if (main2) {
+            main2.style.minHeight = '120vh'; // Forcer un débordement
+            main2.style.height = 'auto';
+        }
+        // Ajouter un div invisible en bas pour forcer le scroll si besoin
+        let forceScrollDiv = document.getElementById('force-scroll-div');
+        if (!forceScrollDiv) {
+            forceScrollDiv = document.createElement('div');
+            forceScrollDiv.id = 'force-scroll-div';
+            forceScrollDiv.style.width = '100%';
+            forceScrollDiv.style.height = '200px';
+            forceScrollDiv.style.pointerEvents = 'none';
+            forceScrollDiv.style.opacity = '0';
+            document.body.appendChild(forceScrollDiv);
+        }
         // 0. Ajout d'un bandeau de debug visuel flottant (uniquement en PWA iOS)
         if (isPWAStandalone() && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             let debugBar = document.getElementById('pwa-debug-bar');
@@ -135,16 +156,20 @@ function fixPWAStyles() {
             return scrolls;
         }
 
-        // Patch la debug bar pour afficher la liste des scrollables
+        // Patch la debug bar pour afficher la liste des scrollables et les hauteurs du document
         const oldUpdate2 = window.__pwaDebugBarUpdate;
         window.__pwaDebugBarUpdate = function(msg) {
             let scrollables = getScrollableElements();
             let scrollInfo = scrollables.length ? `<br><b>Scrollables:</b><br>${scrollables.join('<br>')}` : '<br><b>Scrollables:</b> aucun';
+            let docH = document.documentElement.scrollHeight;
+            let bodyH = document.body.scrollHeight;
+            let winH = window.innerHeight;
+            let heightInfo = `<br><b>Hauteur doc:</b> ${docH} | <b>body:</b> ${bodyH} | <b>win:</b> ${winH}`;
             if (typeof oldUpdate2 === 'function') {
-                oldUpdate2(msg + scrollInfo);
+                oldUpdate2(msg + heightInfo + scrollInfo);
             } else {
                 let debugBar = document.getElementById('pwa-debug-bar');
-                if (debugBar) debugBar.innerHTML = msg + scrollInfo;
+                if (debugBar) debugBar.innerHTML = msg + heightInfo + scrollInfo;
             }
         };
         // 4bis. Debug visuel : log la position du dock et du scroll à chaque scroll
