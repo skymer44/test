@@ -962,14 +962,15 @@ main {
 }
 
 /* Sections */
+/* 🧪 TEST DESIGN - Section sans fond blanc */
 .concert-section {
     margin-bottom: 2.5rem; /* Réduit de 3rem à 2.5rem */
-    background: #ffffff;
-    border-radius: 12px;
+    background: transparent; /* 🧪 RETIRÉ: #ffffff */
+    border-radius: 0; /* 🧪 RETIRÉ: 12px */
     padding: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
-    overflow: hidden;
+    box-shadow: none; /* 🧪 RETIRÉ: 0 1px 3px rgba(0, 0, 0, 0.05) */
+    border: none; /* 🧪 RETIRÉ: 1px solid #e2e8f0 */
+    overflow: visible; /* 🧪 CHANGÉ: de hidden à visible */
 }
 
 /* Espacement spécial pour la première section dans l'onglet programmes */
@@ -977,7 +978,7 @@ main {
     margin-top: 2rem; /* Ajouter un espacement en haut de la première section */
 }
 
-/* En-tête de section avec bouton PDF - Desktop */
+/* 🧪 TEST DESIGN - Header de section épuré */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -985,12 +986,12 @@ main {
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
     gap: 1rem;
-    background: #f8fafc;
-    padding: 1.5rem 2rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: transparent; /* 🧪 RETIRÉ: #f8fafc */
+    padding: 1rem 0; /* 🧪 RÉDUIT: de 1.5rem 2rem à 1rem 0 */
+    border-radius: 0; /* 🧪 RETIRÉ: 8px */
+    box-shadow: none; /* 🧪 RETIRÉ: 0 1px 3px rgba(0, 0, 0, 0.05) */
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* 🧪 CHANGÉ: de hidden à visible */
 }
 
 .section-header h2 {
@@ -1093,11 +1094,12 @@ main {
 }
 
 /* Cartes des pièces */
+/* 🧪 TEST DESIGN - Cartes avec fond renforcé */
 .piece-card {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 1.5rem; /* Réduit de 2rem à 1.5rem pour plus de densité */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background: #ffffff; /* Gardé pour contraste */
+    border-radius: 12px; /* 🧪 AUGMENTÉ: de 10px à 12px */
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 🧪 RENFORCÉ: ombre plus visible */
     border: 1px solid #e2e8f0;
     transition: all 0.2s ease;
     position: relative;
@@ -1116,7 +1118,7 @@ main {
 
 .piece-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); /* 🧪 RENFORCÉ: ombre plus marquée */
     border-color: #cbd5e0;
 }
 
