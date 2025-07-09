@@ -3415,6 +3415,11 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         inset 0 1px 3px rgba(72, 187, 120, 0.1);
 }
 
+/* Changer la couleur de la bande du dessus quand la carte est sélectionnée */
+.mini-event-card.selected::before {
+    background: linear-gradient(90deg, #48bb78, #38a169) !important;
+}
+
 /* Bouton moderne flat design à gauche du badge */
 .back-to-default-btn-modern {
     background: #f5f5f5;
