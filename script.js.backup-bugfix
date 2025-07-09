@@ -1365,31 +1365,70 @@ function displayEventError() {
  * Affiche un événement spécifique en tant qu'événement principal
  */
 function displaySpecificEvent(eventData) {
-    console.log(`📱 displaySpecificEvent - Version simplifiée PWA: ${extractCleanTitle(eventData.title)}`);
+    console.log(`📱 displaySpecificEvent - Affichage de: ${extractCleanTitle(eventData.title)}`);
     
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection de mode PWA
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
+    const isMobile = window.innerWidth <= 768;
     
-    // Sauvegarder l'événement sélectionné pour la mise en évidence
+    // Sauvegarder l'événement sélectionné
     window.selectedEventForHighlight = eventData;
     
-    // Afficher l'événement sélectionné comme événement principal
+    // Afficher l'événement principal
     displayMainEvent(eventData);
     
-    // Régénérer les mini-cartes SANS changer l'ordre, juste avec la mise en évidence
+    // Régénérer les mini-cartes sans changer l'ordre
     const currentUpcomingEvents = window.currentUpcomingEvents || [];
     displayUpcomingEventsPreview(currentUpcomingEvents, eventData);
     
-    // Scroll simplifié selon le mode
-    if (isStandalone) {
-        // En mode PWA, scroll instantané simple
-        console.log('🏠 Mode PWA - Scroll instantané vers le haut');
+    // En mode PWA, utiliser l'approche ultra-simple
+    if (isPWA) {
+        console.log('🏠 Mode PWA détecté - Scroll direct');
+        // Pas d'animations complexes, juste un défilement direct et fiable
         window.scrollTo(0, 0);
-    } else {
-        // En mode navigateur, scroll smooth standard
-        autoScrollToTop();
+        
+        // Double vérification après un court délai
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 100);
+        
+        return;
     }
+    
+    // Pour les appareils mobiles non-PWA
+    if (isMobile) {
+        console.log('📱 Défilement sur mobile standard');
+        
+        // Combinaison de scroll instantané suivi de smooth scroll
+        window.scrollTo(0, 0);  // Immédiat pour réactivité
+        
+        setTimeout(() => {
+            // Scroll smooth pour une meilleure expérience
+            if ('scrollBehavior' in document.documentElement.style) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }, 50);
+    } else {
+        // Sur desktop, comportement standard
+        const mainEventContainer = document.getElementById('main-next-event');
+        if (mainEventContainer) {
+            const rect = mainEventContainer.getBoundingClientRect();
+            const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+            
+            // Scroll seulement si nécessaire
+            if (!isVisible) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }
+}
 }
 
 // Fonction pour cacher l'événement spécifique et revenir à l'affichage normal
@@ -1446,11 +1485,11 @@ function backToCurrentEvent() {
  * Gère la sélection d'un mini-événement
  */
 function selectMiniEvent(eventId) {
-    console.log(`📱 selectMiniEvent - Version simplifiée PWA: ${eventId}`);
+    console.log(`📱 selectMiniEvent - Sélection de: ${eventId}`);
     
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection de mode PWA
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
     
     // Trouver l'événement correspondant dans les données globales
     const selectedEvent = window.currentAllEvents.find(event => {
@@ -1461,20 +1500,38 @@ function selectMiniEvent(eventId) {
     });
     
     if (selectedEvent) {
-        // Approche simplifiée selon le mode
-        if (isStandalone) {
-            // En mode PWA, scroll instantané puis affichage
-            console.log('🏠 Mode PWA - Traitement simplifié');
+        // En mode PWA, approche ultra-simplifiée
+        if (isPWA) {
+            console.log('🏠 Mode PWA détecté - Comportement simplifié');
+            // Scroll direct sans animation
             window.scrollTo(0, 0);
+            // Affichage immédiat
+            displaySpecificEvent(selectedEvent);
+            return;
+        }
+        
+        // Comportement pour navigateur standard
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Sur mobile, scroll avant affichage
+            window.scrollTo(0, 0);
+            
+            // Court délai puis affichage
             setTimeout(() => {
                 displaySpecificEvent(selectedEvent);
             }, 100);
         } else {
-            // Mode navigateur normal
+            // Sur desktop, affichage direct
             displaySpecificEvent(selectedEvent);
         }
     } else {
         console.warn('⚠️ Événement non trouvé pour ID:', eventId);
+        console.log('📊 IDs disponibles:', window.currentAllEvents?.map(event => {
+            const eventTitle = extractCleanTitle(event.title);
+            const eventTitleString = String(eventTitle || 'evenement');
+            return `event_${event.date}_${eventTitleString.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        }));
     }
 }
 
@@ -1545,17 +1602,23 @@ function findPieceInPrograms(pieceName) {
  * Navigue vers une pièce spécifique dans l'onglet Programme musical
  */
 function navigateToPieceInPrograms(pieceName) {
-    console.log(`📱 Navigation vers la pièce: "${pieceName}" - Version simplifiée PWA`);
+    console.log(`📱 Navigation vers la pièce: "${pieceName}" - Version PWA compatible`);
     
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection de mode PWA
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
+    const isMobile = window.innerWidth <= 768;
     
     // 1. Basculer vers l'onglet Programme musical
     switchToTab('programmes');
     
-    // 2. Délai simple selon le mode
-    const delay = isStandalone ? 800 : 300;
+    // En mode PWA, utiliser un délai plus court car les animations sont désactivées
+    const delay = isPWA ? 400 : (isMobile ? 600 : 300);
+    
+    console.log(`📱 navigateToPieceInPrograms - Mode: ${isPWA ? 'PWA' : 'Navigateur'}, Délai: ${delay}ms`);
+    
+    // Scroller en haut immédiatement pour aider au chargement de l'onglet
+    window.scrollTo(0, 0);
     
     setTimeout(() => {
         const pieceInfo = findPieceInPrograms(pieceName);
@@ -1563,19 +1626,34 @@ function navigateToPieceInPrograms(pieceName) {
         if (pieceInfo) {
             console.log(`📱 Pièce trouvée: "${pieceInfo.title}"`);
             
-            // Approche simplifiée pour PWA
-            if (isStandalone) {
-                // En mode PWA, seulement scroller et mettre en évidence
-                scrollToPiece(pieceInfo.element);
+            // En mode PWA, approche ultra simplifiée
+            if (isPWA) {
+                // Ajouter directement la classe de mise en évidence
+                pieceInfo.element.classList.add('piece-highlighted');
+                
+                // Scroll direct sans animation
+                const rect = pieceInfo.element.getBoundingClientRect();
+                const scrollPosition = window.pageYOffset + rect.top;
+                window.scrollTo(0, scrollPosition - 120); // Offset fixe pour PWA
+                
+                // Retirer la mise en évidence après un délai
                 setTimeout(() => {
-                    highlightPiece(pieceInfo.element, pieceInfo.title);
-                }, 200);
+                    pieceInfo.element.classList.remove('piece-highlighted');
+                }, 2000);
+                
+                // Vérification supplémentaire après un court délai
+                setTimeout(() => {
+                    const newRect = pieceInfo.element.getBoundingClientRect();
+                    if (newRect.top < 0 || newRect.top > 120) {
+                        window.scrollTo(0, window.pageYOffset + newRect.top - 120);
+                    }
+                }, 300);
             } else {
-                // Mode navigateur normal
+                // Sur navigateur normal, utiliser highlightPiece qui gère les animations
                 highlightPiece(pieceInfo.element, pieceInfo.title);
             }
         } else {
-            // 4. Afficher une notification si la pièce n'est pas trouvée
+            // Notification si la pièce n'est pas trouvée
             showPieceNotFoundNotification(pieceName);
         }
     }, delay);
@@ -1658,40 +1736,89 @@ function switchToTab(targetId) {
  * Met en évidence une pièce avec animation et scroll amélioré
  */
 function highlightPiece(pieceElement, pieceTitle) {
-    console.log(`📱 highlightPiece - Version simplifiée PWA: "${pieceTitle}"`);
+    console.log(`📱 highlightPiece - Mise en évidence de: "${pieceTitle}" - Version PWA compatible`);
     
-    if (!pieceElement) {
-        console.warn('📱 highlightPiece - Élément de pièce non trouvé!');
-        return;
-    }
-    
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection de mode PWA
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
+    const isMobile = window.innerWidth <= 768;
     
     try {
-        // Supprimer toute mise en évidence précédente
-        const previousHighlights = document.querySelectorAll('.piece-highlighted, .piece-highlighted-important');
-        previousHighlights.forEach(element => {
-            element.classList.remove('piece-highlighted', 'piece-highlighted-important');
+        // Nettoyer les éléments précédents
+        document.querySelectorAll('.piece-highlighted, .piece-highlighted-important').forEach(element => {
+            element.classList.remove('piece-highlighted');
+            element.classList.remove('piece-highlighted-important');
         });
         
-        // Ajouter immédiatement la mise en évidence
-        pieceElement.classList.add('piece-highlighted');
-        
-        // En mode PWA, pas de scroll automatique (déjà fait par scrollToPiece)
-        if (!isStandalone) {
-            // En mode navigateur normal, scroller vers la pièce
-            scrollToPiece(pieceElement);
+        // Vérifier l'existence de l'élément
+        if (!pieceElement) {
+            console.warn('⚠️ highlightPiece - Élément non trouvé');
+            return;
         }
         
-        // Supprimer la mise en évidence après 4 secondes
-        setTimeout(() => {
-            pieceElement.classList.remove('piece-highlighted');
-        }, 4000);
+        // En mode PWA: approche ultra-simplifiée
+        if (isPWA) {
+            console.log('🏠 Mode PWA détecté - Mise en évidence simplifiée');
+            
+            // Ajouter la classe de mise en évidence
+            pieceElement.classList.add('piece-highlighted');
+            
+            // Scroll direct sans animation (plus fiable sur PWA iOS)
+            scrollToPiece(pieceElement);
+            
+            // Retirer après un délai
+            setTimeout(() => {
+                pieceElement.classList.remove('piece-highlighted');
+            }, 2000);
+            
+            return;
+        }
         
+        // Pour navigateur normal (non PWA): 
+        // Ajouter la classe immédiatement sur mobile
+        if (isMobile) {
+            pieceElement.classList.add('piece-highlighted');
+        }
+        
+        // Scroller vers la pièce
+        scrollToPiece(pieceElement);
+        
+        // Animation et vérification après le scroll
+        const highlightDelay = isMobile ? 600 : 400;
+        
+        setTimeout(() => {
+            // Sur desktop, ajouter la classe après le scroll
+            if (!isMobile) {
+                pieceElement.classList.add('piece-highlighted');
+            } else {
+                // Sur mobile, rafraîchir l'animation
+                pieceElement.classList.remove('piece-highlighted');
+                setTimeout(() => {
+                    pieceElement.classList.add('piece-highlighted');
+                }, 50);
+            }
+            
+            // Vérifier la visibilité et ajuster si nécessaire
+            setTimeout(() => {
+                const rect = pieceElement.getBoundingClientRect();
+                if (rect.top < 0 || rect.top > window.innerHeight * 0.5) {
+                    scrollToPiece(pieceElement);
+                }
+            }, 200);
+            
+            // Retirer la mise en évidence après un délai
+            setTimeout(() => {
+                pieceElement.classList.remove('piece-highlighted');
+            }, 3000);
+            
+        }, highlightDelay);
     } catch (e) {
-        console.error('📱 Erreur dans highlightPiece:', e);
+        console.error('⚠️ Erreur dans highlightPiece:', e);
+        // En cas d'erreur, tenter une approche minimale
+        if (pieceElement) {
+            pieceElement.classList.add('piece-highlighted');
+            setTimeout(() => pieceElement.classList.remove('piece-highlighted'), 2000);
+        }
     }
 }
 
@@ -4096,39 +4223,18 @@ function setupProgrammeScrollAnimations() {
 }
 
 // ========================================
-// 📱 FONCTIONS UTILITAIRES PWA
-// ========================================
-
-/**
- * Détecte si l'application est en mode PWA standalone
- */
-function isPWAStandalone() {
-    return window.matchMedia('(display-mode: standalone)').matches || 
-           window.navigator.standalone === true ||
-           document.referrer.includes('android-app://');
-}
-
-/**
- * Log simplifié pour le mode PWA
- */
-function logPWA(message) {
-    if (isPWAStandalone()) {
-        console.log(`🏠 PWA: ${message}`);
-    } else {
-        console.log(`🌐 Browser: ${message}`);
-    }
-}
-
-// ========================================
 // 📱 CORRECTION PWA - DOCK FIXE EN MODE STANDALONE
 // ========================================
 
 // 🔧 Fonction pour forcer le positionnement du dock en mode PWA
 function fixPWANavigation() {
-    const isStandalone = isPWAStandalone();
+    // Détecter si on est en mode PWA standalone
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                        window.navigator.standalone === true ||
+                        document.referrer.includes('android-app://');
     
     if (isStandalone) {
-        logPWA('Mode PWA détecté - Application des corrections navigation');
+        console.log('🏠 Mode PWA détecté - Application des corrections navigation');
         
         const mobileNav = document.querySelector('.mobile-bottom-nav');
         if (mobileNav) {
@@ -4140,12 +4246,12 @@ function fixPWANavigation() {
             mobileNav.style.zIndex = '10000';
             mobileNav.style.transform = 'translateZ(0)';
             mobileNav.style.willChange = 'transform';
-            mobileNav.style.background = 'transparent';
+            mobileNav.style.background = 'transparent'; // ✨ Transparent pour ne pas masquer
             
-            logPWA('Navigation mobile forcée en position fixe');
+            console.log('✅ Navigation mobile forcée en position fixe pour PWA');
         }
         
-        // Ajuster le body pour éviter les problèmes de scroll
+        // Ajuster le body pour éviter les problèmes de scroll et masquer Home Indicator
         document.body.style.position = 'relative';
         document.body.style.overflowX = 'hidden';
         document.body.style.webkitUserSelect = 'none';
@@ -4153,7 +4259,7 @@ function fixPWANavigation() {
         document.body.style.webkitTouchCallout = 'none';
         document.body.style.webkitTapHighlightColor = 'transparent';
         
-        // Techniques pour masquer le Home Indicator
+        // ✨ NOUVEAU : Techniques pour masquer le Home Indicator
         document.documentElement.style.height = '100%';
         document.documentElement.style.touchAction = 'pan-x pan-y';
         document.documentElement.style.webkitOverflowScrolling = 'touch';
@@ -4165,7 +4271,7 @@ function fixPWANavigation() {
                 'width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui');
         }
         
-        logPWA('Tentative de masquage du Home Indicator iPhone');
+        console.log('🏠 Tentative de masquage du Home Indicator iPhone');
     }
 }
 
@@ -4179,46 +4285,6 @@ function watchDisplayMode() {
 
 // 🔧 Initialiser les corrections PWA
 document.addEventListener('DOMContentLoaded', function() {
-    const isStandalone = isPWAStandalone();
-    
-    if (isStandalone) {
-        logPWA('Initialisation des optimisations PWA');
-        
-        // Désactiver les animations CSS complexes en mode PWA pour éviter les problèmes
-        const pwaStyles = document.createElement('style');
-        pwaStyles.id = 'pwa-optimizations';
-        pwaStyles.textContent = `
-            /* Optimisations PWA - Animations simplifiées */
-            * {
-                -webkit-transform: translateZ(0);
-                transform: translateZ(0);
-            }
-            
-            .piece-highlighted {
-                animation: none !important;
-                border: 2px solid #667eea !important;
-                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
-                transition: all 0.2s ease !important;
-            }
-            
-            /* Scroll plus fluide en PWA */
-            html {
-                scroll-behavior: auto !important;
-            }
-            
-            /* Éviter les problèmes de repaint */
-            .main-next-event,
-            .mini-event-card,
-            .piece-card {
-                will-change: auto;
-                transform: translateZ(0);
-            }
-        `;
-        document.head.appendChild(pwaStyles);
-        
-        logPWA('Styles d\'optimisation PWA appliqués');
-    }
-    
     fixPWANavigation();
     watchDisplayMode();
     
@@ -4238,83 +4304,117 @@ window.addEventListener('orientationchange', function() {
 // ========================================
 
 /**
- * Fonction simplifiée pour scroll vers le haut - VERSION PWA COMPATIBLE
+ * Fonction ultra-simplifiée pour faire remonter automatiquement quand on clique sur un événement
+ * Optimisé pour fonctionner en mode PWA iOS
  */
 function autoScrollToTop() {
-    console.log('📱 autoScrollToTop - Version simplifiée PWA');
+    console.log('📱 autoScrollToTop - Version PWA compatible');
     
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection spécifique de mode PWA sur iOS
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
     
-    // En mode PWA, utiliser seulement un scroll instantané simple
-    if (isStandalone) {
-        console.log('🏠 Mode PWA détecté - Scroll instantané');
-        window.scrollTo(0, 0);
-        return;
+    // Scroll instantané qui fonctionne toujours, même en PWA
+    window.scrollTo(0, 0);
+    
+    // Pour les appareils non-PWA, ajouter un smooth scroll après un court délai
+    if (!isPWA && 'scrollBehavior' in document.documentElement.style) {
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 50);
     }
     
-    // En mode navigateur normal, comportement standard
-    try {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    } catch (e) {
-        // Fallback simple
-        window.scrollTo(0, 0);
-    }
+    // Double vérification après un délai
+    setTimeout(() => {
+        if (window.pageYOffset > 10) {
+            console.log('📱 Second scroll forcé');
+            window.scrollTo(0, 0);
+        }
+    }, 300);
 }
 
 /**
- * Fonction améliorée pour scroll vers une pièce - VERSION CORRIGÉE POUR MOBILE
- */
-/**
- * Fonction simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE
+ * Fonction ultra-simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE
+ * Optimisée pour fonctionner en mode PWA sur iOS
  */
 function scrollToPiece(element) {
-    console.log('📱 scrollToPiece - Version simplifiée PWA');
-    
     if (!element) {
-        console.warn('📱 Element non trouvé pour scrollToPiece');
+        console.warn('📱 scrollToPiece - Élément non trouvé');
         return;
     }
     
-    // Détecter si on est en mode PWA standalone
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                        window.navigator.standalone === true;
+    // Détection de mode PWA
+    const isPWA = window.navigator.standalone === true || 
+                 window.matchMedia('(display-mode: standalone)').matches;
+    const isMobile = window.innerWidth <= 768;
     
-    // En mode PWA, approche ultra-simple
-    if (isStandalone) {
-        console.log('🏠 Mode PWA détecté - Scroll simple vers élément');
-        
-        try {
-            // Calcul simple de la position
-            const rect = element.getBoundingClientRect();
-            const targetPosition = window.pageYOffset + rect.top - 100; // Offset fixe de 100px
-            
-            // Scroll instantané en PWA pour éviter les problèmes
-            window.scrollTo(0, Math.max(0, targetPosition));
-        } catch (e) {
-            console.warn('📱 Erreur scroll PWA:', e);
-            // Fallback: essayer juste scrollIntoView
-            element.scrollIntoView({ block: 'start' });
-        }
-        return;
-    }
+    console.log(`📱 scrollToPiece - Mode: ${isPWA ? 'PWA' : 'Navigateur'}, Mobile: ${isMobile}`);
     
-    // En mode navigateur normal, comportement standard mais simplifié
     try {
+        // Calculer la position de l'élément
         const rect = element.getBoundingClientRect();
-        const targetPosition = window.pageYOffset + rect.top - 100;
+        const scrollPosition = window.pageYOffset + rect.top;
+        // Offset plus grand pour mobile pour tenir compte de la navbar
+        const offset = isMobile ? 120 : 80;
+        const targetPosition = scrollPosition - offset;
         
-        window.scrollTo({
-            top: Math.max(0, targetPosition),
-            behavior: 'smooth'
-        });
+        console.log(`📱 scrollToPiece - Position cible: ${targetPosition}`);
+        
+        // En mode PWA, utiliser uniquement le scroll instantané qui est fiable
+        if (isPWA) {
+            window.scrollTo(0, targetPosition);
+            
+            // Pour PWA iOS, parfois un second scroll est nécessaire après un court délai
+            setTimeout(() => {
+                // Recalculer car le DOM peut avoir changé
+                const newRect = element.getBoundingClientRect();
+                if (newRect.top < 0 || newRect.top > 120) {
+                    const newPosition = window.pageYOffset + newRect.top - offset;
+                    window.scrollTo(0, newPosition);
+                }
+            }, 100);
+            
+            // Ajouter une classe de mise en évidence temporaire
+            element.classList.add('pwa-highlighted');
+            setTimeout(() => {
+                element.classList.remove('pwa-highlighted');
+            }, 2000);
+            
+            return;
+        }
+        
+        // Pour les navigateurs standards (non PWA), utiliser smooth scroll si disponible
+        if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        } else {
+            // Fallback simple pour anciens navigateurs
+            window.scrollTo(0, targetPosition);
+        }
+        
+        // Vérification de position après un délai
+        if (isMobile) {
+            setTimeout(() => {
+                const finalRect = element.getBoundingClientRect();
+                // Si l'élément n'est pas bien visible, ajuster
+                if (finalRect.top < 0 || finalRect.top > 120) {
+                    window.scrollTo(0, window.pageYOffset + finalRect.top - offset);
+                }
+            }, 300);
+        }
     } catch (e) {
-        // Fallback simple
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        console.error('📱 Erreur lors du défilement:', e);
+        // En cas d'erreur, essayer un scroll simple vers l'élément
+        try {
+            element.scrollIntoView({behavior: 'auto', block: 'start'});
+        } catch (err) {
+            // Silence en cas d'échec
+        }
     }
 }
 
