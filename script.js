@@ -19,50 +19,64 @@ function fixPWAStyles() {
     
     if (isStandalone) {
         logPWA('🔧 Application des corrections CSS PWA...');
-        
+
         // 1. Corriger le body pour permettre le scroll naturel
         document.body.style.overflowY = 'auto';
         document.body.style.webkitOverflowScrolling = 'touch';
-        
+
         // 2. S'assurer que html permet le scroll
         document.documentElement.style.overflowY = 'auto';
         document.documentElement.style.webkitOverflowScrolling = 'touch';
-        
+
         // 3. Corriger main pour avoir le bon padding
         const mainElement = document.querySelector('main');
         if (mainElement) {
             mainElement.style.paddingBottom = 'calc(120px + env(safe-area-inset-bottom))';
             mainElement.style.minHeight = 'auto'; // Laisser la hauteur naturelle
         }
-        
-        // 4. S'assurer que la navigation reste fixe
+
+        // 4. S'assurer que la navigation reste FIXÉE EN BAS même en PWA iOS
         const mobileNav = document.querySelector('.mobile-bottom-nav');
         if (mobileNav) {
-            mobileNav.style.position = 'fixed';
-            mobileNav.style.bottom = '0';
-            mobileNav.style.left = '0';
-            mobileNav.style.right = '0';
-            mobileNav.style.zIndex = '9999';
+            // Hack iOS : utiliser 100vh JS pour fixer le dock
+            function updateDockPosition() {
+                const vh = window.innerHeight;
+                mobileNav.style.position = 'fixed';
+                mobileNav.style.left = '0';
+                mobileNav.style.right = '0';
+                mobileNav.style.zIndex = '9999';
+                mobileNav.style.bottom = '0';
+                mobileNav.style.width = '100vw';
+                // Empêcher le dock de "remonter" en haut
+                mobileNav.style.transform = 'translateY(0)';
+                mobileNav.style.visibility = 'visible';
+                mobileNav.style.opacity = '1';
+                // Forcer la hauteur du dock si besoin
+                if (!mobileNav.style.height) {
+                    mobileNav.style.height = '64px';
+                }
+            }
+            updateDockPosition();
+            window.addEventListener('resize', updateDockPosition);
+            window.addEventListener('orientationchange', updateDockPosition);
         }
-        
+
         // 5. 🔧 AJOUT : Injecter CSS correctif pour PWA
         const style = document.createElement('style');
         style.id = 'pwa-fixes';
         style.textContent = `
             @media (display-mode: standalone) {
-                /* 🔧 CORRECTION CRITIQUE : Forcer le scroll fluide en PWA */
-                html {
+                html, body {
                     scroll-behavior: smooth !important;
                     overflow-y: auto !important;
                     -webkit-overflow-scrolling: touch !important;
+                    height: 100vh !important;
+                    min-height: 100vh !important;
                 }
-                
-                body {
-                    overflow-y: auto !important;
-                    -webkit-overflow-scrolling: touch !important;
+                main {
+                    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+                    min-height: auto !important;
                 }
-                
-                /* 🔧 CORRECTION CRITIQUE : Navigation mobile TOUJOURS visible et fixe */
                 .mobile-bottom-nav {
                     display: flex !important;
                     position: fixed !important;
@@ -72,51 +86,65 @@ function fixPWAStyles() {
                     z-index: 9999 !important;
                     visibility: visible !important;
                     opacity: 1 !important;
-                    transform: none !important;
-                    /* Empêcher toute animation qui pourrait masquer le dock */
+                    width: 100vw !important;
+                    transform: translateY(0) !important;
                     transition: none !important;
                     will-change: auto !important;
                 }
-                
-                /* S'assurer que le container est aussi visible */
                 .mobile-nav-container {
                     display: flex !important;
                     visibility: visible !important;
                     opacity: 1 !important;
                     pointer-events: auto !important;
                 }
-                
-                /* Contenu principal avec espace suffisant GARANTI */
-                main {
-                    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
-                    min-height: auto !important;
-                }
-                
-                /* Corriger les conteneurs qui pourraient poser problème */
                 .container {
                     min-height: auto !important;
                 }
-                
-                /* 🔧 NOUVEAU : Empêcher les transformations qui pourraient cacher le dock */
                 .mobile-bottom-nav * {
                     transform: none !important;
                 }
             }
         `;
-        
+
         // Supprimer l'ancien style s'il existe
         const existingStyle = document.getElementById('pwa-fixes');
         if (existingStyle) {
             existingStyle.remove();
         }
-        
+
         document.head.appendChild(style);
-        
+
         logPWA('✅ Corrections CSS PWA appliquées');
-        
+
         // 6. Corriger les problèmes de scroll spécifiques PWA
         fixPWAScrollBehavior();
     }
+// Correction du scroll automatique vers une pièce en PWA iOS
+function scrollToPiece(pieceId) {
+    const isStandalone = isPWAStandalone();
+    const el = document.getElementById(pieceId);
+    if (!el) return;
+
+    // Calculer la hauteur du dock pour éviter de le masquer
+    const dock = document.querySelector('.mobile-bottom-nav');
+    let dockHeight = 0;
+    if (dock && getComputedStyle(dock).display !== 'none') {
+        dockHeight = dock.offsetHeight || 64;
+    }
+
+    // Calculer la position cible en tenant compte du dock
+    const rect = el.getBoundingClientRect();
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const targetY = rect.top + scrollTop - dockHeight - 16; // 16px de marge
+
+    if (isStandalone && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        // iOS PWA : utiliser window.scrollTo avec options
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+    } else {
+        // Autres cas : scroll classique
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 }
 
 /**
