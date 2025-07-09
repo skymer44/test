@@ -3674,10 +3674,35 @@ function initPDFGeneration() {
     // Fonction pour configurer les boutons PDF
     function setupPDFButtons() {
         document.querySelectorAll('.pdf-download-btn').forEach(button => {
-            button.addEventListener('click', function() {
+            // Supprimer l'ancien listener s'il existe
+            button.removeEventListener('click', button._pdfClickHandler);
+            
+            // Créer un nouveau handler
+            button._pdfClickHandler = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Empêcher les clics multiples rapides
+                if (button.disabled) return;
+                button.disabled = true;
+                
                 const sectionId = this.getAttribute('data-section');
-                generatePDF(sectionId);
-            });
+                console.log('📄 Génération PDF pour:', sectionId);
+                
+                try {
+                    generatePDF(sectionId);
+                } catch (error) {
+                    console.error('Erreur PDF:', error);
+                } finally {
+                    // Réactiver le bouton après un délai
+                    setTimeout(() => {
+                        button.disabled = false;
+                    }, 1000);
+                }
+            };
+            
+            // Ajouter le nouveau listener
+            button.addEventListener('click', button._pdfClickHandler);
         });
     }
     
@@ -4352,5 +4377,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (upcomingEventsList) {
         eventsObserver.observe(upcomingEventsList, { childList: true, subtree: true });
+    }
+});
+
+// Délégation d'événements globale pour les boutons PDF (solution de secours)
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('pdf-download-btn') || e.target.closest('.pdf-download-btn')) {
+        const button = e.target.classList.contains('pdf-download-btn') ? e.target : e.target.closest('.pdf-download-btn');
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Empêcher les clics multiples rapides
+        if (button.disabled || button.hasAttribute('data-processing')) return;
+        
+        button.setAttribute('data-processing', 'true');
+        
+        const sectionId = button.getAttribute('data-section');
+        console.log('📄 Délégation PDF pour:', sectionId);
+        
+        try {
+            if (typeof window.jspdf !== 'undefined') {
+                generatePDF(sectionId);
+            } else {
+                alert('PDF non disponible');
+            }
+        } catch (error) {
+            console.error('Erreur PDF:', error);
+            alert('Erreur lors de la génération du PDF');
+        } finally {
+            // Nettoyer après un délai
+            setTimeout(() => {
+                button.removeAttribute('data-processing');
+            }, 2000);
+        }
     }
 });
