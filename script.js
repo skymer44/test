@@ -539,13 +539,28 @@ function initTabs() {
         // Trouver l'index de l'item actif
         const activeIndex = Array.from(items).indexOf(activeItem);
         
-        // Calculer la position de l'indicateur (33.333% par item)
-        const indicatorPosition = `${activeIndex * 100}%`;
+        // 🔧 CORRECTION PROFONDE : Calculer la position en pixels, pas en pourcentage
+        const containerRect = container.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+        const paddingLeft = 8; // 0.5rem padding du container
+        const paddingRight = 8; // 0.5rem padding du container
         
-        // Appliquer l'animation CSS custom property
-        container.style.setProperty('--nav-indicator-position', indicatorPosition);
+        // Largeur d'un item (diviser l'espace disponible par le nombre d'items)
+        const availableWidth = containerWidth - paddingLeft - paddingRight;
+        const itemWidth = availableWidth / items.length;
         
-        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
+        // Position de l'indicateur (décalage depuis le bord gauche du container)
+        const indicatorPosition = activeIndex * itemWidth;
+        
+        // Appliquer la position ET la largeur
+        container.style.setProperty('--nav-indicator-position', `${indicatorPosition}px`);
+        container.style.setProperty('--nav-indicator-width', `${itemWidth}px`);
+        
+        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex}:`);
+        console.log(`   - Container width: ${containerWidth}px`);
+        console.log(`   - Available width: ${availableWidth}px`);
+        console.log(`   - Item width: ${itemWidth}px`);
+        console.log(`   - Indicator position: ${indicatorPosition}px`);
     }
     
     // Gérer les clics sur les boutons d'onglets desktop
@@ -570,15 +585,37 @@ function initTabs() {
     // Activer le premier onglet par défaut
     if (tabButtons.length > 0) {
         const firstTabId = tabButtons[0].getAttribute('data-tab');
-        // Initialiser l'indicateur au premier onglet
+        // Initialiser les indicateurs au premier onglet
         setTimeout(() => {
             const firstButton = tabButtons[0];
+            const firstMobileItem = document.querySelector('.mobile-nav-item.active');
+            
             if (firstButton) {
                 animateTabIndicator(firstButton);
+            }
+            
+            if (firstMobileItem) {
+                animateMobileIndicator(firstMobileItem);
             }
         }, 100);
         showTab(firstTabId);
     }
+    
+    // 🔧 CORRECTION : Recalculer les indicateurs lors du redimensionnement
+    window.addEventListener('resize', () => {
+        setTimeout(() => {
+            const activeButton = document.querySelector('.tab-button.active');
+            const activeMobileItem = document.querySelector('.mobile-nav-item.active');
+            
+            if (activeButton) {
+                animateTabIndicator(activeButton);
+            }
+            
+            if (activeMobileItem) {
+                animateMobileIndicator(activeMobileItem);
+            }
+        }, 100);
+    });
 }
 
 // � FONCTION POUR DÉCLENCHER LES ANIMATIONS SPÉCIFIQUES À CHAQUE ONGLET
@@ -1641,13 +1678,30 @@ function switchToTab(targetId) {
             // Trouver l'index de l'item actif
             const activeIndex = Array.from(allMobileItems).indexOf(activeMobileItem);
             if (activeIndex !== -1) {
-                // Calculer la position de l'indicateur (33.333% par item sur 3 onglets)
-                const indicatorPosition = `${activeIndex * (100 / allMobileItems.length)}%`;
+                // 🔧 CORRECTION PROFONDE : Calculer la position en pixels, pas en pourcentage
+                // L'indicateur doit se déplacer selon la largeur réelle de chaque item
                 
-                // Appliquer l'animation CSS custom property
-                mobileContainer.style.setProperty('--nav-indicator-position', indicatorPosition);
+                const containerRect = mobileContainer.getBoundingClientRect();
+                const containerWidth = containerRect.width;
+                const paddingLeft = 8; // 0.5rem padding du container
+                const paddingRight = 8; // 0.5rem padding du container
                 
-                console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
+                // Largeur d'un item (diviser l'espace disponible par le nombre d'items)
+                const availableWidth = containerWidth - paddingLeft - paddingRight;
+                const itemWidth = availableWidth / allMobileItems.length;
+                
+                // Position de l'indicateur (décalage depuis le bord gauche du container)
+                const indicatorPosition = activeIndex * itemWidth;
+                
+                // Appliquer la position ET la largeur
+                mobileContainer.style.setProperty('--nav-indicator-position', `${indicatorPosition}px`);
+                mobileContainer.style.setProperty('--nav-indicator-width', `${itemWidth}px`);
+                
+                console.log(`🎨 Animation indicateur mobile vers position ${activeIndex}:`);
+                console.log(`   - Container width: ${containerWidth}px`);
+                console.log(`   - Available width: ${availableWidth}px`);
+                console.log(`   - Item width: ${itemWidth}px`);
+                console.log(`   - Indicator position: ${indicatorPosition}px`);
             }
         }
     }
@@ -4309,7 +4363,7 @@ function autoScrollToTop() {
  * Fonction améliorée pour scroll vers une pièce - VERSION CORRIGÉE POUR MOBILE
  */
 /**
- * Fonction simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE
+ * Fonction simplifiée pour scroll vers une pièce - VERSION PWA COMPATIBLE RENFORCÉE
  */
 function scrollToPiece(element) {
     const isStandalone = isPWAStandalone();
@@ -4320,22 +4374,49 @@ function scrollToPiece(element) {
         return;
     }
     
-    // En mode PWA, approche ultra-simple
+    // En mode PWA, approche renforcée multi-stratégies
     if (isStandalone) {
-        logPWA('Scroll simple vers élément');
+        logPWA('Mode PWA - Scroll renforcé multi-stratégies');
         
         try {
-            // Calcul simple de la position
+            // Stratégie 1 : Position immédiate calculée
             const rect = element.getBoundingClientRect();
-            const targetPosition = window.pageYOffset + rect.top - 100; // Offset fixe de 100px
+            const targetPosition = window.pageYOffset + rect.top - 100;
             
-            // Scroll instantané en PWA pour éviter les problèmes
+            // Scroll instantané en PWA
             window.scrollTo(0, Math.max(0, targetPosition));
-            logPWA(`Position calculée: ${targetPosition}, scroll vers: ${Math.max(0, targetPosition)}`);
+            logPWA(`Stratégie 1 - Position: ${targetPosition}, scroll vers: ${Math.max(0, targetPosition)}`);
+            
+            // Stratégie 2 : Vérification et correction après 100ms
+            setTimeout(() => {
+                const newRect = element.getBoundingClientRect();
+                if (newRect.top > window.innerHeight || newRect.top < 0) {
+                    logPWA('Stratégie 2 - Correction nécessaire');
+                    const correctedPosition = window.pageYOffset + newRect.top - 100;
+                    window.scrollTo(0, Math.max(0, correctedPosition));
+                }
+            }, 100);
+            
+            // Stratégie 3 : Backup avec scrollIntoView après 250ms
+            setTimeout(() => {
+                const finalRect = element.getBoundingClientRect();
+                if (finalRect.top > window.innerHeight || finalRect.top < 50) {
+                    logPWA('Stratégie 3 - Backup scrollIntoView');
+                    element.scrollIntoView({ 
+                        behavior: 'auto', // Force auto en PWA
+                        block: 'center'
+                    });
+                }
+            }, 250);
+            
         } catch (e) {
             console.warn('📱 Erreur scroll PWA:', e);
-            // Fallback: essayer juste scrollIntoView
-            element.scrollIntoView({ block: 'start' });
+            // Fallback ultime
+            try {
+                element.scrollIntoView({ block: 'start' });
+            } catch (fallbackError) {
+                console.error('📱 Erreur fallback:', fallbackError);
+            }
         }
         return;
     }
