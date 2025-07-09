@@ -3692,10 +3692,10 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         display: none !important;
     }
     
-    /* Neutraliser les styles h2 conflictuels dans la bulle */
+    /* Neutraliser les styles h2 conflictuels dans la bulle - AVEC GESTION TEXTE LONG */
     #programmes .header-bubble h2 {
         color: #2d3748 !important;
-        font-size: 1.4rem !important;
+        font-size: 1.25rem !important; /* 🔄 RÉDUIT: de 1.4rem à 1.25rem pour économiser de l'espace */
         text-align: center !important;
         margin: 0 !important;
         font-weight: 600 !important;
@@ -3706,12 +3706,15 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: none !important;
-        flex: 0 0 auto !important;
+        flex: 1 1 auto !important; /* 🔄 CHANGÉ: de "0 0 auto" à "1 1 auto" pour permettre le rétrécissement */
         line-height: 1.2 !important;
-        white-space: nowrap !important;
+        white-space: normal !important; /* 🔄 CHANGÉ: de "nowrap" à "normal" pour permettre le retour à la ligne */
         height: auto !important;
         min-height: auto !important;
         display: block !important;
+        overflow-wrap: break-word !important; /* 🔄 AJOUTÉ: pour casser les mots trop longs */
+        word-wrap: break-word !important; /* 🔄 AJOUTÉ: pour meilleure compatibilité */
+        max-width: 100% !important; /* 🔄 AJOUTÉ: pour éviter le débordement */
     }
     
     /* Container de pièces mobile délicat */
