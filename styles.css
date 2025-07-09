@@ -2534,6 +2534,37 @@ section:target {
 /* Les mini-cartes gardent leurs couleurs d'origine selon le type d'événement */
 /* (pas de surcharge, elles utilisent les couleurs définies plus bas dans le CSS) */
 
+/* ========================================
+   BOUTON RETOUR EN HAUT - COULEURS DYNAMIQUES
+   ======================================== */
+
+/* 🟢 ONGLET ÉVÉNEMENTS - Bouton vert */
+.tab-buttons[data-active-tab="prochains-evenements"] ~ * .back-to-top,
+body:has(.tab-buttons[data-active-tab="prochains-evenements"]) .back-to-top {
+    --back-to-top-bg: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    --back-to-top-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+/* 🔵 ONGLET PROGRAMMES - Bouton bleu (par défaut) */
+.tab-buttons[data-active-tab="programmes"] ~ * .back-to-top,
+body:has(.tab-buttons[data-active-tab="programmes"]) .back-to-top {
+    --back-to-top-bg: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+    --back-to-top-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+/* 🔴 ONGLET PARTITIONS - Bouton rouge */
+.tab-buttons[data-active-tab="partitions"] ~ * .back-to-top,
+body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
+    --back-to-top-bg: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    --back-to-top-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Style hover pour le bouton retour en haut */
+.back-to-top:hover {
+    transform: translateY(-3px) scale(1.05);
+    filter: brightness(1.1);
+}
+
 /* 🔵 ONGLET PROGRAMMES - Couleurs bleues (inchangées, pour référence) */
 #programmes .section-header h2:after,
 #programmes .concert-section h2:after {

@@ -436,6 +436,11 @@ function initTabs() {
         if (tabButtonsContainer) {
             tabButtonsContainer.setAttribute('data-active-tab', targetId);
         }
+
+        // 🎨 BOUTON RETOUR EN HAUT - Mettre à jour les couleurs dynamiquement
+        if (typeof updateBackToTopColors === 'function') {
+            updateBackToTopColors(targetId);
+        }
         
         // 🌊 ANIMATION VAGUE FLUIDE - Calculer et animer l'indicateur
         const targetButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
@@ -3153,38 +3158,65 @@ function addBackToTopButton() {
     }
     
     const backToTopButton = document.createElement('button');
-    backToTopButton.innerHTML = '↑';
+    backToTopButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 14l5-5 5 5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    `;
     backToTopButton.className = 'back-to-top';
     backToTopButton.style.cssText = `
         position: fixed;
         bottom: 2rem;
         right: 2rem;
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        background: #4299e1;
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background: var(--back-to-top-bg, linear-gradient(135deg, #4299e1 0%, #667eea 100%));
         color: white;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        box-shadow: var(--back-to-top-shadow, 0 4px 12px rgba(66, 153, 225, 0.3));
         opacity: 0;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1000;
         font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     `;
     
     document.body.appendChild(backToTopButton);
     
-    // Effet hover
+    // Effet hover dynamique selon l'onglet actif
     backToTopButton.addEventListener('mouseenter', function() {
-        this.style.background = '#3182ce';
-        this.style.transform = 'translateY(-2px)';
+        const currentTab = document.querySelector('.tab-buttons')?.getAttribute('data-active-tab') || 'programmes';
+        
+        // Couleurs hover plus foncées selon l'onglet
+        const hoverColors = {
+            'prochains-evenements': 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)',
+            'programmes': 'linear-gradient(135deg, #3182ce 0%, #5a67d8 100%)',
+            'partitions': 'linear-gradient(135deg, #c53030 0%, #9c2c2c 100%)'
+        };
+        
+        this.style.background = hoverColors[currentTab] || hoverColors['programmes'];
+        this.style.transform = 'translateY(-3px) scale(1.05)';
     });
     
     backToTopButton.addEventListener('mouseleave', function() {
-        this.style.background = '#4299e1';
-        this.style.transform = 'translateY(0)';
+        const currentTab = document.querySelector('.tab-buttons')?.getAttribute('data-active-tab') || 'programmes';
+        
+        // Couleurs normales selon l'onglet
+        const normalColors = {
+            'prochains-evenements': 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+            'programmes': 'linear-gradient(135deg, #4299e1 0%, #667eea 100%)',
+            'partitions': 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)'
+        };
+        
+        this.style.background = normalColors[currentTab] || normalColors['programmes'];
+        this.style.transform = 'translateY(0) scale(1)';
     });
     
     // Afficher/masquer le bouton selon la position de scroll
@@ -3203,6 +3235,34 @@ function addBackToTopButton() {
             behavior: 'smooth'
         });
     });
+
+    // 🎨 FONCTION POUR METTRE À JOUR LES COULEURS DU BOUTON RETOUR EN HAUT
+    window.updateBackToTopColors = function(targetId) {
+        const backToTopButton = document.querySelector('.back-to-top');
+        if (!backToTopButton) return;
+
+        // Définir les couleurs selon l'onglet
+        const colors = {
+            'prochains-evenements': {
+                bg: 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)',
+                shadow: '0 4px 12px rgba(72, 187, 120, 0.3)'
+            },
+            'programmes': {
+                bg: 'linear-gradient(135deg, #4299e1 0%, #667eea 100%)',
+                shadow: '0 4px 12px rgba(66, 153, 225, 0.3)'
+            },
+            'partitions': {
+                bg: 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)',
+                shadow: '0 4px 12px rgba(229, 62, 62, 0.3)'
+            }
+        };
+
+        const color = colors[targetId] || colors['programmes']; // Fallback vers bleu
+        backToTopButton.style.background = color.bg;
+        backToTopButton.style.boxShadow = color.shadow;
+        
+        console.log(`🎨 Bouton retour en haut mis à jour pour l'onglet: ${targetId}`);
+    };
 }
 
 // Fonction pour ajouter la recherche
