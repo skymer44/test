@@ -20,13 +20,18 @@ function fixPWAStyles() {
     if (isStandalone) {
         logPWA('🔧 Application des corrections CSS PWA...');
 
-        // 1. Corriger le body pour permettre le scroll naturel
-        document.body.style.overflowY = 'auto';
-        document.body.style.webkitOverflowScrolling = 'touch';
 
-        // 2. S'assurer que html permet le scroll
-        document.documentElement.style.overflowY = 'auto';
-        document.documentElement.style.webkitOverflowScrolling = 'touch';
+    // 1. Forcer html/body à overflow/height auto/initial (aucune restriction)
+    document.body.style.overflow = 'auto';
+    document.body.style.overflowY = 'auto';
+    document.body.style.height = 'auto';
+    document.body.style.minHeight = '0';
+    document.body.style.webkitOverflowScrolling = 'touch';
+    document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.overflowY = 'auto';
+    document.documentElement.style.height = 'auto';
+    document.documentElement.style.minHeight = '0';
+    document.documentElement.style.webkitOverflowScrolling = 'touch';
 
         // 3. Corriger main pour avoir le bon padding
         const mainElement = document.querySelector('main');
@@ -36,8 +41,12 @@ function fixPWAStyles() {
         }
 
         // 4. S'assurer que la navigation reste FIXÉE EN BAS même en PWA iOS
-        const mobileNav = document.querySelector('.mobile-bottom-nav');
+        let mobileNav = document.querySelector('.mobile-bottom-nav');
         if (mobileNav) {
+            // Déplacer le dock tout en bas du body (portal)
+            if (mobileNav.parentNode !== document.body) {
+                document.body.appendChild(mobileNav);
+            }
             // Fixe le dock en bas avec le safe-area iOS
             mobileNav.style.position = 'fixed';
             mobileNav.style.left = '0';
@@ -49,6 +58,8 @@ function fixPWAStyles() {
             mobileNav.style.visibility = 'visible';
             mobileNav.style.opacity = '1';
             mobileNav.style.height = '';
+            // Debug visuel temporaire
+            mobileNav.style.outline = '2px solid red';
         }
 
         // 5. 🔧 AJOUT : Injecter CSS correctif pour PWA
@@ -119,9 +130,20 @@ function scrollToPiece(pieceId) {
     const dock = document.querySelector('.mobile-bottom-nav');
     let dockHeight = 0;
     let safeArea = 0;
+    // Mesure réelle du safe-area
     if (window.CSS && CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
-        safeArea = parseInt(getComputedStyle(document.documentElement).getPropertyValue('padding-bottom')) || 0;
-        // fallback: 0 si non défini
+        // Crée un élément temporaire pour mesurer la valeur réelle
+        const temp = document.createElement('div');
+        temp.style.position = 'fixed';
+        temp.style.bottom = 'env(safe-area-inset-bottom)';
+        temp.style.height = '1px';
+        temp.style.width = '1px';
+        temp.style.visibility = 'hidden';
+        document.body.appendChild(temp);
+        const tempRect = temp.getBoundingClientRect();
+        safeArea = window.innerHeight - tempRect.bottom;
+        document.body.removeChild(temp);
+        if (safeArea < 0) safeArea = 0;
     }
     if (dock && getComputedStyle(dock).display !== 'none') {
         dockHeight = dock.offsetHeight || 64;
