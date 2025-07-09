@@ -1,9 +1,15 @@
-// 📱 PWA Service Worker Registration (simple)
+// 📱 PWA Service Worker Registration (optimisé v20250709)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
         try {
             const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('✅ Service Worker enregistré');
+            console.log('✅ Service Worker enregistré avec succès');
+            
+            // Vérifier les mises à jour
+            registration.addEventListener('updatefound', () => {
+                console.log('🔄 Mise à jour PWA disponible');
+            });
+            
         } catch (error) {
             console.error('❌ Échec Service Worker:', error);
         }

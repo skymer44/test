@@ -2,14 +2,14 @@
   "name": "Fiche Musicien",
   "short_name": "Fiche Musicien",
   "description": "Fiche Musicien - Toutes les informations du musicien d'orchestre",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
-  "display_override": ["standalone", "fullscreen", "minimal-ui"],
-  "orientation": "portrait-primary",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "theme_color": "#667eea",
   "background_color": "#f7fafc",
   "lang": "fr",
-  "scope": "/",
+  "scope": "./",
   "icons": [
     {
       "src": "icons/icon-72x72.svg",

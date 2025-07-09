@@ -15,14 +15,38 @@ body {
     line-height: 1.6;
     color: #1a202c;
     background-color: #f7fafc;
-    /* Masquer la barre de statut autant que possible */
+    /* Optimisations PWA iOS */
     padding-top: env(safe-area-inset-top);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Améliorer les performances de défilement sur iOS */
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Styles pour application PWA en plein écran */
 @media (display-mode: standalone) {
     body {
         padding-top: 0;
+        /* Optimisations spécifiques PWA */
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+    }
+    
+    /* Désactiver le zoom sur les inputs en mode PWA */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Support pour les préférences de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
@@ -611,6 +635,9 @@ header h1 {
         pointer-events: auto;
         position: relative;
         overflow: hidden;
+        /* Optimisation pour les performances */
+        will-change: transform;
+        transform: translateZ(0);
     }
     
     /* Indicateur flottant animé */

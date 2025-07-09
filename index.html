@@ -5,36 +5,30 @@
     
     <!-- PWA Configuration -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f7fafc">
+    <meta name="theme-color" content="#667eea">
     <meta name="background-color" content="#f7fafc">
     
     <!-- iOS Specific Meta Tags for PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Musical 2026">
-    <!-- ✨ NOUVEAU : Masquer définitivement le Home Indicator iPhone -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="apple-touch-icon" href="icons/icon-152x152.svg">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.svg">
-    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192x192.svg">
+    
+    <!-- Apple Touch Icons optimisées pour iOS -->
+    <link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUyIiBoZWlnaHQ9IjE1MiIgdmlld0JveD0iMCAwIDE1MiAxNTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIvPgogICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjE1MiIgaGVpZ2h0PSIxNTIiIHJ4PSIyOCIgZmlsbD0idXJsKCNiZykiLz4KICAgIDxjaXJjbGUgY3g9Ijk2IiBjeT0iNzYiIHI9IjI4IiBmaWxsPSJ3aGl0ZSIvPgogICAgPHJlY3QgeD0iOTQiIHk9IjQ4IiB3aWR0aD0iMyIgaGVpZ2h0PSI1NyIgZmlsbD0id2hpdGUiLz4KICAgIDx0ZXh0IHg9Ijk2IiB5PSIxNjMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSJib2xkIj4yMDI2PC90ZXh0Pgo8L3N2Zz4K">
+    <link rel="apple-touch-icon" sizes="167x167" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTY3IiBoZWlnaHQ9IjE2NyIgdmlld0JveD0iMCAwIDE2NyAxNjciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIvPgogICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjE2NyIgaGVpZ2h0PSIxNjciIHJ4PSIyOCIgZmlsbD0idXJsKCNiZykiLz4KICAgIDxjaXJjbGUgY3g9Ijk2IiBjeT0iNzYiIHI9IjI4IiBmaWxsPSJ3aGl0ZSIvPgogICAgPHJlY3QgeD0iOTQiIHk9IjQ4IiB3aWR0aD0iMyIgaGVpZ2h0PSI1NyIgZmlsbD0id2hpdGUiLz4KICAgIDx0ZXh0IHg9Ijk2IiB5PSIxNjMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSJib2xkIj4yMDI2PC90ZXh0Pgo8L3N2Zz4K">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZGVmcz4KICAgICAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIvPgogICAgICAgICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3NjRiYTIiLz4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSIyOCIgZmlsbD0idXJsKCNiZykiLz4KICAgIDxjaXJjbGUgY3g9Ijk2IiBjeT0iNzYiIHI9IjI4IiBmaWxsPSJ3aGl0ZSIvPgogICAgPHJlY3QgeD0iOTQiIHk9IjQ4IiB3aWR0aD0iMyIgaGVpZ2h0PSI1NyIgZmlsbD0id2hpdGUiLz4KICAgIDx0ZXh0IHg9Ijk2IiB5PSIxNjMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtd2VpZ2h0PSJib2xkIj4yMDI2PC90ZXh0Pgo8L3N2Zz4K">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="icons/icon-192x192.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.svg">
     <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.svg">
     
-    <!-- Cache Busting - Version v20250707_e2cbdb2a -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta name="version" content="v20250708_a280087e">
-    <meta name="build-time" content="2025-07-08T12:14:00.000Z">
-    <!-- ✨ Viewport optimisé pour PWA avec masquage Home Indicator -->
+    <!-- Viewport optimisé pour PWA avec masquage Home Indicator -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui">
-    <title>Fiche Musicien</title>
+    <title>Programme Musical 2026 - Fiche Musicien</title>
     <!-- CSS critique pour éviter le flash des liens d'achat -->
     <style>
         .links a[title="Lien d'achat"] {
