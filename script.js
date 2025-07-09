@@ -38,27 +38,17 @@ function fixPWAStyles() {
         // 4. S'assurer que la navigation reste FIXÉE EN BAS même en PWA iOS
         const mobileNav = document.querySelector('.mobile-bottom-nav');
         if (mobileNav) {
-            // Hack iOS : utiliser 100vh JS pour fixer le dock
-            function updateDockPosition() {
-                const vh = window.innerHeight;
-                mobileNav.style.position = 'fixed';
-                mobileNav.style.left = '0';
-                mobileNav.style.right = '0';
-                mobileNav.style.zIndex = '9999';
-                mobileNav.style.bottom = '0';
-                mobileNav.style.width = '100vw';
-                // Empêcher le dock de "remonter" en haut
-                mobileNav.style.transform = 'translateY(0)';
-                mobileNav.style.visibility = 'visible';
-                mobileNav.style.opacity = '1';
-                // Forcer la hauteur du dock si besoin
-                if (!mobileNav.style.height) {
-                    mobileNav.style.height = '64px';
-                }
-            }
-            updateDockPosition();
-            window.addEventListener('resize', updateDockPosition);
-            window.addEventListener('orientationchange', updateDockPosition);
+            // Fixe le dock en bas avec le safe-area iOS
+            mobileNav.style.position = 'fixed';
+            mobileNav.style.left = '0';
+            mobileNav.style.right = '0';
+            mobileNav.style.zIndex = '9999';
+            mobileNav.style.bottom = 'env(safe-area-inset-bottom)';
+            mobileNav.style.width = '100vw';
+            mobileNav.style.transform = 'translateY(0)';
+            mobileNav.style.visibility = 'visible';
+            mobileNav.style.opacity = '1';
+            mobileNav.style.height = '';
         }
 
         // 5. 🔧 AJOUT : Injecter CSS correctif pour PWA
@@ -80,7 +70,7 @@ function fixPWAStyles() {
                 .mobile-bottom-nav {
                     display: flex !important;
                     position: fixed !important;
-                    bottom: 0 !important;
+                    bottom: env(safe-area-inset-bottom) !important;
                     left: 0 !important;
                     right: 0 !important;
                     z-index: 9999 !important;
@@ -125,17 +115,22 @@ function scrollToPiece(pieceId) {
     const el = document.getElementById(pieceId);
     if (!el) return;
 
-    // Calculer la hauteur du dock pour éviter de le masquer
+    // Calculer la hauteur du dock + safe-area pour éviter de masquer la pièce
     const dock = document.querySelector('.mobile-bottom-nav');
     let dockHeight = 0;
+    let safeArea = 0;
+    if (window.CSS && CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
+        safeArea = parseInt(getComputedStyle(document.documentElement).getPropertyValue('padding-bottom')) || 0;
+        // fallback: 0 si non défini
+    }
     if (dock && getComputedStyle(dock).display !== 'none') {
         dockHeight = dock.offsetHeight || 64;
     }
 
-    // Calculer la position cible en tenant compte du dock
+    // Calculer la position cible en tenant compte du dock ET du safe-area
     const rect = el.getBoundingClientRect();
     const scrollTop = window.scrollY || window.pageYOffset;
-    const targetY = rect.top + scrollTop - dockHeight - 16; // 16px de marge
+    const targetY = rect.top + scrollTop - dockHeight - safeArea - 16; // 16px de marge
 
     if (isStandalone && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         // iOS PWA : utiliser window.scrollTo avec options
