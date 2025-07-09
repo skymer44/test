@@ -1063,7 +1063,14 @@ main {
 
 /* Espacement spécial pour la première section dans l'onglet programmes */
 #programmes-content .concert-section:first-child {
-    margin-top: 2rem; /* Ajouter un espacement en haut de la première section */
+    margin-top: 1rem; /* Réduit de 2rem à 1rem pour un espacement plus compact */
+}
+
+/* Espacement encore plus réduit sur mobile pour l'onglet programmes */
+@media (max-width: 768px) {
+    #programmes-content .concert-section:first-child {
+        margin-top: 0.5rem; /* Espacement minimal sur mobile */
+    }
 }
 
 /* 🧪 TEST DESIGN - Header de section épuré */
