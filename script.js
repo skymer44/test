@@ -4456,14 +4456,12 @@ document.addEventListener('click', function(e) {
         const now = Date.now();
         const lastClick = button.dataset.lastPdfClick;
         
-        // Protection ultra-adaptative : quasi-instantané en PWA mobile, minimal sur mobile navigateur
+        // Protection uniquement sur desktop - AUCUNE protection sur mobile (PWA ou navigateur)
         let protectionDelay;
-        if (isMobile && isPWA) {
-            protectionDelay = 25; // PWA mobile : quasi-instantané (25ms)
-        } else if (isMobile) {
-            protectionDelay = 50; // Mobile navigateur : très rapide (50ms)
+        if (isMobile) {
+            protectionDelay = 0; // Mobile (PWA ET navigateur) : AUCUNE protection - réactivité maximale
         } else {
-            protectionDelay = 800; // Desktop : protection normale (800ms)
+            protectionDelay = 800; // Desktop uniquement : protection normale (800ms)
         }
         
         console.log(`🛡️ Protection PDF: ${isMobile ? 'Mobile' : 'Desktop'} ${isPWA ? '(PWA)' : '(Navigateur)'} - Délai: ${protectionDelay}ms`);
