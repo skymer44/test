@@ -489,6 +489,12 @@ function initTabs() {
             tabButtonsContainer.setAttribute('data-active-tab', targetId);
         }
 
+        // 🎨 COULEURS DYNAMIQUES MOBILE - Mettre à jour l'attribut pour la navigation mobile
+        const mobileNavContainer = document.querySelector('.mobile-nav-container');
+        if (mobileNavContainer) {
+            mobileNavContainer.setAttribute('data-active-tab', targetId);
+        }
+
         // 🎨 BOUTON RETOUR EN HAUT - Mettre à jour les couleurs dynamiquement
         if (typeof updateBackToTopColors === 'function') {
             updateBackToTopColors(targetId);
@@ -609,6 +615,14 @@ function initTabs() {
     // Activer le premier onglet par défaut
     if (tabButtons.length > 0) {
         const firstTabId = tabButtons[0].getAttribute('data-tab');
+        
+        // 🎨 INITIALISER LES COULEURS MOBILES - Définir l'onglet par défaut
+        const mobileNavContainer = document.querySelector('.mobile-nav-container');
+        if (mobileNavContainer) {
+            mobileNavContainer.setAttribute('data-active-tab', firstTabId);
+            console.log('🎨 Couleurs mobiles initialisées pour:', firstTabId);
+        }
+        
         // Initialiser l'indicateur au premier onglet
         setTimeout(() => {
             const firstButton = tabButtons[0];
@@ -1667,6 +1681,12 @@ function switchToTab(targetId) {
     const tabButtonsContainer = document.querySelector('.tab-buttons');
     if (tabButtonsContainer) {
         tabButtonsContainer.setAttribute('data-active-tab', targetId);
+    }
+
+    // 🎨 COULEURS DYNAMIQUES MOBILE - Mettre à jour l'attribut pour la navigation mobile
+    const mobileNavContainer = document.querySelector('.mobile-nav-container');
+    if (mobileNavContainer) {
+        mobileNavContainer.setAttribute('data-active-tab', targetId);
     }
     
     // 🌊 ANIMATION VAGUE FLUIDE - Calculer et animer l'indicateur
