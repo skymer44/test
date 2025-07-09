@@ -458,8 +458,8 @@ function initTabs() {
         console.log(`  ${index}: id="${content.id}"`);
     });
     
-    // Fonction pour afficher un onglet
-    function showTab(targetId) {
+    // Créer la fonction showTab globale
+    window.showTab = function(targetId) {
         console.log('Affichage onglet:', targetId);
         
         // Masquer tous les contenus d'onglets
@@ -527,10 +527,10 @@ function initTabs() {
             // 🎨 Animer l'indicateur mobile moderne
             animateMobileIndicator(activeMobileItem);
         }
-    }
+    };
     
-    // 🎨 FONCTION ANIMATION INDICATEUR MOBILE MODERNE
-    function animateMobileIndicator(activeItem) {
+    // 🎨 FONCTION ANIMATION INDICATEUR MOBILE MODERNE - Aussi globale
+    window.animateMobileIndicator = function(activeItem) {
         const container = document.querySelector('.mobile-nav-container');
         const items = document.querySelectorAll('.mobile-nav-item');
         
@@ -539,21 +539,21 @@ function initTabs() {
         // Trouver l'index de l'item actif
         const activeIndex = Array.from(items).indexOf(activeItem);
         
-        // Calculer la position de l'indicateur (33.333% par item)
-        const indicatorPosition = `${activeIndex * 100}%`;
+        // Calculer la position de l'indicateur correctement pour 3 onglets
+        const indicatorPosition = `${activeIndex * (100 / items.length)}%`;
         
         // Appliquer l'animation CSS custom property
         container.style.setProperty('--nav-indicator-position', indicatorPosition);
         
-        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
-    }
+        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition}) sur ${items.length} onglets`);
+    };
     
     // Gérer les clics sur les boutons d'onglets desktop
     tabButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('data-tab');
-            showTab(targetId);
+            window.showTab(targetId);
         });
     });
     
@@ -563,7 +563,7 @@ function initTabs() {
             e.preventDefault();
             const targetId = this.getAttribute('data-tab');
             console.log('🔄 Mobile - Clic sur onglet:', targetId);
-            showTab(targetId);
+            window.showTab(targetId);
         });
     });
     
@@ -577,7 +577,7 @@ function initTabs() {
                 animateTabIndicator(firstButton);
             }
         }, 100);
-        showTab(firstTabId);
+        window.showTab(firstTabId);
     }
 }
 
@@ -1544,8 +1544,13 @@ function navigateToPieceInPrograms(pieceName) {
     const isStandalone = isPWAStandalone();
     logPWA(`Navigation vers "${pieceName}" - Mode: ${isStandalone ? 'PWA' : 'Navigateur'}`);
     
-    // 1. Basculer vers l'onglet Programme musical
-    switchToTab('programmes');
+    // 1. Basculer vers l'onglet Programme musical en utilisant la fonction showTab globale
+    if (typeof window.showTab === 'function') {
+        window.showTab('programmes');
+    } else {
+        console.error('❌ showTab non disponible, utilisation de switchToTab en fallback');
+        switchToTab('programmes');
+    }
     
     // 2. Délai simple selon le mode
     const delay = isStandalone ? 800 : 300;
@@ -1632,24 +1637,8 @@ function switchToTab(targetId) {
     const activeMobileItem = document.querySelector(`.mobile-nav-item[data-tab="${targetId}"]`);
     if (activeMobileItem) {
         activeMobileItem.classList.add('active');
-        
-        // 🎨 IMPORTANT : Animer l'indicateur mobile aussi !
-        const mobileContainer = document.querySelector('.mobile-nav-container');
-        const allMobileItems = document.querySelectorAll('.mobile-nav-item');
-        
-        if (mobileContainer && allMobileItems.length > 0) {
-            // Trouver l'index de l'item actif
-            const activeIndex = Array.from(allMobileItems).indexOf(activeMobileItem);
-            if (activeIndex !== -1) {
-                // Calculer la position de l'indicateur (33.333% par item sur 3 onglets)
-                const indicatorPosition = `${activeIndex * (100 / allMobileItems.length)}%`;
-                
-                // Appliquer l'animation CSS custom property
-                mobileContainer.style.setProperty('--nav-indicator-position', indicatorPosition);
-                
-                console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
-            }
-        }
+        // 🎨 Animer l'indicateur mobile moderne
+        animateMobileIndicator(activeMobileItem);
     }
     
     // Déclencher la mise à jour de la visibilité de la recherche (desktop seulement)
