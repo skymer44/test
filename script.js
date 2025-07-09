@@ -478,7 +478,28 @@ function initTabs() {
         const activeMobileItem = document.querySelector(`.mobile-nav-item[data-tab="${targetId}"]`);
         if (activeMobileItem) {
             activeMobileItem.classList.add('active');
+            // 🎨 Animer l'indicateur mobile moderne
+            animateMobileIndicator(activeMobileItem);
         }
+    }
+    
+    // 🎨 FONCTION ANIMATION INDICATEUR MOBILE MODERNE
+    function animateMobileIndicator(activeItem) {
+        const container = document.querySelector('.mobile-nav-container');
+        const items = document.querySelectorAll('.mobile-nav-item');
+        
+        if (!container || !activeItem) return;
+        
+        // Trouver l'index de l'item actif
+        const activeIndex = Array.from(items).indexOf(activeItem);
+        
+        // Calculer la position de l'indicateur (33.333% par item)
+        const indicatorPosition = `${activeIndex * 100}%`;
+        
+        // Appliquer l'animation CSS custom property
+        container.style.setProperty('--nav-indicator-position', indicatorPosition);
+        
+        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition})`);
     }
     
     // Gérer les clics sur les boutons d'onglets desktop

@@ -569,72 +569,115 @@ header h1 {
         display: none !important;
     }
     
-    /* Navigation mobile en bas (bottom navigation) */
+    /* 🎨 Navigation mobile moderne style "floating pill" */
     .mobile-bottom-nav {
         display: flex !important;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        background: #ffffff;
-        border-top: 1px solid #e2e8f0;
-        box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
-        padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
+        background: transparent;
+        padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
         z-index: 1000;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        pointer-events: none; /* Les éléments enfants auront pointer-events: auto */
+    }
+    
+    /* Container flottant moderne */
+    .mobile-nav-container {
+        display: flex;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 0.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                    0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        pointer-events: auto;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Indicateur flottant animé */
+    .mobile-nav-container::before {
+        content: '';
+        position: absolute;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        width: calc(33.333% - 0.33rem);
+        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(var(--nav-indicator-position, 0));
+        z-index: 1;
+        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
     }
     
     .mobile-nav-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0.5rem;
-        border-radius: 12px;
-        transition: all 0.2s ease;
+        padding: 0.75rem 1rem;
+        border-radius: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
         flex: 1;
-        max-width: 80px;
+        min-width: 60px;
+        position: relative;
+        z-index: 2;
+        background: transparent;
     }
     
+    /* Pas d'arrière-plan pour l'état actif - l'indicateur s'en charge */
     .mobile-nav-item.active {
-        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        background: transparent;
+        transform: none;
+        box-shadow: none;
     }
     
     .mobile-nav-icon {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         margin-bottom: 0.25rem;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
+    /* Icônes toujours colorées, plus de blanc/gris */
     .mobile-nav-item.active .mobile-nav-icon {
         color: #ffffff;
         transform: scale(1.1);
     }
     
     .mobile-nav-item:not(.active) .mobile-nav-icon {
-        color: #4a5568;
+        color: #64748b;
+        transform: scale(0.95);
     }
     
     .mobile-nav-label {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         font-weight: 500;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: center;
         line-height: 1.2;
+        opacity: 1;
     }
     
     .mobile-nav-item.active .mobile-nav-label {
         color: #ffffff;
         font-weight: 600;
+        transform: translateY(-1px);
     }
     
     .mobile-nav-item:not(.active) .mobile-nav-label {
-        color: #718096;
+        color: #64748b;
+        opacity: 0.8;
+    }
+    
+    /* Effet hover/tap subtil */
+    .mobile-nav-item:not(.active):active {
+        transform: scale(0.98);
     }
     
     /* Header mobile simplifié */
@@ -3724,47 +3767,65 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
 .piece-bubble:nth-child(4) { animation-delay: 150ms; }
 
 /* ========================================
-   PWA iOS SIMPLE - INTERFACE IDENTIQUE À SAFARI
+   PWA iOS OPTIMISÉ - MASQUER BARRE IPHONE
    ======================================== */
 
-/* 🎯 AJUSTEMENTS PWA PRÉCIS - Interface identique avec contrôle largeur */
+/* 🎯 Mode PWA standalone - Interface native complète */
 @media all and (display-mode: standalone) {
-    /* Support du notch - essentiel */
+    /* Support du notch et zones sûres iPhone */
     body {
         padding-top: env(safe-area-inset-top) !important;
-        padding-bottom: env(safe-area-inset-bottom) !important;
+        padding-bottom: 0 !important; /* ✨ Suppression padding bas pour barre iPhone */
         padding-left: env(safe-area-inset-left) !important;
         padding-right: env(safe-area-inset-right) !important;
+        /* � Forcer le plein écran et masquer les barres système */
+        overflow-x: hidden;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
     }
     
-    /* 🎯 CONTRÔLE PRÉCIS DES LARGEURS - Éviter débordement */
-    .upcoming-events-list {
-        /* Assurer que les cartes ne débordent pas */
-        max-width: 100% !important;
-        padding: 0 10px !important; /* Marges internes pour éviter que ça touche les bords */
-        box-sizing: border-box !important;
+    /* 🏠 Navigation mobile ajustée pour PWA */
+    .mobile-bottom-nav {
+        /* ✨ Supprimer le padding safe-area-inset-bottom en mode PWA */
+        padding: 1rem 1.5rem 1rem !important;
+        /* 🎯 Positionnement exactement en bas */
+        bottom: 0 !important;
     }
     
-    .mini-event-card {
-        /* Largeur contrôlée pour éviter débordement */
-        max-width: calc(100% - 4px) !important; /* Légère marge pour sécurité */
-        box-sizing: border-box !important;
+    /* 🎯 Container principal ajusté */
+    main {
+        /* ✨ Padding bas réduit en mode PWA pour éviter conflits avec navigation */
+        padding-bottom: 120px !important; /* Ajusté pour la nouvelle navigation flottante */
     }
     
-    .pieces-grid {
-        /* Contrôle largeur des programmes musicaux */
-        max-width: 100% !important;
-        padding: 0 10px !important;
-        box-sizing: border-box !important;
+    /* 🏠 Masquer définitivement la barre de défilement et éléments système */
+    html {
+        /* Masquer scrollbar */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        /* Éviter le rebond iOS */
+        -webkit-overflow-scrolling: touch;
+        /* Forcer l'accélération matérielle */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
     
+    html::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* 🎯 Mode plein écran pour tous les conteneurs */
+    .upcoming-events-list,
+    .pieces-grid,
+    .mini-event-card,
     .piece-card {
-        /* Largeur contrôlée pour éviter débordement */
-        max-width: calc(100% - 4px) !important;
+        /* ✨ Contrôle largeur précis pour éviter débordement */
+        max-width: calc(100vw - 20px) !important;
         box-sizing: border-box !important;
     }
     
-    /* Conteneur principal - s'assurer qu'il reste dans les limites */
+    /* 🏠 Optimisations spécifiques iPhone PWA */
     .main-event-content,
     .next-events-section {
         max-width: 100% !important;
@@ -3774,14 +3835,42 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     }
 }
 
-/* Support du notch iPhone - version minimale */
+/* 🏠 Mode PWA avec support étendu des safe areas */
 @supports (padding: max(0px)) {
     @media all and (display-mode: standalone) {
         body {
             padding-top: max(env(safe-area-inset-top), 0px) !important;
-            padding-bottom: max(env(safe-area-inset-bottom), 0px) !important;
+            padding-bottom: 0 !important; /* ✨ Pas de padding bas */
             padding-left: max(env(safe-area-inset-left), 0px) !important;
             padding-right: max(env(safe-area-inset-right), 0px) !important;
+        }
+        
+        /* 🎯 Navigation mobile sans padding safe-area en bas */
+        .mobile-bottom-nav {
+            padding: 1rem 1.5rem max(1rem, env(safe-area-inset-bottom)) !important;
+        }
+    }
+}
+
+/* 🏠 Styles spécifiques WebKit pour iOS PWA */
+@supports (-webkit-touch-callout: none) {
+    @media all and (display-mode: standalone) {
+        body {
+            /* Empêcher les interactions système iOS */
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            /* Forcer le mode plein écran */
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Masquer tous les éléments de contrôle système */
+        input, textarea, select {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            -webkit-border-radius: 0 !important;
+            border-radius: 0 !important;
         }
     }
 }

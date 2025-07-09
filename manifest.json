@@ -9,6 +9,8 @@
   "background_color": "#f7fafc",
   "lang": "fr",
   "scope": "/",
+  "display_override": ["standalone", "minimal-ui"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icons/icon-72x72.svg",
@@ -80,6 +82,5 @@
     "preferred_width": 400
   },
   "protocol_handlers": [],
-  "related_applications": [],
-  "prefer_related_applications": false
+  "related_applications": []
 }
