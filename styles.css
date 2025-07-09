@@ -3600,12 +3600,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         gap: 0;
     }
     
-    /* Bulle conteneur pour titre + PDF - ALIGNEMENT FORCÉ */
+    /* Bulle conteneur pour titre + PDF - RESPONSIVE POUR TEXTE LONG */
     #programmes .section-header .header-bubble {
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 1rem !important;
+        gap: 0.75rem !important; /* 🔄 RÉDUIT: de 1rem à 0.75rem pour économiser de l'espace */
         background: #f8fafc !important;
         padding: 0.75rem 1.25rem !important;
         border-radius: 20px !important;
@@ -3615,10 +3615,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
         min-height: auto !important;
-        width: fit-content !important;
+        width: 90% !important; /* 🔄 CHANGÉ: de "fit-content" à "90%" pour limiter la largeur */
+        max-width: 500px !important; /* 🔄 AJOUTÉ: limite maximum pour les grands écrans */
         margin: 0 auto !important;
         height: auto !important;
         box-sizing: border-box !important;
+        flex-wrap: wrap !important; /* 🔄 AJOUTÉ: permet le passage à la ligne si nécessaire */
     }
     
     #programmes .section-header h2 {
@@ -3643,7 +3645,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         display: none;
     }
     
-    /* Icône PDF dans la bulle - STYLES FORCÉS pour neutraliser les conflits */
+    /* Icône PDF dans la bulle - ADAPTATIF AVEC TEXTE LONG */
     #programmes .header-bubble .pdf-download-btn {
         background: linear-gradient(135deg, #4299e1 0%, #667eea 100%) !important;
         color: white !important;
@@ -3658,7 +3660,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         align-items: center !important;
         justify-content: center !important;
         box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3) !important;
-        margin: 0 !important;
+        margin: 0.25rem 0 !important; /* 🔄 AJOUTÉ: marges verticales pour les cas où il passe à la ligne */
         margin-top: 0 !important;
         flex-shrink: 0 !important;
         transition: all 0.2s ease !important;
@@ -3668,6 +3670,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         white-space: nowrap !important;
         position: relative !important;
         z-index: auto !important;
+        align-self: center !important; /* 🔄 AJOUTÉ: reste centré verticalement */
     }
     
     #programmes .header-bubble .pdf-download-btn svg {
@@ -3690,6 +3693,22 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     
     #programmes .header-bubble .pdf-download-btn:before {
         display: none !important;
+    }
+    
+    /* Règle spéciale pour les écrans très étroits (<350px) */
+    @media (max-width: 350px) {
+        #programmes .section-header .header-bubble {
+            flex-direction: column !important;
+            padding: 0.75rem 1rem !important;
+            gap: 0.5rem !important;
+            width: 95% !important;
+        }
+        
+        #programmes .header-bubble h2 {
+            font-size: 1.15rem !important;
+            text-align: center !important;
+            width: 100% !important;
+        }
     }
     
     /* Neutraliser les styles h2 conflictuels dans la bulle - AVEC GESTION TEXTE LONG */
