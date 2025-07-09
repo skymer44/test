@@ -15,6 +15,30 @@ if ('serviceWorker' in navigator) {
  * Résout les problèmes de scroll et de navigation qui "disparaît"
  */
 function fixPWAStyles() {
+        // 2bis. Supprimer tout overflow/height sur main et .container (pour iOS PWA)
+        const main = document.querySelector('main');
+        if (main) {
+            main.style.overflow = 'visible';
+            main.style.overflowY = 'visible';
+            main.style.height = 'auto';
+            main.style.minHeight = '0';
+        }
+        const containers = document.querySelectorAll('.container');
+        containers.forEach(c => {
+            c.style.overflow = 'visible';
+            c.style.overflowY = 'visible';
+            c.style.height = 'auto';
+            c.style.minHeight = '0';
+        });
+        // 4bis. Debug visuel : log la position du dock et du scroll à chaque scroll
+        window.addEventListener('scroll', function() {
+            const dock = document.querySelector('.mobile-bottom-nav');
+            if (!dock) return;
+            const dockRect = dock.getBoundingClientRect();
+            const scrollY = window.scrollY || window.pageYOffset;
+            const viewportH = window.innerHeight;
+            logPWA(`🟦 ScrollY: ${scrollY}, Dock top: ${dockRect.top}, Dock bottom: ${dockRect.bottom}, ViewportH: ${viewportH}`);
+        }, { passive: true });
     const isStandalone = isPWAStandalone();
     
     if (isStandalone) {
