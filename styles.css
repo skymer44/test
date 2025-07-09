@@ -4098,25 +4098,25 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     /* FORCER l'affichage de la navigation mobile en mode PWA */
     .mobile-bottom-nav {
         display: flex !important;
-        justify-content: center;
-        align-items: center;
+        justify-content: center !important;
+        align-items: center !important;
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         z-index: 10000 !important;
-        padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
-        background: transparent;
-        pointer-events: none;
+        padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom)) !important;
+        background: transparent !important;
+        pointer-events: none !important;
         /* Optimisations performance */
-        transform: translateZ(0);
-        will-change: transform;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
     }
     
     /* S'assurer que le container flottant soit visible */
     .mobile-nav-container {
         display: flex !important;
-        pointer-events: auto;
+        pointer-events: auto !important;
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
@@ -4124,10 +4124,26 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         padding: 0.5rem !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        position: relative;
-        overflow: hidden;
-        will-change: transform;
-        transform: translateZ(0);
+        position: relative !important;
+        overflow: hidden !important;
+        will-change: transform !important;
+        transform: translateZ(0) !important;
+    }
+    
+    /* Indicateur animé */
+    .mobile-nav-container::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0.5rem !important;
+        bottom: 0.5rem !important;
+        left: 0.5rem !important;
+        width: calc(33.333% - 0.33rem) !important;
+        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%) !important;
+        border-radius: 20px !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform: translateX(var(--nav-indicator-position, 0)) !important;
+        z-index: 1 !important;
+        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3) !important;
     }
     
     /* Items de navigation mobile */
@@ -4143,6 +4159,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         position: relative !important;
         z-index: 2 !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        background: transparent !important;
     }
     
     /* Icônes et labels */
@@ -4150,6 +4167,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         font-size: 1.4rem !important;
         margin-bottom: 0.25rem !important;
         color: #64748b !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
     .mobile-nav-label {
@@ -4158,16 +4176,31 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         color: #64748b !important;
         text-align: center !important;
         line-height: 1.2 !important;
+        opacity: 1 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
     /* État actif */
     .mobile-nav-item.active .mobile-nav-icon {
         color: #ffffff !important;
+        transform: scale(1.1) !important;
     }
     
     .mobile-nav-item.active .mobile-nav-label {
         color: #ffffff !important;
         font-weight: 600 !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    /* État non-actif */
+    .mobile-nav-item:not(.active) .mobile-nav-icon {
+        color: #64748b !important;
+        transform: scale(0.95) !important;
+    }
+    
+    .mobile-nav-item:not(.active) .mobile-nav-label {
+        color: #64748b !important;
+        opacity: 0.8 !important;
     }
     
     /* Masquer la navigation desktop en mode PWA */
@@ -4177,18 +4210,18 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     
     /* Contenu principal avec espace pour la navigation */
     main {
-        padding-bottom: calc(140px + env(safe-area-inset-bottom));
+        padding-bottom: calc(140px + env(safe-area-inset-bottom)) !important;
     }
     
     /* Masquer les barres de défilement */
     html {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
     }
     
     html::-webkit-scrollbar {
-        display: none;
+        display: none !important;
     }
 }
 
