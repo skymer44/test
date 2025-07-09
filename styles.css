@@ -3606,7 +3606,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         align-items: center !important; /* ✨ RÉTABLI: alignement centré verticalement */
         justify-content: center !important; /* ✨ RÉTABLI: centrage général */
         gap: 0.5rem !important;
-        background: #f8fafc !important;
+        background: #ffffff !important; /* ✨ MODIFIÉ: fond blanc au lieu de gris clair */
         padding: 0.75rem 1.25rem !important;
         border-radius: 20px !important;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
