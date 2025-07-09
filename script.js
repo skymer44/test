@@ -534,18 +534,34 @@ function initTabs() {
         const container = document.querySelector('.mobile-nav-container');
         const items = document.querySelectorAll('.mobile-nav-item');
         
-        if (!container || !activeItem) return;
+        if (!container || !activeItem) {
+            console.warn('🎨 animateMobileIndicator: conteneur ou item actif manquant');
+            return;
+        }
         
         // Trouver l'index de l'item actif
         const activeIndex = Array.from(items).indexOf(activeItem);
         
-        // Calculer la position de l'indicateur correctement pour 3 onglets
-        const indicatorPosition = `${activeIndex * (100 / items.length)}%`;
+        if (activeIndex === -1) {
+            console.warn('🎨 animateMobileIndicator: item actif non trouvé dans la liste');
+            return;
+        }
         
-        // Appliquer l'animation CSS custom property
-        container.style.setProperty('--nav-indicator-position', indicatorPosition);
+        // Calculer la position en pixels pour être plus précis
+        // Obtenir les dimensions du conteneur
+        const containerRect = container.getBoundingClientRect();
+        const containerWidth = containerRect.width;
         
-        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPosition}) sur ${items.length} onglets`);
+        // Chaque onglet occupe 1/3 de la largeur
+        const itemWidth = containerWidth / items.length;
+        
+        // Position de l'indicateur = index * largeur d'un item
+        const indicatorPositionPx = activeIndex * itemWidth;
+        
+        // Appliquer la position en pixels
+        container.style.setProperty('--nav-indicator-position', `${indicatorPositionPx}px`);
+        
+        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPositionPx}px / ${containerWidth}px) sur ${items.length} onglets`);
     };
     
     // Gérer les clics sur les boutons d'onglets desktop
@@ -576,9 +592,26 @@ function initTabs() {
             if (firstButton) {
                 animateTabIndicator(firstButton);
             }
+            // Initialiser aussi l'indicateur mobile
+            const firstMobileItem = document.querySelector(`.mobile-nav-item[data-tab="${firstTabId}"]`);
+            if (firstMobileItem && typeof window.animateMobileIndicator === 'function') {
+                window.animateMobileIndicator(firstMobileItem);
+            }
         }, 100);
         window.showTab(firstTabId);
     }
+    
+    // 🔄 Gestionnaire de redimensionnement pour recalculer la position de l'indicateur mobile
+    window.addEventListener('resize', function() {
+        // Trouver l'onglet actuellement actif
+        const activeItem = document.querySelector('.mobile-nav-item.active');
+        if (activeItem && typeof window.animateMobileIndicator === 'function') {
+            // Recalculer la position après un petit délai pour que le redimensionnement soit terminé
+            setTimeout(() => {
+                window.animateMobileIndicator(activeItem);
+            }, 100);
+        }
+    });
 }
 
 // � FONCTION POUR DÉCLENCHER LES ANIMATIONS SPÉCIFIQUES À CHAQUE ONGLET
