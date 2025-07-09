@@ -3340,7 +3340,7 @@ function initVideoModal() {
     // Intercepter les clics sur les liens audio YouTube
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href*="youtube.com"]');
-        if (link && link.textContent.includes('🎵')) {
+        if (link && (link.textContent.includes('Audio') || link.textContent.includes('Original'))) {
             e.preventDefault();
             
             const videoUrl = link.href;
