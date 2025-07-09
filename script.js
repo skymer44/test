@@ -1506,6 +1506,19 @@ function switchToTab(targetId) {
     mobileNavItems.forEach(item => {
         item.classList.remove('active');
     });
+
+    // 🎨 COULEURS DYNAMIQUES - Mettre à jour l'attribut pour les couleurs d'onglet
+    const tabButtonsContainer = document.querySelector('.tab-buttons');
+    if (tabButtonsContainer) {
+        tabButtonsContainer.setAttribute('data-active-tab', targetId);
+    }
+    
+    // 🌊 ANIMATION VAGUE FLUIDE - Calculer et animer l'indicateur
+    const targetButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
+    if (targetButton) {
+        animateTabIndicator(targetButton);
+        targetButton.classList.add('active');
+    }
     
     // Afficher le contenu de l'onglet ciblé
     const targetContent = document.getElementById(targetId);
@@ -1518,8 +1531,6 @@ function switchToTab(targetId) {
     const activeButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
     if (activeButton) {
         activeButton.classList.add('active');
-        // 🌊 AJOUT : Animation de l'indicateur fluide
-        animateTabIndicator(activeButton);
     }
     
     // Activer l'item correspondant (mobile)

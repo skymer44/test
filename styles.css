@@ -2550,6 +2550,26 @@ section:target {
     border-left-color: #e53e3e;
 }
 
+/* Bouton "Ouvrir le Drive" en rouge avec dégradé */
+#partitions .access-button {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3) !important;
+}
+
+#partitions .access-button:hover {
+    background: linear-gradient(135deg, #c53030 0%, #9c2c2c 100%) !important;
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4) !important;
+}
+
+/* Icône de dossier en rouge */
+#partitions .folder-icon {
+    color: #e53e3e !important;
+}
+
+#partitions .folder-icon svg {
+    fill: #e53e3e !important;
+}
+
 .main-next-event::before {
     content: '';
     position: absolute;
