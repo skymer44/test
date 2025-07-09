@@ -4015,3 +4015,68 @@ function setupProgrammeScrollAnimations() {
         
     }, 300);
 }
+
+// ========================================
+// 📱 CORRECTION PWA - DOCK FIXE EN MODE STANDALONE
+// ========================================
+
+// 🔧 Fonction pour forcer le positionnement du dock en mode PWA
+function fixPWANavigation() {
+    // Détecter si on est en mode PWA standalone
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                        window.navigator.standalone === true ||
+                        document.referrer.includes('android-app://');
+    
+    if (isStandalone) {
+        console.log('🏠 Mode PWA détecté - Application des corrections navigation');
+        
+        const mobileNav = document.querySelector('.mobile-bottom-nav');
+        if (mobileNav) {
+            // Force les styles critiques
+            mobileNav.style.position = 'fixed';
+            mobileNav.style.bottom = '0';
+            mobileNav.style.left = '0';
+            mobileNav.style.right = '0';
+            mobileNav.style.zIndex = '10000';
+            mobileNav.style.transform = 'translateZ(0)';
+            mobileNav.style.willChange = 'transform';
+            
+            console.log('✅ Navigation mobile forcée en position fixe pour PWA');
+        }
+        
+        // Ajuster le body pour éviter les problèmes de scroll
+        document.body.style.position = 'relative';
+        document.body.style.overflowX = 'hidden';
+        
+        // Force le viewport en mode PWA
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (viewportMeta) {
+            viewportMeta.setAttribute('content', 
+                'width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no');
+        }
+    }
+}
+
+// 🔧 Fonction pour surveiller les changements de mode d'affichage
+function watchDisplayMode() {
+    if (window.matchMedia) {
+        const standaloneQuery = window.matchMedia('(display-mode: standalone)');
+        standaloneQuery.addEventListener('change', fixPWANavigation);
+    }
+}
+
+// 🔧 Initialiser les corrections PWA
+document.addEventListener('DOMContentLoaded', function() {
+    fixPWANavigation();
+    watchDisplayMode();
+    
+    // Re-appliquer après un délai pour s'assurer que tout est chargé
+    setTimeout(fixPWANavigation, 500);
+    setTimeout(fixPWANavigation, 1500);
+});
+
+// 🔧 Appliquer aussi au resize et scroll pour être sûr
+window.addEventListener('resize', fixPWANavigation);
+window.addEventListener('orientationchange', function() {
+    setTimeout(fixPWANavigation, 100);
+});

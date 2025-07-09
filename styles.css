@@ -3906,7 +3906,7 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         min-height: 100dvh !important;
     }
     
-    /* 🔧 Navigation mobile VRAIMENT fixe en bas */
+    /* 🔧 Navigation mobile VRAIMENT fixe en bas EN MODE PWA */
     .mobile-bottom-nav {
         position: fixed !important;
         bottom: 0 !important;
@@ -3919,6 +3919,9 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
                     #f7fafc 50%, 
                     rgba(247, 250, 252, 0.8) 80%, 
                     transparent 100%) !important;
+        /* ✨ NOUVEAU : Force le positionnement en mode PWA */
+        transform: translateZ(0) !important; /* Force hardware acceleration */
+        will-change: transform !important;
     }
     
     /* ✨ Container plus opaque pour bien masquer */
@@ -3932,9 +3935,32 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
     }
     
-    /* 🔧 Ajuster le contenu principal */
+    /* 🔧 Ajuster le contenu principal EN MODE PWA */
     main {
         padding-bottom: 90px !important; /* Réduit pour que le dock soit plus bas */
+        /* ✨ NOUVEAU : Forcer la hauteur en mode PWA */
+        min-height: calc(100vh - 90px) !important;
+        min-height: calc(100dvh - 90px) !important;
+    }
+    
+    /* ✨ NOUVEAU : Force spécifique pour iOS PWA */
+    body {
+        /* Éviter que le contenu pousse la navigation */
+        overflow-x: hidden !important;
+        position: relative !important;
+    }
+    
+    /* ✨ NOUVEAU : Conteneur absolu pour forcer la position */
+    .mobile-bottom-nav::before {
+        content: '';
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        height: 90px !important;
+        background: linear-gradient(to top, #f7fafc 60%, transparent) !important;
+        z-index: 9997 !important;
+        pointer-events: none !important;
     }
 }
 
@@ -3944,5 +3970,30 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         position: fixed !important;
         bottom: 0 !important;
         z-index: 9999 !important;
+    }
+}
+
+/* ✨ NOUVEAU : Règles spécifiques pour Safari iOS en mode standalone */
+@supports (-webkit-touch-callout: none) {
+    @media all and (display-mode: standalone) {
+        .mobile-bottom-nav {
+            /* Force la position même sur WebKit */
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
+            /* Empêcher le scroll de l'affecter */
+            -webkit-transform: translateZ(0) !important;
+            transform: translateZ(0) !important;
+            will-change: transform !important;
+        }
+        
+        /* Force le viewport en mode PWA */
+        html, body {
+            height: 100% !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
     }
 }
