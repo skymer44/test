@@ -977,16 +977,16 @@ main {
     margin-top: 2rem; /* Ajouter un espacement en haut de la première section */
 }
 
-/* En-tête de section avec bouton PDF */
+/* En-tête de section avec bouton PDF - Desktop */
 .section-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
+    margin-bottom: 1.75rem;
     flex-wrap: wrap;
     gap: 1rem;
     background: #f8fafc;
-    padding: 1.5rem 2rem; /* Légèrement augmenté pour plus d'air */
+    padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     position: relative;
@@ -1007,10 +1007,9 @@ main {
 }
 
 .section-header h2:after {
-    /* Trait bleu centré sous le texte - position calculée par JavaScript */
     content: '';
     position: absolute;
-    bottom: -10px; /* Réduit de -12px à -10px pour être plus proche */
+    bottom: -10px;
     left: var(--trait-left-position, 0px);
     width: 60px;
     height: 3px;
@@ -1051,7 +1050,7 @@ main {
     transform: translateY(0);
 }
 
-/* Anciens styles pour h2 dans les sections sans header - MODIFIÉ pour alignement à gauche */
+/* Anciens styles pour h2 dans les sections sans header */
 .concert-section h2 {
     color: #2d3748;
     font-size: 2rem;
@@ -1064,8 +1063,8 @@ main {
     background: transparent;
     border-radius: 0;
     box-shadow: none;
-    border-left: none; /* Suppression de l'ancienne bordure */
-    display: inline-block; /* Pour que le h2 prenne la largeur de son contenu */
+    border-left: none;
+    display: inline-block;
 }
 
 /* Nouvelle bande bleue étendue pour les titres de sections */
@@ -3581,6 +3580,178 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    
+    /* 📱 REDESIGN MOBILE POUR L'ONGLET PROGRAMMES - Version délicate */
+    
+    /* Header mobile subtil comme la version desktop */
+    #programmes .section-header {
+        background: #f8fafc;
+        padding: 1.5rem 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    #programmes .section-header h2 {
+        color: #2d3748;
+        font-size: 1.6rem;
+        text-align: center;
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        position: relative;
+    }
+    
+    #programmes .section-header h2:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #4299e1;
+        border-radius: 2px;
+    }
+    
+    /* Bouton PDF mobile délicat */
+    #programmes .pdf-download-btn {
+        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        margin-top: 0;
+    }
+    
+    #programmes .pdf-download-btn:hover {
+        background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+    }
+    
+    /* Container de pièces mobile délicat */
+    #programmes .pieces-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+        background: transparent;
+        border-radius: 0;
+        margin-top: 0;
+    }
+    
+    /* Cartes délicates pour mobile - comme desktop */
+    #programmes .piece-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #programmes .piece-card:before {
+        height: 4px;
+        background: #4299e1;
+        border-radius: 0;
+    }
+    
+    #programmes .piece-card:hover,
+    #programmes .piece-card:active {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e0;
+    }
+    
+    /* Titre des pièces mobile délicat */
+    #programmes .piece-card h3 {
+        color: #2d3748;
+        font-size: 1.2rem;
+        margin-bottom: 0.8rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    
+    /* Métadonnées compactes */
+    #programmes .piece-card p {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #4a5568;
+        line-height: 1.4;
+    }
+    
+    /* Liens mobile délicats - comme desktop */
+    #programmes .links {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    #programmes .links a {
+        flex: 1;
+        min-width: 120px;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border: 1px solid transparent;
+    }
+    
+    #programmes .links a:hover,
+    #programmes .links a:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+        background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
+    }
+    
+    /* Suppression du trait décentré sur h2 standards */
+    #programmes .concert-section h2:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: #4299e1;
+        border-radius: 2px;
+    }
+    
+    /* H2 standards mobile délicats */
+    #programmes .concert-section h2 {
+        background: #f8fafc;
+        color: #2d3748;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+        display: block;
+        letter-spacing: -0.01em;
+        position: relative;
     }
 }
 
