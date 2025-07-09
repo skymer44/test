@@ -547,21 +547,38 @@ function initTabs() {
             return;
         }
         
-        // Calculer la position en pixels pour être plus précis
-        // Obtenir les dimensions du conteneur
+        // Approche plus simple : utiliser la position réelle des éléments
         const containerRect = container.getBoundingClientRect();
-        const containerWidth = containerRect.width;
+        const activeItemRect = activeItem.getBoundingClientRect();
         
-        // Chaque onglet occupe 1/3 de la largeur
-        const itemWidth = containerWidth / items.length;
+        // Position relative de l'onglet actif par rapport au conteneur
+        const relativeLeft = activeItemRect.left - containerRect.left;
         
-        // Position de l'indicateur = index * largeur d'un item
-        const indicatorPositionPx = activeIndex * itemWidth;
+        // Largeur de l'onglet actif
+        const itemWidth = activeItemRect.width;
+        
+        // L'indicateur CSS a une largeur de calc(33.333% - 0.33rem)
+        // Calculons sa largeur réelle
+        const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const indicatorWidth = (containerRect.width * 0.33333) - (0.33 * remToPx);
+        
+        // Pour centrer l'indicateur sur l'onglet :
+        // Position = position de l'onglet + (largeur onglet - largeur indicateur) / 2
+        const centeredPosition = relativeLeft + (itemWidth - indicatorWidth) / 2;
+        
+        // Tenir compte du left: 0.5rem de l'indicateur
+        const leftOffset = 0.5 * remToPx;
+        const finalPosition = centeredPosition - leftOffset;
         
         // Appliquer la position en pixels
-        container.style.setProperty('--nav-indicator-position', `${indicatorPositionPx}px`);
+        container.style.setProperty('--nav-indicator-position', `${finalPosition}px`);
         
-        console.log(`🎨 Animation indicateur mobile vers position ${activeIndex} (${indicatorPositionPx}px / ${containerWidth}px) sur ${items.length} onglets`);
+        console.log(`🎨 Animation indicateur mobile vers onglet ${activeIndex}:`);
+        console.log(`   - Position onglet: ${relativeLeft}px`);
+        console.log(`   - Largeur onglet: ${itemWidth}px`);
+        console.log(`   - Largeur indicateur: ${indicatorWidth}px`);
+        console.log(`   - Position centrée: ${centeredPosition}px`);
+        console.log(`   - Position finale (après offset): ${finalPosition}px`);
     };
     
     // Gérer les clics sur les boutons d'onglets desktop
