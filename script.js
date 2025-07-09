@@ -4451,8 +4451,8 @@ document.addEventListener('click', function(e) {
         const now = Date.now();
         const lastClick = button.dataset.lastPdfClick;
         
-        // Protection adaptative selon l'appareil
-        const protectionDelay = isMobile ? 300 : 1000; // 300ms sur mobile, 1s sur desktop
+        // Protection adaptative selon l'appareil : quasi-instantané sur mobile, protection desktop
+        const protectionDelay = isMobile ? 50 : 800; // 50ms sur mobile (quasi-instantané), 800ms sur desktop
         
         if (lastClick && (now - parseInt(lastClick)) < protectionDelay) {
             console.log(`🚫 Clic PDF ignoré - Protection anti-double-clic active (${protectionDelay}ms)`);
