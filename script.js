@@ -3709,28 +3709,34 @@ function initPDFGeneration() {
         return typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined';
     }
     
-    // Fonction pour configurer les boutons PDF
+    // Fonction pour configurer les boutons PDF - VERSION OPTIMISÉE
     function setupPDFButtons() {
         document.querySelectorAll('.pdf-download-btn').forEach(button => {
             // Supprimer l'ancien listener s'il existe
             button.removeEventListener('click', button._pdfClickHandler);
             
-            // Créer un nouveau handler
+            // Créer un nouveau handler optimisé
             button._pdfClickHandler = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('🔍 Handler spécifique déclenché pour:', this.getAttribute('data-section'));
+                console.log('🔍 Handler PDF déclenché pour:', this.getAttribute('data-section'));
                 
-                // Empêcher les clics multiples rapides
-                if (button.disabled) {
-                    console.log('🚫 Bouton déjà désactivé, ignoring');
+                // Protection simple contre les clics multiples rapides (100ms seulement)
+                const now = Date.now();
+                const lastClick = parseInt(button.dataset.lastPdfClick || '0');
+                
+                if (now - lastClick < 100) {
+                    console.log('🚫 Clic trop rapide, ignoré');
                     return;
                 }
-                button.disabled = true;
                 
-                // Marquer le bouton comme traité pour éviter la délégation
-                button.setAttribute('data-pdf-processing', 'true');
+                button.dataset.lastPdfClick = now.toString();
+                
+                // Désactiver temporairement le bouton
+                const originalText = button.textContent;
+                button.textContent = 'Génération...';
+                button.disabled = true;
                 
                 const sectionId = this.getAttribute('data-section');
                 console.log('📄 Génération PDF pour:', sectionId);
@@ -3740,11 +3746,11 @@ function initPDFGeneration() {
                 } catch (error) {
                     console.error('Erreur PDF:', error);
                 } finally {
-                    // Réactiver le bouton après un délai
+                    // Réactiver le bouton après un délai court
                     setTimeout(() => {
                         button.disabled = false;
-                        button.removeAttribute('data-pdf-processing');
-                    }, 1000);
+                        button.textContent = originalText;
+                    }, 500); // Délai réduit pour une meilleure UX
                 }
             };
             
@@ -4438,47 +4444,10 @@ console.log('� Délégation globale PDF DÉSACTIVÉE pour diagnostic');
 // ================================
 // 🚨 CORRECTIF INTELLIGENT POUR DOUBLE TÉLÉCHARGEMENT PDF
 // ================================
+// SYSTÈME PDF UNIFIÉ
+// ================================
 
-// Supprimer toute délégation globale existante en interceptant les événements
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('pdf-download-btn') || e.target.closest('.pdf-download-btn')) {
-        const button = e.target.classList.contains('pdf-download-btn') ? e.target : e.target.closest('.pdf-download-btn');
-        
-        // Détecter le type d'appareil et le mode PWA
-        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                        ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-        
-        // Détecter si on est en mode PWA (plus strict sur les délais)
-        const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-                     window.navigator.standalone === true ||
-                     document.referrer.includes('android-app://');
-        
-        const now = Date.now();
-        const lastClick = button.dataset.lastPdfClick;
-        
-        // Protection uniquement sur desktop - AUCUNE protection sur mobile (PWA ou navigateur)
-        let protectionDelay;
-        if (isMobile) {
-            protectionDelay = 0; // Mobile (PWA ET navigateur) : AUCUNE protection - réactivité maximale
-        } else {
-            protectionDelay = 800; // Desktop uniquement : protection normale (800ms)
-        }
-        
-        console.log(`🛡️ Protection PDF: ${isMobile ? 'Mobile' : 'Desktop'} ${isPWA ? '(PWA)' : '(Navigateur)'} - Délai: ${protectionDelay}ms`);
-        
-        if (lastClick && (now - parseInt(lastClick)) < protectionDelay) {
-            console.log(`🚫 Clic PDF ignoré - Protection anti-double-clic active (${protectionDelay}ms)`);
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            return false;
-        }
-        
-        // Marquer le bouton comme récemment cliqué
-        button.dataset.lastPdfClick = now.toString();
-        
-        console.log(`✅ Clic PDF autorisé pour: ${button.getAttribute('data-section')} (${isMobile ? 'Mobile' : 'Desktop'})`);
-    }
-}, true); // Phase de capture pour intercepter en premier
+// Le système PDF est maintenant géré uniquement par setupPDFButtons()
+// Plus de délégation globale pour éviter les conflits
 
-console.log('🛡️ Protection anti-double-clic PDF intelligente activée');
+console.log('🛡️ Système PDF unifié activé - Gestion par handlers spécifiques uniquement');
