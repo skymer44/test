@@ -2520,6 +2520,17 @@ section:target {
     border-left-color: #48bb78 !important;
 }
 
+/* Bouton d'ajout au calendrier en vert avec le même dégradé que l'onglet */
+#prochains-evenements .add-to-calendar-btn {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+    box-shadow: 0 2px 4px rgba(72, 187, 120, 0.3) !important;
+}
+
+#prochains-evenements .add-to-calendar-btn:hover {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+    box-shadow: 0 4px 8px rgba(72, 187, 120, 0.4) !important;
+}
+
 /* Les mini-cartes gardent leurs couleurs d'origine selon le type d'événement */
 /* (pas de surcharge, elles utilisent les couleurs définies plus bas dans le CSS) */
 
