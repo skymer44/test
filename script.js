@@ -4040,20 +4040,32 @@ function fixPWANavigation() {
             mobileNav.style.zIndex = '10000';
             mobileNav.style.transform = 'translateZ(0)';
             mobileNav.style.willChange = 'transform';
+            mobileNav.style.background = 'transparent'; // ✨ Transparent pour ne pas masquer
             
             console.log('✅ Navigation mobile forcée en position fixe pour PWA');
         }
         
-        // Ajuster le body pour éviter les problèmes de scroll
+        // Ajuster le body pour éviter les problèmes de scroll et masquer Home Indicator
         document.body.style.position = 'relative';
         document.body.style.overflowX = 'hidden';
+        document.body.style.webkitUserSelect = 'none';
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitTouchCallout = 'none';
+        document.body.style.webkitTapHighlightColor = 'transparent';
         
-        // Force le viewport en mode PWA
-        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        // ✨ NOUVEAU : Techniques pour masquer le Home Indicator
+        document.documentElement.style.height = '100%';
+        document.documentElement.style.touchAction = 'pan-x pan-y';
+        document.documentElement.style.webkitOverflowScrolling = 'touch';
+        
+        // Force le viewport pour masquer Home Indicator
+        let viewportMeta = document.querySelector('meta[name="viewport"]');
         if (viewportMeta) {
             viewportMeta.setAttribute('content', 
-                'width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no');
+                'width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui');
         }
+        
+        console.log('🏠 Tentative de masquage du Home Indicator iPhone');
     }
 }
 
