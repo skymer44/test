@@ -3584,14 +3584,14 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     
     /* 📱 REDESIGN MOBILE POUR L'ONGLET PROGRAMMES - Version délicate */
     
-    /* Header mobile subtil comme la version desktop */
+    /* Header mobile simplifié - SANS encadré */
     #programmes .section-header {
-        background: #f8fafc;
-        padding: 1.5rem 1rem;
-        border-radius: 12px;
+        background: transparent;
+        padding: 1.5rem 1rem 1rem;
+        border-radius: 0;
         margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        box-shadow: none;
+        border: none;
         flex-direction: column;
         align-items: center;
         gap: 0.8rem;
@@ -3605,18 +3605,15 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         font-weight: 600;
         letter-spacing: -0.02em;
         position: relative;
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
     }
     
     #programmes .section-header h2:after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: #4299e1;
-        border-radius: 2px;
+        display: none; /* Suppression de la petite barre */
     }
     
     /* Bouton PDF mobile délicat */
@@ -3724,20 +3721,12 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         background: linear-gradient(135deg, #3182ce 0%, #5a67d8 100%);
     }
     
-    /* Suppression du trait décentré sur h2 standards */
+    /* Suppression de la barre bleue sur h2 standards */
     #programmes .concert-section h2:after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60px;
-        height: 3px;
-        background: #4299e1;
-        border-radius: 2px;
+        display: none;
     }
     
-    /* H2 standards mobile délicats */
+    /* H2 standards mobile épurés - SANS barre bleue */
     #programmes .concert-section h2 {
         background: #f8fafc;
         color: #2d3748;
