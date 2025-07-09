@@ -1512,6 +1512,8 @@ function switchToTab(targetId) {
     const activeButton = document.querySelector(`.tab-button[data-tab="${targetId}"]`);
     if (activeButton) {
         activeButton.classList.add('active');
+        // 🌊 AJOUT : Animation de l'indicateur fluide
+        animateTabIndicator(activeButton);
     }
     
     // Activer l'item correspondant (mobile)
@@ -1528,6 +1530,11 @@ function switchToTab(targetId) {
     if (searchContainer) {
         searchContainer.style.display = isVisible ? 'flex' : 'none';
     }
+    
+    // 🎬 AJOUT : Déclencher les animations d'onglet
+    setTimeout(() => {
+        triggerTabAnimations(targetId);
+    }, 100);
 }
 
 /**
