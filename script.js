@@ -51,41 +51,37 @@ const programsObserver = new MutationObserver((mutations) => {
 });
 
 /**
- * Restructure les headers sur mobile pour avoir titre + icône côte à côte
+ * Restructurer avec bulle centrée + bouton PDF existant
  */
 function restructureMobileHeaders() {
     // Seulement sur mobile (largeur <= 768px)
     if (window.innerWidth <= 768) {
-        const sectionHeaders = document.querySelectorAll('#programmes .section-header');
+        // Cibler uniquement les sections de programmes
+        const programsSections = document.querySelectorAll('#programmes .concert-section');
         
-        sectionHeaders.forEach(header => {
-            const h2 = header.querySelector('h2');
-            const pdfBtn = header.querySelector('.pdf-download-btn');
-            
-            if (h2 && pdfBtn && !header.querySelector('.title-with-pdf')) {
-                // Créer le conteneur titre + PDF
-                const titleWithPdf = document.createElement('div');
-                titleWithPdf.className = 'title-with-pdf';
+        programsSections.forEach((section) => {
+            const header = section.querySelector('.section-header');
+            if (header) {
+                const h2 = header.querySelector('h2');
+                const existingBubble = header.querySelector('.header-bubble');
+                const existingPdfBtn = header.querySelector('.pdf-download-btn');
                 
-                // Cloner et modifier le bouton PDF
-                const newPdfBtn = pdfBtn.cloneNode(true);
-                newPdfBtn.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                `;
-                
-                // Assembler titre + PDF
-                titleWithPdf.appendChild(h2.cloneNode(true));
-                titleWithPdf.appendChild(newPdfBtn);
-                
-                // Remplacer le contenu du header
-                header.innerHTML = '';
-                header.appendChild(titleWithPdf);
+                if (h2 && !existingBubble && existingPdfBtn) {
+                    // Créer la bulle conteneur
+                    const bubble = document.createElement('div');
+                    bubble.className = 'header-bubble';
+                    
+                    // Cloner h2 et l'ajouter à la bulle
+                    const h2Clone = h2.cloneNode(true);
+                    bubble.appendChild(h2Clone);
+                    
+                    // Déplacer le bouton PDF existant dans la bulle
+                    existingPdfBtn.remove();
+                    bubble.appendChild(existingPdfBtn);
+                    
+                    // Remplacer h2 par la bulle
+                    h2.parentNode.replaceChild(bubble, h2);
+                }
             }
         });
     }
@@ -1632,7 +1628,7 @@ function switchToTab(targetId) {
 }
 
 /**
- * Met en évidence une pièce avec animation et scroll
+ * Met en évidence une pièce avec animation et scroll amélioré
  */
 function highlightPiece(pieceElement, pieceTitle) {
     console.log(`✨ Mise en évidence de la pièce: "${pieceTitle}"`);
@@ -1643,14 +1639,8 @@ function highlightPiece(pieceElement, pieceTitle) {
         previousHighlight.classList.remove('piece-highlighted');
     }
     
-    // Scroller vers la pièce avec un offset pour la rendre bien visible
-    const elementRect = pieceElement.getBoundingClientRect();
-    const offset = window.innerHeight * 0.2; // 20% de la hauteur de l'écran
-    
-    window.scrollTo({
-        top: window.pageYOffset + elementRect.top - offset,
-        behavior: 'smooth'
-    });
+    // Scroller vers la pièce avec un offset amélioré
+    scrollToPiece(pieceElement);
     
     // Attendre le scroll, puis appliquer la mise en évidence
     setTimeout(() => {
@@ -1661,7 +1651,7 @@ function highlightPiece(pieceElement, pieceTitle) {
             pieceElement.classList.remove('piece-highlighted');
         }, 4000);
         
-    }, 800); // Attendre que le scroll soit terminé
+    }, 1000); // Attendre plus longtemps que le scroll soit terminé
 }
 
 /**
@@ -4146,11 +4136,26 @@ window.addEventListener('orientationchange', function() {
 // ========================================
 
 /**
- * Fonction pour faire remonter automatiquement quand on clique sur un événement
+ * Fonction améliorée pour faire remonter automatiquement quand on clique sur un événement
  */
 function autoScrollToTop() {
+    // Scroller vers le haut avec un offset pour éviter la navigation mobile
+    const offset = window.innerWidth <= 768 ? 100 : 50;
     window.scrollTo({
-        top: 0,
+        top: offset,
+        behavior: 'smooth'
+    });
+}
+
+/**
+ * Fonction améliorée pour scroll vers une pièce
+ */
+function scrollToPiece(element) {
+    const rect = element.getBoundingClientRect();
+    const offset = window.innerWidth <= 768 ? 150 : 100; // Plus d'offset sur mobile
+    
+    window.scrollTo({
+        top: window.pageYOffset + rect.top - offset,
         behavior: 'smooth'
     });
 }
@@ -4164,9 +4169,10 @@ function addEventClickListeners() {
     mainEvents.forEach(event => {
         if (!event.hasAttribute('data-scroll-listener')) {
             event.addEventListener('click', function(e) {
-                // Ne pas déclencher sur les boutons calendrier
-                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn')) {
-                    setTimeout(autoScrollToTop, 100);
+                // Ne pas déclencher sur les boutons calendrier ou liens
+                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn, a, button')) {
+                    console.log('📱 Scroll automatique - événement principal');
+                    setTimeout(autoScrollToTop, 200);
                 }
             });
             event.setAttribute('data-scroll-listener', 'true');
@@ -4178,12 +4184,25 @@ function addEventClickListeners() {
     miniEvents.forEach(event => {
         if (!event.hasAttribute('data-scroll-listener')) {
             event.addEventListener('click', function(e) {
-                // Ne pas déclencher sur les boutons calendrier
-                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn')) {
-                    setTimeout(autoScrollToTop, 100);
+                // Ne pas déclencher sur les boutons calendrier ou liens
+                if (!e.target.closest('.add-to-calendar-btn, .mini-add-to-calendar-btn, a, button')) {
+                    console.log('📱 Scroll automatique - mini événement');
+                    setTimeout(autoScrollToTop, 200);
                 }
             });
             event.setAttribute('data-scroll-listener', 'true');
+        }
+    });
+    
+    // Éléments cliquables de pièces dans les événements
+    const clickablePieces = document.querySelectorAll('.clickable-piece');
+    clickablePieces.forEach(piece => {
+        if (!piece.hasAttribute('data-nav-listener')) {
+            piece.addEventListener('click', function(e) {
+                console.log('🎯 Navigation vers pièce détectée');
+                // Le scroll sera géré par navigateToPieceInPrograms
+            });
+            piece.setAttribute('data-nav-listener', 'true');
         }
     });
 }
