@@ -1683,11 +1683,11 @@ main {
 
 /* Section partitions - Version sobre et élégante */
 .partitions-section-clean {
-    background: #ffffff;
+    background: transparent; /* Retiré le fond blanc pour cohérence avec les autres onglets */
     border-radius: 12px;
     padding: 3rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e2e8f0;
+    box-shadow: none; /* Retiré l'ombre qui n'a plus de sens sans fond */
+    border: none; /* Retiré la bordure pour un look plus épuré */
     max-width: 900px;
     margin: 0 auto;
 }
@@ -1772,7 +1772,7 @@ main {
 }
 
 .example-item {
-    background: #f8fafc;
+    background: #ffffff; /* Fond blanc pour meilleure lisibilité */
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 1.5rem;
@@ -1801,7 +1801,7 @@ main {
 }
 
 .access-card {
-    background: #f7fafc;
+    background: #ffffff; /* Fond blanc pour meilleure lisibilité */
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 2rem;
