@@ -611,14 +611,14 @@ header h1 {
         display: flex !important;
         justify-content: center;
         align-items: center;
-        position: fixed !important;
+        position: fixed !important; /* ✅ TOUJOURS fixe en bas */
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         background: transparent;
         padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
-        z-index: 9999 !important;
-        pointer-events: none;
+        z-index: 1000 !important; /* ✅ Au-dessus de tout */
+        pointer-events: none; /* Les éléments enfants auront pointer-events: auto */
     }
     
     /* Container flottant moderne */
@@ -4078,51 +4078,230 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
    PWA iOS OPTIMISÉ - MASQUER BARRE IPHONE
    ======================================== */
 
-/* ========================================
-   🎯 PWA MODE STANDALONE - VERSION UNIFIÉE ET SIMPLIFIÉE
-   ======================================== */
-
+/* 🎯 Mode PWA standalone - Interface native complète */
 @media all and (display-mode: standalone) {
-    /* Configuration de base pour PWA */
+    /* Support du notch et zones sûres iPhone */
     body {
-        padding-top: env(safe-area-inset-top);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-        /* Optimisations PWA */
+        padding-top: env(safe-area-inset-top) !important;
+        padding-bottom: 0 !important; /* ✨ Suppression padding bas pour barre iPhone */
+        padding-left: env(safe-area-inset-left) !important;
+        padding-right: env(safe-area-inset-right) !important;
+        /* � Forcer le plein écran et masquer les barres système */
+        overflow-x: hidden;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         user-select: none;
-        overflow-x: hidden;
     }
     
-    /* Navigation mobile TOUJOURS fixe en mode PWA */
+    /* 🏠 Navigation mobile ajustée pour PWA */
     .mobile-bottom-nav {
-        position: fixed !important;
+        /* ✨ Supprimer le padding safe-area-inset-bottom en mode PWA */
+        padding: 1rem 1.5rem 1rem !important;
+        /* 🎯 Positionnement exactement en bas */
         bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 10000 !important;
-        padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
-        background: transparent;
-        /* Optimisations performance */
-        transform: translateZ(0);
-        will-change: transform;
     }
     
-    /* Contenu principal avec espace pour la navigation */
+    /* 🎯 Container principal ajusté */
     main {
-        padding-bottom: calc(140px + env(safe-area-inset-bottom));
+        /* ✨ Padding bas réduit en mode PWA pour éviter conflits avec navigation */
+        padding-bottom: 120px !important; /* Ajusté pour la nouvelle navigation flottante */
     }
     
-    /* Masquer les barres de défilement */
+    /* 🏠 Masquer définitivement la barre de défilement et éléments système */
     html {
+        /* Masquer scrollbar */
         -ms-overflow-style: none;
         scrollbar-width: none;
+        /* Éviter le rebond iOS */
         -webkit-overflow-scrolling: touch;
+        /* Forcer l'accélération matérielle */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
     
     html::-webkit-scrollbar {
         display: none;
     }
+    
+    /* 🎯 Mode plein écran pour tous les conteneurs */
+    .upcoming-events-list,
+    .pieces-grid,
+    .mini-event-card,
+    .piece-card {
+        /* ✨ Contrôle largeur précis pour éviter débordement */
+        max-width: calc(100vw - 20px) !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* 🏠 Optimisations spécifiques iPhone PWA */
+    .main-event-content,
+    .next-events-section {
+        max-width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+    }
 }
 
+/* 🏠 Mode PWA avec support étendu des safe areas */
+@supports (padding: max(0px)) {
+    @media all and (display-mode: standalone) {
+        body {
+            padding-top: max(env(safe-area-inset-top), 0px) !important;
+            padding-bottom: 0 !important; /* ✨ Pas de padding bas */
+            padding-left: max(env(safe-area-inset-left), 0px) !important;
+            padding-right: max(env(safe-area-inset-right), 0px) !important;
+        }
+        
+        /* 🎯 Navigation mobile sans padding safe-area en bas */
+        .mobile-bottom-nav {
+            padding: 1rem 1.5rem max(1rem, env(safe-area-inset-bottom)) !important;
+        }
+    }
+}
+
+/* 🏠 Styles spécifiques WebKit pour iOS PWA */
+@supports (-webkit-touch-callout: none) {
+    @media all and (display-mode: standalone) {
+        body {
+            /* Empêcher les interactions système iOS */
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            /* Forcer le mode plein écran */
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Masquer tous les éléments de contrôle système */
+        input, textarea, select {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            -webkit-border-radius: 0 !important;
+            border-radius: 0 !important;
+        }
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   🏠 CORRECTION DOCK MOBILE FIXE + MASQUAGE BARRE IPHONE
+   ======================================== */
+
+/* 🔧 Masquer définitivement la barre iPhone noire */
+@media all and (display-mode: standalone) {
+    /* ✨ SUPPRIMÉ : Le pseudo-élément qui masquait le dock */
+    /* body::after supprimé car il cachait la navigation */
+    
+    /* ✨ Forcer la couleur de fond partout */
+    html, body {
+        background-color: #f7fafc !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+    }
+    
+    /* 🔧 Navigation mobile VRAIMENT fixe en bas EN MODE PWA */
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important; /* Au-dessus du masque */
+        padding: 1rem 1.5rem 0.5rem !important; /* Padding normal en bas pour être visible */
+        background: transparent !important; /* ✨ Transparent pour ne pas masquer */
+        /* ✨ NOUVEAU : Force le positionnement en mode PWA */
+        transform: translateZ(0) !important; /* Force hardware acceleration */
+        will-change: transform !important;
+    }
+    
+    /* ✨ Container avec design glassmorphism normal */
+    .mobile-nav-container {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+                    0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 25px !important;
+    }
+    
+    /* 🔧 Ajuster le contenu principal EN MODE PWA */
+    main {
+        padding-bottom: 120px !important; /* Plus d'espace pour le dock visible */
+        /* ✨ NOUVEAU : Forcer la hauteur en mode PWA */
+        min-height: calc(100vh - 120px) !important;
+        min-height: calc(100dvh - 120px) !important;
+    }
+    
+    /* ✨ NOUVEAU : Force spécifique pour iOS PWA - Masquer Home Indicator */
+    body {
+        /* Éviter que le contenu pousse la navigation */
+        overflow-x: hidden !important;
+        position: relative !important;
+        /* ✨ Masquer le Home Indicator iOS */
+        -webkit-user-select: none !important;
+        user-select: none !important;
+        -webkit-touch-callout: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+    
+    /* ✨ NOUVEAU : Styles spécifiques pour masquer le Home Indicator */
+    html {
+        /* Force l'application à occuper tout l'écran */
+        height: 100% !important;
+        /* Empêche les gestures système en bas */
+        touch-action: pan-x pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* ✨ NOUVEAU : Masquer le Home Indicator avec env() */
+    @supports (padding: env(safe-area-inset-bottom)) {
+        .mobile-bottom-nav {
+            /* Utiliser la safe area pour pousser au-dessus du Home Indicator */
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom)) !important;
+        }
+        
+        main {
+            /* Ajuster en fonction de la safe area */
+            padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+        }
+    }
+}
+
+/* 🔧 Renforcement pour tous les modes mobiles */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        z-index: 9999 !important;
+    }
+}
+
+/* ✨ NOUVEAU : Règles spécifiques pour Safari iOS en mode standalone */
+@supports (-webkit-touch-callout: none) {
+    @media all and (display-mode: standalone) {
+        .mobile-bottom-nav {
+            /* Force la position même sur WebKit */
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 10000 !important;
+            /* Empêcher le scroll de l'affecter */
+            -webkit-transform: translateZ(0) !important;
+            transform: translateZ(0) !important;
+            will-change: transform !important;
+        }
+        
+        /* Force le viewport en mode PWA */
+        html, body {
+            height: 100% !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+    }
+}
