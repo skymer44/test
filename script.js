@@ -299,7 +299,8 @@ function createPieceElement(piece) {
         </a>`);
         if (piece.links.original) links.push(`<a href="${piece.links.original}" target="_blank" title="Œuvre originale">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
-                <path d="M7 4V2C7 1.45 7.45 1 8 1S9 1.45 9 2V4H15C16.1 4 17 4.9 17 6V18C17 19.1 16.1 20 15 20H3C1.9 20 1 19.1 1 18V6C1 4.9 1.9 4 3 4H7ZM3 18H15V8H3V18ZM5 10H13V12H5V10ZM5 14H10V16H5V14Z" fill="currentColor"/>
+                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" fill="currentColor" opacity="0.1"/>
+                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="currentColor"/>
             </svg>Original
         </a>`);
         if (piece.links.purchase) links.push(`<a href="${piece.links.purchase}" target="_blank" title="Lien d'achat">

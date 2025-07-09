@@ -306,7 +306,12 @@ class ProgrammeLoader {
             </a>`);
         }
         if (links.original) {
-            linkElements.push(`<a href="${links.original}" target="_blank" title="Œuvre originale">🎬 Original</a>`);
+            linkElements.push(`<a href="${links.original}" target="_blank" title="Œuvre originale">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px; vertical-align: middle;">
+                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" fill="currentColor" opacity="0.1"/>
+                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="currentColor"/>
+                </svg>Original
+            </a>`);
         }
         if (links.purchase) {
             linkElements.push(`<a href="${links.purchase}" target="_blank" title="Lien d'achat">
