@@ -15,6 +15,33 @@ if ('serviceWorker' in navigator) {
  * Résout les problèmes de scroll et de navigation qui "disparaît"
  */
 function fixPWAStyles() {
+        // 0. Ajout d'un bandeau de debug visuel flottant (uniquement en PWA iOS)
+        if (isPWAStandalone() && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            let debugBar = document.getElementById('pwa-debug-bar');
+            if (!debugBar) {
+                debugBar = document.createElement('div');
+                debugBar.id = 'pwa-debug-bar';
+                debugBar.style.position = 'fixed';
+                debugBar.style.left = '0';
+                debugBar.style.right = '0';
+                debugBar.style.bottom = '0';
+                debugBar.style.zIndex = '10000';
+                debugBar.style.background = 'rgba(0,0,0,0.85)';
+                debugBar.style.color = '#fff';
+                debugBar.style.fontSize = '13px';
+                debugBar.style.fontFamily = 'monospace';
+                debugBar.style.padding = '6px 8px 8px 8px';
+                debugBar.style.pointerEvents = 'none';
+                debugBar.style.textAlign = 'left';
+                debugBar.style.borderTop = '2px solid #f00';
+                debugBar.style.maxWidth = '100vw';
+                debugBar.style.wordBreak = 'break-all';
+                document.body.appendChild(debugBar);
+            }
+            window.__pwaDebugBarUpdate = function(msg) {
+                debugBar.innerHTML = msg;
+            };
+        }
         // 2bis. Supprimer tout overflow/height sur main et .container (pour iOS PWA)
         const main = document.querySelector('main');
         if (main) {
@@ -33,12 +60,19 @@ function fixPWAStyles() {
         // 4bis. Debug visuel : log la position du dock et du scroll à chaque scroll
         window.addEventListener('scroll', function() {
             const dock = document.querySelector('.mobile-bottom-nav');
-            if (!dock) return;
-            const dockRect = dock.getBoundingClientRect();
             const scrollY = window.scrollY || window.pageYOffset;
             const viewportH = window.innerHeight;
-            logPWA(`🟦 ScrollY: ${scrollY}, Dock top: ${dockRect.top}, Dock bottom: ${dockRect.bottom}, ViewportH: ${viewportH}`);
+            let dockRect = { top: 'n/a', bottom: 'n/a', height: 'n/a' };
+            if (dock) {
+                const r = dock.getBoundingClientRect();
+                dockRect = { top: Math.round(r.top), bottom: Math.round(r.bottom), height: Math.round(r.height) };
+            }
+            const msg = `🟦 <b>ScrollY:</b> ${scrollY} | <b>ViewportH:</b> ${viewportH}<br>` +
+                        `<b>Dock top:</b> ${dockRect.top} | <b>Dock bottom:</b> ${dockRect.bottom} | <b>Dock height:</b> ${dockRect.height}`;
+            if (window.__pwaDebugBarUpdate) window.__pwaDebugBarUpdate(msg);
         }, { passive: true });
+        // Premier affichage
+        setTimeout(() => { window.dispatchEvent(new Event('scroll')); }, 500);
     const isStandalone = isPWAStandalone();
     
     if (isStandalone) {
