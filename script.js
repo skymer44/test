@@ -10,6 +10,126 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+/**
+ * 🔧 CORRECTION PWA : Fonction pour corriger les styles PWA dynamiquement
+ * Résout les problèmes de scroll et de navigation qui "disparaît"
+ */
+function fixPWAStyles() {
+    const isStandalone = isPWAStandalone();
+    
+    if (isStandalone) {
+        logPWA('🔧 Application des corrections CSS PWA...');
+        
+        // 1. Corriger le body pour permettre le scroll naturel
+        document.body.style.overflowY = 'auto';
+        document.body.style.webkitOverflowScrolling = 'touch';
+        
+        // 2. S'assurer que html permet le scroll
+        document.documentElement.style.overflowY = 'auto';
+        document.documentElement.style.webkitOverflowScrolling = 'touch';
+        
+        // 3. Corriger main pour avoir le bon padding
+        const mainElement = document.querySelector('main');
+        if (mainElement) {
+            mainElement.style.paddingBottom = 'calc(120px + env(safe-area-inset-bottom))';
+            mainElement.style.minHeight = 'auto'; // Laisser la hauteur naturelle
+        }
+        
+        // 4. S'assurer que la navigation reste fixe
+        const mobileNav = document.querySelector('.mobile-bottom-nav');
+        if (mobileNav) {
+            mobileNav.style.position = 'fixed';
+            mobileNav.style.bottom = '0';
+            mobileNav.style.left = '0';
+            mobileNav.style.right = '0';
+            mobileNav.style.zIndex = '9999';
+        }
+        
+        // 5. 🔧 AJOUT : Injecter CSS correctif pour PWA
+        const style = document.createElement('style');
+        style.id = 'pwa-fixes';
+        style.textContent = `
+            @media (display-mode: standalone) {
+                /* Forcer le scroll normal en PWA */
+                html, body {
+                    overflow-y: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                }
+                
+                /* Navigation mobile toujours fixe */
+                .mobile-bottom-nav {
+                    position: fixed !important;
+                    bottom: 0 !important;
+                    z-index: 9999 !important;
+                }
+                
+                /* Contenu principal avec espace suffisant */
+                main {
+                    padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+                    min-height: auto !important;
+                }
+                
+                /* Corriger les conteneurs qui pourraient poser problème */
+                .container {
+                    min-height: auto !important;
+                }
+            }
+        `;
+        
+        // Supprimer l'ancien style s'il existe
+        const existingStyle = document.getElementById('pwa-fixes');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
+        document.head.appendChild(style);
+        
+        logPWA('✅ Corrections CSS PWA appliquées');
+        
+        // 6. Corriger les problèmes de scroll spécifiques PWA
+        fixPWAScrollBehavior();
+    }
+}
+
+/**
+ * 🔧 Correction du comportement de scroll spécifique PWA
+ */
+function fixPWAScrollBehavior() {
+    // Intercepter et corriger les problèmes de scroll PWA
+    let isScrolling = false;
+    
+    // Éviter les conflits de scroll multiples
+    const originalScrollTo = window.scrollTo;
+    window.scrollTo = function(x, y) {
+        if (isScrolling) return;
+        isScrolling = true;
+        
+        // En PWA, forcer le scroll immédiat
+        if (typeof x === 'object') {
+            // scrollTo({ top: y, behavior: 'smooth' })
+            originalScrollTo.call(window, x.left || 0, x.top || 0);
+        } else {
+            // scrollTo(x, y)
+            originalScrollTo.call(window, x, y);
+        }
+        
+        setTimeout(() => { isScrolling = false; }, 100);
+    };
+    
+    // 🔧 AJOUT : Surveillance de la navigation mobile
+    setInterval(() => {
+        const mobileNav = document.querySelector('.mobile-bottom-nav');
+        if (mobileNav && getComputedStyle(mobileNav).position !== 'fixed') {
+            logPWA('⚠️ Navigation mobile perdue - restauration');
+            mobileNav.style.position = 'fixed';
+            mobileNav.style.bottom = '0';
+            mobileNav.style.zIndex = '9999';
+        }
+    }, 2000); // Vérification toutes les 2 secondes
+    
+    logPWA('✅ Comportement de scroll PWA corrigé');
+}
+
 // Fonction pour centrer les traits bleus sous les titres
 function centerBlueLines() {
     const sectionHeaders = document.querySelectorAll('.section-header h2');
@@ -382,6 +502,9 @@ function updateEventsWithNotionData(events) {
 // Attendre que le DOM soit chargé
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Fiche Musicien - Chargement terminé!');
+    
+    // 🔧 CORRECTION PWA : Appliquer les corrections CSS avant tout
+    fixPWAStyles();
     
     // Initialiser les onglets en priorité
     initTabs();
@@ -1584,8 +1707,8 @@ function navigateToPieceInPrograms(pieceName) {
     // 1. Basculer vers l'onglet Programme musical
     switchToTab('programmes');
     
-    // 2. Délai simple selon le mode
-    const delay = isStandalone ? 800 : 300;
+    // 2. 🔧 CORRECTION PWA : Délai réduit et adapté
+    const delay = isStandalone ? 400 : 300; // Réduit de 800ms à 400ms pour PWA
     logPWA(`Délai utilisé: ${delay}ms`);
     
     setTimeout(() => {
@@ -1594,14 +1717,26 @@ function navigateToPieceInPrograms(pieceName) {
         if (pieceInfo) {
             logPWA(`Pièce trouvée: "${pieceInfo.title}"`);
             
-            // Approche simplifiée pour PWA
+            // 🔧 CORRECTION PWA : Approche renforcée
             if (isStandalone) {
-                // En mode PWA, seulement scroller et mettre en évidence
-                logPWA('Traitement PWA: scroll puis highlight');
+                logPWA('Traitement PWA renforcé');
+                
+                // Multiple stratégies pour PWA
+                // Stratégie 1 : Scroll immédiat
                 scrollToPiece(pieceInfo.element);
+                
+                // Stratégie 2 : Highlight immédiat
+                highlightPiece(pieceInfo.element, pieceInfo.title);
+                
+                // Stratégie 3 : Vérification et correction après 300ms
                 setTimeout(() => {
-                    highlightPiece(pieceInfo.element, pieceInfo.title);
-                }, 200);
+                    const rect = pieceInfo.element.getBoundingClientRect();
+                    if (rect.top > window.innerHeight || rect.top < 0) {
+                        logPWA('Correction nécessaire - nouveau scroll');
+                        scrollToPiece(pieceInfo.element);
+                    }
+                }, 300);
+                
             } else {
                 // Mode navigateur normal
                 highlightPiece(pieceInfo.element, pieceInfo.title);
