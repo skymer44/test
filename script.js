@@ -91,25 +91,62 @@ function fixPWAStyles() {
                 debugBar.innerHTML = msg + `<br><b>Scroller détecté :</b> ${scrollerName}`;
             };
         }
-        // 2bis. Supprimer tout overflow/height sur main, .container ET tous les parents jusqu'à html (pour iOS PWA)
-        const main = document.querySelector('main');
-        if (main) {
-            let el = main;
-            while (el && el !== document.documentElement) {
+        // 2bis. SUPPRIMER TOUT OVERFLOW/HEIGHT SUR TOUS LES ÉLÉMENTS DU DOM (diagnostic maximal)
+        function forceAllOverflowVisible() {
+            const all = document.querySelectorAll('*');
+            all.forEach(el => {
                 el.style.overflow = 'visible';
                 el.style.overflowY = 'visible';
+                el.style.overflowX = 'visible';
                 el.style.height = 'auto';
                 el.style.minHeight = '0';
-                el = el.parentElement;
-            }
+                el.style.maxHeight = 'none';
+            });
+            document.body.style.overflow = 'visible';
+            document.body.style.overflowY = 'visible';
+            document.body.style.overflowX = 'visible';
+            document.body.style.height = 'auto';
+            document.body.style.minHeight = '0';
+            document.body.style.maxHeight = 'none';
+            document.documentElement.style.overflow = 'visible';
+            document.documentElement.style.overflowY = 'visible';
+            document.documentElement.style.overflowX = 'visible';
+            document.documentElement.style.height = 'auto';
+            document.documentElement.style.minHeight = '100vh';
+            document.documentElement.style.maxHeight = 'none';
         }
-        const containers = document.querySelectorAll('.container');
-        containers.forEach(c => {
-            c.style.overflow = 'visible';
-            c.style.overflowY = 'visible';
-            c.style.height = 'auto';
-            c.style.minHeight = '0';
-        });
+        forceAllOverflowVisible();
+
+        // Diagnostic : lister tous les éléments qui scrollent ou qui ont overflow non visible
+        function getScrollableElements() {
+            const all = document.querySelectorAll('*');
+            let scrolls = [];
+            all.forEach(el => {
+                const st = el.scrollTop;
+                const so = getComputedStyle(el).overflow;
+                const soy = getComputedStyle(el).overflowY;
+                if (st > 0 || (so && so !== 'visible') || (soy && soy !== 'visible')) {
+                    let desc = el.tagName.toLowerCase();
+                    if (el.id) desc += '#' + el.id;
+                    if (el.className) desc += '.' + el.className.toString().replace(/\s+/g, '.');
+                    scrolls.push(desc + ` (scrollTop:${st}, overflow:${so}, overflowY:${soy})`);
+                }
+            });
+            return scrolls;
+        }
+
+        // Patch la debug bar pour afficher la liste des scrollables
+        const oldUpdate2 = window.__pwaDebugBarUpdate;
+        window.__pwaDebugBarUpdate = function(msg) {
+            let scrollables = getScrollableElements();
+            let scrollInfo = scrollables.length ? `<br><b>Scrollables:</b><br>${scrollables.join('<br>')}` : '<br><b>Scrollables:</b> aucun';
+            if (typeof oldUpdate2 === 'function') {
+                oldUpdate2(msg + scrollInfo);
+            } else {
+                let debugBar = document.getElementById('pwa-debug-bar');
+                if (debugBar) debugBar.innerHTML = msg + scrollInfo;
+            }
+        };
         // 4bis. Debug visuel : log la position du dock et du scroll à chaque scroll
         window.addEventListener('scroll', function() {
             const dock = document.querySelector('.mobile-bottom-nav');
