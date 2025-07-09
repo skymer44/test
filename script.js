@@ -3140,80 +3140,16 @@ window.pdfPreloader = {
         console.log('🔄 Préchargement PDF en cours pour:', sectionId);
         this.isPreloading = true;
         
-        // 🎨 Ajouter un indicateur visuel discret
-        this.addPreloadIndicator(sectionId);
-        
         try {
             const pdfData = await this.generatePDFData(sectionId);
             this.cache.set(sectionId, pdfData);
             console.log('✅ PDF préchargé et mis en cache pour:', sectionId);
-            
-            // 🎨 Mettre à jour l'indicateur visuel
-            this.updatePreloadIndicator(sectionId, true);
-            
             return pdfData;
         } catch (error) {
             console.error('❌ Erreur préchargement PDF:', error);
-            this.updatePreloadIndicator(sectionId, false);
             return null;
         } finally {
             this.isPreloading = false;
-        }
-    },
-    
-    // Ajouter un indicateur de préchargement
-    addPreloadIndicator(sectionId) {
-        const section = document.getElementById(sectionId);
-        const pdfButton = section?.querySelector('.pdf-download-btn');
-        if (pdfButton && !pdfButton.querySelector('.preload-indicator')) {
-            const indicator = document.createElement('span');
-            indicator.className = 'preload-indicator';
-            indicator.innerHTML = '🔄';
-            indicator.style.cssText = `
-                margin-left: 8px;
-                font-size: 12px;
-                opacity: 0.7;
-                animation: spin 2s linear infinite;
-            `;
-            
-            // Ajouter l'animation CSS si elle n'existe pas
-            if (!document.querySelector('#preload-animations')) {
-                const style = document.createElement('style');
-                style.id = 'preload-animations';
-                style.textContent = `
-                    @keyframes spin {
-                        from { transform: rotate(0deg); }
-                        to { transform: rotate(360deg); }
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            pdfButton.appendChild(indicator);
-        }
-    },
-    
-    // Mettre à jour l'indicateur de préchargement
-    updatePreloadIndicator(sectionId, success) {
-        const section = document.getElementById(sectionId);
-        const indicator = section?.querySelector('.preload-indicator');
-        if (indicator) {
-            if (success) {
-                indicator.innerHTML = '⚡';
-                indicator.style.animation = 'none';
-                indicator.style.color = '#38a169';
-                indicator.title = 'PDF préchargé - téléchargement instantané';
-                
-                // Masquer l'indicateur après 3 secondes
-                setTimeout(() => {
-                    if (indicator.parentNode) {
-                        indicator.style.opacity = '0';
-                        setTimeout(() => indicator.remove(), 300);
-                    }
-                }, 3000);
-            } else {
-                indicator.remove();
-            }
         }
     },
     
@@ -4043,27 +3979,16 @@ function initPDFGeneration() {
                 
                 button.dataset.lastPdfClick = now.toString();
                 
-                // Désactiver temporairement le bouton avec indicateur intelligent
+                // Désactiver temporairement le bouton
                 const originalText = button.textContent;
-                const btnSectionId = button.getAttribute('data-section');
-                
-                // 🚀 Vérifier si le PDF est en cache
-                const isPreloaded = window.pdfPreloader && window.pdfPreloader.cache.has(btnSectionId);
-                
-                if (isPreloaded) {
-                    button.textContent = '⚡ Téléchargement...';
-                    button.style.background = 'linear-gradient(135deg, #38a169 0%, #2f855a 100%)';
-                } else {
-                    button.textContent = '📄 Génération...';
-                    button.style.background = 'linear-gradient(135deg, #d69e2e 0%, #b7791f 100%)';
-                }
-                
+                button.textContent = 'Génération...';
                 button.disabled = true;
                 
-                console.log('📄 Génération PDF pour:', btnSectionId);
+                const sectionId = this.getAttribute('data-section');
+                console.log('📄 Génération PDF pour:', sectionId);
                 
                 try {
-                    generatePDF(btnSectionId);
+                    generatePDF(sectionId);
                 } catch (error) {
                     console.error('Erreur PDF:', error);
                 } finally {
@@ -4071,7 +3996,6 @@ function initPDFGeneration() {
                     setTimeout(() => {
                         button.disabled = false;
                         button.textContent = originalText;
-                        button.style.background = ''; // Reset background
                     }, 500);
                 }
             };
