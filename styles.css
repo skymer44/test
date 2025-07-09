@@ -4117,6 +4117,57 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
     .mobile-nav-container {
         display: flex !important;
         pointer-events: auto;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-radius: 25px !important;
+        padding: 0.5rem !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+        transform: translateZ(0);
+    }
+    
+    /* Items de navigation mobile */
+    .mobile-nav-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 20px !important;
+        cursor: pointer !important;
+        flex: 1 !important;
+        min-width: 60px !important;
+        position: relative !important;
+        z-index: 2 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    
+    /* Icônes et labels */
+    .mobile-nav-icon {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.25rem !important;
+        color: #64748b !important;
+    }
+    
+    .mobile-nav-label {
+        font-size: 0.65rem !important;
+        font-weight: 500 !important;
+        color: #64748b !important;
+        text-align: center !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* État actif */
+    .mobile-nav-item.active .mobile-nav-icon {
+        color: #ffffff !important;
+    }
+    
+    .mobile-nav-item.active .mobile-nav-label {
+        color: #ffffff !important;
+        font-weight: 600 !important;
     }
     
     /* Masquer la navigation desktop en mode PWA */
