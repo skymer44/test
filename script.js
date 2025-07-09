@@ -4436,7 +4436,7 @@ document.addEventListener('click', function(e) {
 
 console.log('� Délégation globale PDF DÉSACTIVÉE pour diagnostic');
 // ================================
-// 🚨 CORRECTIF DÉFINITIF POUR DOUBLE TÉLÉCHARGEMENT PDF
+// 🚨 CORRECTIF INTELLIGENT POUR DOUBLE TÉLÉCHARGEMENT PDF
 // ================================
 
 // Supprimer toute délégation globale existante en interceptant les événements
@@ -4444,12 +4444,18 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('pdf-download-btn') || e.target.closest('.pdf-download-btn')) {
         const button = e.target.classList.contains('pdf-download-btn') ? e.target : e.target.closest('.pdf-download-btn');
         
-        // NOUVELLE LOGIQUE : Si le bouton a déjà été traité récemment, ignorer
+        // Détecter le type d'appareil
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                        ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
         const now = Date.now();
         const lastClick = button.dataset.lastPdfClick;
         
-        if (lastClick && (now - parseInt(lastClick)) < 2000) { // 2 secondes de protection
-            console.log('🚫 Clic PDF ignoré - Protection anti-double-clic active');
+        // Protection adaptative selon l'appareil
+        const protectionDelay = isMobile ? 300 : 1000; // 300ms sur mobile, 1s sur desktop
+        
+        if (lastClick && (now - parseInt(lastClick)) < protectionDelay) {
+            console.log(`🚫 Clic PDF ignoré - Protection anti-double-clic active (${protectionDelay}ms)`);
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
@@ -4459,8 +4465,8 @@ document.addEventListener('click', function(e) {
         // Marquer le bouton comme récemment cliqué
         button.dataset.lastPdfClick = now.toString();
         
-        console.log('✅ Clic PDF autorisé pour:', button.getAttribute('data-section'));
+        console.log(`✅ Clic PDF autorisé pour: ${button.getAttribute('data-section')} (${isMobile ? 'Mobile' : 'Desktop'})`);
     }
 }, true); // Phase de capture pour intercepter en premier
 
-console.log('🛡️ Protection anti-double-clic PDF activée');
+console.log('🛡️ Protection anti-double-clic PDF intelligente activée');
