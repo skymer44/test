@@ -4095,8 +4095,11 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         overflow-x: hidden;
     }
     
-    /* Navigation mobile TOUJOURS fixe en mode PWA */
+    /* FORCER l'affichage de la navigation mobile en mode PWA */
     .mobile-bottom-nav {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
@@ -4104,9 +4107,21 @@ body:has(.tab-buttons[data-active-tab="partitions"]) .back-to-top {
         z-index: 10000 !important;
         padding: 1rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
         background: transparent;
+        pointer-events: none;
         /* Optimisations performance */
         transform: translateZ(0);
         will-change: transform;
+    }
+    
+    /* S'assurer que le container flottant soit visible */
+    .mobile-nav-container {
+        display: flex !important;
+        pointer-events: auto;
+    }
+    
+    /* Masquer la navigation desktop en mode PWA */
+    .tab-navigation {
+        display: none !important;
     }
     
     /* Contenu principal avec espace pour la navigation */

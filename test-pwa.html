@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui">
+    <title>Test PWA Navigation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            min-height: 200vh; /* Force le scroll pour tester */
+        }
+        
+        .content {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+        
+        /* Test de la navigation fixe */
+        .test-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            color: #333;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        /* Mode PWA spécifique */
+        @media (display-mode: standalone) {
+            body {
+                background: linear-gradient(45deg, #48bb78, #38a169);
+            }
+            .test-nav::after {
+                content: " (MODE PWA)";
+                color: #e53e3e;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>🧪 Test Navigation PWA</h1>
+        <p>Cette page permet de tester si la navigation reste fixe en mode PWA</p>
+        
+        <div class="section">
+            <h2>Section 1</h2>
+            <p>Scrollez vers le bas pour tester...</p>
+        </div>
+        
+        <div class="section">
+            <h2>Section 2</h2>
+            <p>La navigation doit rester en bas</p>
+        </div>
+        
+        <div class="section">
+            <h2>Section 3</h2>
+            <p>En mode PWA (standalone), le fond devient vert</p>
+        </div>
+        
+        <div class="section">
+            <h2>Section 4</h2>
+            <p>Et la navigation affiche "(MODE PWA)"</p>
+        </div>
+        
+        <div class="section">
+            <h2>Section 5</h2>
+            <p>Test final de scroll</p>
+        </div>
+        
+        <div class="section">
+            <h2>Section 6</h2>
+            <p>Fin du test</p>
+        </div>
+    </div>
+    
+    <div class="test-nav">
+        📱 Navigation Test
+    </div>
+</body>
+</html>

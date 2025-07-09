@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui">
+    <title>🔍 Diagnostic Navigation PWA</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f8ff;
+            min-height: 300vh;
+            padding: 2rem;
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 20000;
+            max-width: 300px;
+        }
+        
+        .test-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem;
+            border-radius: 25px;
+            z-index: 10000;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border: 2px solid #667eea;
+        }
+        
+        .section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Indicateur PWA */
+        .pwa-indicator {
+            display: none;
+            background: #48bb78;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        @media (display-mode: standalone) {
+            body {
+                background: #e6fffa;
+            }
+            .pwa-indicator {
+                display: block;
+            }
+            .test-nav {
+                border-color: #48bb78;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        <div id="debug-content">
+            🔍 Diagnostic en cours...
+        </div>
+    </div>
+
+    <div class="pwa-indicator">
+        ✅ MODE PWA ACTIF
+    </div>
+    
+    <h1>🔍 Diagnostic Navigation PWA</h1>
+    
+    <div class="section">
+        <h2>Test 1: Information de base</h2>
+        <p><strong>Largeur d'écran:</strong> <span id="screen-width"></span>px</p>
+        <p><strong>Mode d'affichage:</strong> <span id="display-mode"></span></p>
+        <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+    </div>
+    
+    <div class="section">
+        <h2>Test 2: Scrollez vers le bas</h2>
+        <p>La navigation blanche en bas doit rester fixe.</p>
+        <p>Si elle disparaît ou n'est pas visible, il y a un problème.</p>
+    </div>
+    
+    <div class="section">
+        <h2>Test 3: Contenu long</h2>
+        <p>Cette page fait 3x la hauteur de l'écran pour forcer le scroll.</p>
+    </div>
+    
+    <div class="section">
+        <h2>Test 4: Milieu de page</h2>
+        <p>Navigation toujours visible ?</p>
+    </div>
+    
+    <div class="section">
+        <h2>Test 5: Plus de contenu</h2>
+        <p>Test de persistance de la navigation...</p>
+    </div>
+    
+    <div class="section">
+        <h2>Test 6: Fin de page</h2>
+        <p>Dernière vérification de la navigation fixe</p>
+    </div>
+    
+    <div class="test-nav">
+        📱 Navigation Test - Devrait rester fixe !
+    </div>
+
+    <script>
+        function updateDebugInfo() {
+            const debugContent = document.getElementById('debug-content');
+            const screenWidth = document.getElementById('screen-width');
+            const displayMode = document.getElementById('display-mode');
+            const userAgent = document.getElementById('user-agent');
+            
+            screenWidth.textContent = window.innerWidth;
+            userAgent.textContent = navigator.userAgent.substring(0, 50) + '...';
+            
+            // Détecter le mode d'affichage
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                displayMode.textContent = 'PWA Standalone';
+                displayMode.style.color = '#48bb78';
+            } else if (window.matchMedia('(display-mode: fullscreen)').matches) {
+                displayMode.textContent = 'Plein écran';
+                displayMode.style.color = '#ed8936';
+            } else {
+                displayMode.textContent = 'Navigateur normal';
+                displayMode.style.color = '#667eea';
+            }
+            
+            // Info de debug détaillée
+            debugContent.innerHTML = `
+                <strong>📱 Diagnostic Navigation</strong><br>
+                Largeur: ${window.innerWidth}px<br>
+                Hauteur: ${window.innerHeight}px<br>
+                PWA: ${window.matchMedia('(display-mode: standalone)').matches ? '✅' : '❌'}<br>
+                Mobile: ${window.innerWidth <= 768 ? '✅' : '❌'}<br>
+                Scroll Y: ${window.scrollY}px
+            `;
+        }
+        
+        updateDebugInfo();
+        window.addEventListener('resize', updateDebugInfo);
+        window.addEventListener('scroll', updateDebugInfo);
+        
+        // Test périodique
+        setInterval(updateDebugInfo, 1000);
+    </script>
+</body>
+</html>
