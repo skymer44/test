@@ -1,15 +1,12 @@
 
-// Service Worker pour PWA iOS - Version avec Splash Screen v20250710
-const CACHE_NAME = 'programme-musical-v20250710';
+// Service Worker pour PWA iOS - Version corrigée v20250709
+const CACHE_NAME = 'programme-musical-v20250709';
 const urlsToCache = [
     '/',
     '/index.html',
     '/styles.css',
     '/script.js',
-    '/manifest.json',
-    // Icônes pour le splash screen
-    '/icons/icon-192x192.svg',
-    '/icons/icon-512x512.svg'
+    '/manifest.json'
 ];
 
 // Installation - mise en cache des ressources critiques
