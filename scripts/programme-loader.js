@@ -419,47 +419,17 @@ class ProgrammeLoader {
     injectContent(containerId, html) {
         const container = document.getElementById(containerId);
         if (container) {
-            // 🎯 Vérifier si c'est la première visite pour gérer les animations
-            const isFirstVisit = !window.visitedTabs || !window.visitedTabs.has('programmes');
-            
-            console.log('🔍 DEBUG VISITE:', {
-                visitedTabs: Array.from(window.visitedTabs || []),
-                hasProgrammes: window.visitedTabs && window.visitedTabs.has('programmes'),
-                isFirstVisit: isFirstVisit
-            });
-            
             container.innerHTML = html;
             
-            // 🎯 Gérer les animations selon l'état de visite (style Partitions)
-            if (isFirstVisit) {
-                console.log('🎬 Première visite - Animation style Partitions');
-                const elements = container.querySelectorAll('.concert-section, .piece-card');
-                elements.forEach((element, index) => {
-                    // Préparer l'animation
-                    element.style.opacity = '0';
-                    element.style.transform = 'translateY(20px)';
-                    element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    element.style.transitionDelay = `${index * 0.1}s`;
-                    element.dataset.animationPrepared = 'true';
-                    
-                    // Déclencher l'animation immédiatement
-                    setTimeout(() => {
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                    }, 100 + (index * 100)); // Délai progressif
-                });
-                console.log(`✨ ${elements.length} éléments avec animation progressive`);
-            } else {
-                console.log('🛡️ Visite répétée - Affichage immédiat (pas d\'animation)');
-                const elements = container.querySelectorAll('.concert-section, .piece-card');
-                elements.forEach(element => {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                    element.style.transition = 'none';
-                    element.dataset.animationPrepared = 'true';
-                });
-                console.log(`✅ ${elements.length} éléments affichés immédiatement`);
-            }
+            // Affichage simple et immédiat - plus de complexité d'animations
+            const elements = container.querySelectorAll('.concert-section, .piece-card');
+            elements.forEach(element => {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+                element.style.transition = 'none';
+            });
+            
+            console.log(`✅ ${elements.length} éléments affichés (animation simplifiée)`);
             
             // Réactiver les événements après injection
             this.reactivateEvents(container);
@@ -540,24 +510,9 @@ class ProgrammeLoader {
      * Vérifie s'il y a des mises à jour disponibles
      */
     async checkForUpdates() {
-        try {
-            const currentData = this.dataCache['data/pieces.json'];
-            if (!currentData) return;
-            
-            const newData = await this.fetchData('data/pieces.json');
-            
-            // Comparer les timestamps de sync
-            const currentSync = currentData.data.metadata?.syncDate;
-            const newSync = newData.metadata?.syncDate;
-            
-            if (newSync && newSync !== currentSync) {
-                console.log('🔄 Nouvelle version des données détectée');
-                this.showUpdateNotification();
-            }
-            
-        } catch (error) {
-            console.warn('Erreur vérification mises à jour:', error);
-        }
+        // DÉSACTIVÉ COMPLÈTEMENT : Plus de vérifications pour éviter les requêtes
+        console.log('�️ checkForUpdates désactivé pour stabilité');
+        return;
     }
 
     /**
