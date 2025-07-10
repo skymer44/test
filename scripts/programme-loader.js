@@ -75,61 +75,44 @@ class ProgrammeLoader {
      * Récupère les données depuis un fichier JSON avec cache
      */
     async fetchData(url) {
+        // Vérifier le cache d'abord (valable 5 minutes)
+        if (this.dataCache[url]) {
+            const cached = this.dataCache[url];
+            if (Date.now() - cached.timestamp < 300000) { // 5 minutes
+                console.log(`✅ Cache utilisé pour ${url}`);
+                return cached.data;
+            }
+        }
+
         try {
-            // 🛡️ PROTECTION: Essayer plusieurs stratégies pour contourner les erreurs 503
-            const strategies = [
-                // Stratégie 1: URL normale avec cache-buster
-                () => fetch(url + `?t=${Date.now()}`),
-                // Stratégie 2: URL sans cache-buster (au cas où le service worker pose problème)
-                () => fetch(url),
-                // Stratégie 3: Forcer bypass du cache
-                () => fetch(url, { cache: 'no-cache', headers: { 'Cache-Control': 'no-cache' } })
-            ];
+            console.log(`🔄 Chargement de ${url}`);
+            const response = await fetch(url + `?t=${Date.now()}`);
             
-            let lastError = null;
-            
-            for (let i = 0; i < strategies.length; i++) {
-                try {
-                    console.log(`🔄 Tentative ${i + 1}/3 pour charger ${url}`);
-                    const response = await strategies[i]();
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        
-                        // Mettre en cache
-                        this.dataCache[url] = {
-                            data,
-                            timestamp: Date.now()
-                        };
-                        
-                        console.log(`✅ Succès stratégie ${i + 1} pour ${url}`);
-                        return data;
-                    } else {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                } catch (error) {
-                    lastError = error;
-                    console.warn(`⚠️ Stratégie ${i + 1} échouée:`, error.message);
-                    
-                    // Petit délai avant la stratégie suivante
-                    if (i < strategies.length - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 200));
-                    }
-                }
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Mettre en cache
+                this.dataCache[url] = {
+                    data,
+                    timestamp: Date.now()
+                };
+                
+                console.log(`✅ Données chargées depuis: ${url}`);
+                return data;
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            // 🛡️ FALLBACK: Si toutes les stratégies échouent, essayer le cache
+        } catch (error) {
+            console.error(`❌ Erreur pour ${url}:`, error);
+            
+            // Fallback vers cache même expiré
             if (this.dataCache[url]) {
-                console.warn(`🔄 Toutes les stratégies ont échoué, utilisation du cache pour ${url}`);
+                console.warn(`🔄 Utilisation du cache expiré pour ${url}`);
                 return this.dataCache[url].data;
             }
             
-            throw lastError || new Error('Toutes les tentatives ont échoué');
-            
-        } catch (error) {
-            console.error(`❌ Erreur finale pour ${url}:`, error);
-            
-            // 🛡️ FALLBACK ULTIME: Données par défaut pour éviter le crash complet
+            // Fallback ultime
             if (url.includes('pieces.json')) {
                 console.warn('🔄 Utilisation des données de fallback pour pieces.json');
                 return {
@@ -487,20 +470,23 @@ class ProgrammeLoader {
      * Réactive les événements après injection de contenu
      */
     reactivateEvents(container) {
-        // ❌ SUPPRIMÉ: Les boutons PDF sont maintenant gérés exclusivement par initPDFGeneration() dans script.js
-        // Cela évite la duplication d'event listeners qui causait les clics multiples sur mobile
+        // ✅ CORRECTION : Ne plus configurer les boutons PDF ici
+        // Ils sont gérés exclusivement par initPDFGeneration() dans script.js
+        console.log('🔧 ProgrammeLoader: Event listeners PDF non configurés (gérés par script.js)');
         
-        console.log('🔧 ProgrammeLoader: Event listeners configurés (PDF géré par script.js)');
-        
-        // Réactiver les liens audio/vidéo si nécessaire
+        // Réactiver seulement les liens audio/vidéo si nécessaire
         const audioLinks = container.querySelectorAll('a[title*="audio"], a[title*="Audio"]');
         audioLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                if (window.handleAudioLink && typeof window.handleAudioLink === 'function') {
-                    e.preventDefault();
-                    window.handleAudioLink(link.href, link.textContent);
-                }
-            });
+            // Vérifier qu'il n'a pas déjà un listener
+            if (!link.hasAttribute('data-audio-listener')) {
+                link.addEventListener('click', (e) => {
+                    if (window.handleAudioLink && typeof window.handleAudioLink === 'function') {
+                        e.preventDefault();
+                        window.handleAudioLink(link.href, link.textContent);
+                    }
+                });
+                link.setAttribute('data-audio-listener', 'true');
+            }
         });
     }
 
@@ -529,26 +515,25 @@ class ProgrammeLoader {
      * Configure les écouteurs d'événements pour les onglets
      */
     setupTabListeners() {
-        const tabButtons = document.querySelectorAll('.tab-button');
-        tabButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const targetTab = e.target.dataset.tab;
-                if (targetTab === 'programmes') {
-                    // Recharger si nécessaire
-                    this.checkForUpdates();
-                }
-            });
-        });
+        // DÉSACTIVÉ : Plus d'écoute d'onglets pour éviter les rechargements
+        console.log('🛡️ Écouteurs d\'onglets désactivés pour stabilité');
     }
 
     /**
      * Démarre la vérification périodique des mises à jour
      */
     startUpdateChecker() {
-        // Vérifier toutes les 5 minutes
-        setInterval(() => {
-            this.checkForUpdates();
-        }, 5 * 60 * 1000);
+        // DÉSACTIVÉ : Vérifications automatiques pour éviter la boucle infinie
+        console.log('🛡️ Vérifications automatiques désactivées pour stabilité');
+        
+        // Vérifier seulement au focus de la page (maximum 1 fois par 10 minutes)
+        let lastCheck = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && Date.now() - lastCheck > 600000) { // 10 minutes minimum
+                lastCheck = Date.now();
+                this.checkForUpdates();
+            }
+        });
     }
 
     /**
