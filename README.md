@@ -2,6 +2,8 @@
 
 Site web de programme musical avec synchronisation automatique Notion. 🎼✨
 
+<!-- Test de synchronisation GitHub - 10 juillet 2025 -->
+
 ## 🚀 Utilisation rapide
 
 ### Mise à jour manuelle
