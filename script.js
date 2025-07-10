@@ -1,4 +1,4 @@
-// 📱 PWA Service Worker Registration (optimisé v20250709)
+// 📱 PWA Service Worker Registration (optimisé v20250710)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
         try {
@@ -15,6 +15,114 @@ if ('serviceWorker' in navigator) {
         }
     });
 }
+
+// 🎯 Détection intelligente de plateforme PWA
+function detectPWAPlatform() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const userAgent = navigator.userAgent;
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+    
+    // Détection basée sur les dimensions et user agent
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isMac = /Macintosh/.test(userAgent);
+    const isIPad = /iPad/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    console.log('🔍 Détection plateforme PWA:', {
+        isStandalone,
+        isIOS,
+        isMac,
+        isIPad,
+        screenWidth,
+        screenHeight,
+        userAgent: userAgent.substring(0, 50) + '...'
+    });
+    
+    if (isStandalone) {
+        if (isIOS && !isIPad) {
+            // iPhone - navigation dock
+            console.log('📱 PWA iPhone détectée - dock mobile');
+            return 'ios-mobile';
+        } else if (isIPad) {
+            // iPad - dock optimisé ou navigation desktop selon orientation
+            const isLandscape = screenWidth > screenHeight;
+            console.log('📱 PWA iPad détectée - mode', isLandscape ? 'paysage (desktop)' : 'portrait (dock)');
+            return isLandscape ? 'ipad-landscape' : 'ipad-portrait';
+        } else if (isMac || screenWidth >= 1024) {
+            // Mac/PC - navigation desktop
+            console.log('💻 PWA Desktop détectée - navigation header');
+            return 'desktop';
+        }
+    }
+    
+    // Fallback vers détection responsive classique
+    console.log('🌐 Mode web classique - responsive');
+    return 'web';
+}
+
+// 🎯 Ajuster l'interface selon la plateforme
+function adjustInterfaceForPlatform() {
+    const platform = detectPWAPlatform();
+    const body = document.body;
+    
+    // Nettoyer les classes précédentes
+    body.classList.remove('pwa-ios-mobile', 'pwa-ipad-portrait', 'pwa-ipad-landscape', 'pwa-desktop', 'pwa-web');
+    
+    // Ajouter la classe correspondante
+    body.classList.add(`pwa-${platform.replace('-', '-')}`);
+    
+    // Forcer l'affichage correct selon la plateforme
+    const tabNavigation = document.querySelector('.tab-navigation');
+    const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+    
+    if (platform === 'desktop' || platform === 'ipad-landscape') {
+        // Force navigation desktop
+        if (tabNavigation) {
+            tabNavigation.style.display = 'block';
+            tabNavigation.style.setProperty('display', 'block', 'important');
+        }
+        if (mobileBottomNav) {
+            mobileBottomNav.style.display = 'none';
+            mobileBottomNav.style.setProperty('display', 'none', 'important');
+        }
+        console.log('✅ Interface ajustée : Navigation desktop forcée');
+    } else if (platform === 'ios-mobile' || platform === 'ipad-portrait') {
+        // Force navigation mobile
+        if (mobileBottomNav) {
+            mobileBottomNav.style.display = 'flex';
+            mobileBottomNav.style.setProperty('display', 'flex', 'important');
+        }
+        if (tabNavigation) {
+            tabNavigation.style.display = 'none';
+            tabNavigation.style.setProperty('display', 'none', 'important');
+        }
+        console.log('✅ Interface ajustée : Navigation mobile forcée');
+    }
+    
+    return platform;
+}
+
+// 🎯 Fonction de basculement manuel (debug/fallback)
+window.toggleNavigationMode = function() {
+    const tabNavigation = document.querySelector('.tab-navigation');
+    const mobileBottomNav = document.querySelector('.mobile-bottom-nav');
+    
+    if (tabNavigation && mobileBottomNav) {
+        const isDesktopVisible = getComputedStyle(tabNavigation).display !== 'none';
+        
+        if (isDesktopVisible) {
+            // Basculer vers mobile
+            tabNavigation.style.setProperty('display', 'none', 'important');
+            mobileBottomNav.style.setProperty('display', 'flex', 'important');
+            console.log('🔄 Basculé vers navigation mobile');
+        } else {
+            // Basculer vers desktop
+            mobileBottomNav.style.setProperty('display', 'none', 'important');
+            tabNavigation.style.setProperty('display', 'block', 'important');
+            console.log('🔄 Basculé vers navigation desktop');
+        }
+    }
+};
 
 // Fonction pour centrer les traits bleus sous les titres
 function centerBlueLines() {
@@ -389,8 +497,14 @@ function updateEventsWithNotionData(events) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Fiche Musicien - Chargement terminé!');
     
-    // Initialiser les onglets en priorité
-    initTabs();
+    // 🎯 PRIORITÉ 1: Ajuster l'interface selon la plateforme PWA
+    const platform = adjustInterfaceForPlatform();
+    console.log('✅ Plateforme détectée et interface ajustée:', platform);
+    
+    // 🎯 PRIORITÉ 2: Initialiser les onglets après ajustement de l'interface
+    setTimeout(() => {
+        initTabs();
+    }, 50);
     
     // Initialiser les autres fonctionnalités
     try {
@@ -650,16 +764,31 @@ function initTabs() {
         window.showTab(firstTabId);
     }
     
-    // 🔄 Gestionnaire de redimensionnement pour recalculer la position de l'indicateur mobile
+    // 🔄 Gestionnaire de redimensionnement pour recalculer les interfaces
     window.addEventListener('resize', function() {
-        // Trouver l'onglet actuellement actif
-        const activeItem = document.querySelector('.mobile-nav-item.active');
-        if (activeItem && typeof window.animateMobileIndicator === 'function') {
-            // Recalculer la position après un petit délai pour que le redimensionnement soit terminé
-            setTimeout(() => {
+        // Réajuster l'interface selon la nouvelle taille/orientation
+        setTimeout(() => {
+            adjustInterfaceForPlatform();
+            
+            // Trouver l'onglet actuellement actif et recalculer les indicateurs
+            const activeItem = document.querySelector('.mobile-nav-item.active');
+            if (activeItem && typeof window.animateMobileIndicator === 'function') {
                 window.animateMobileIndicator(activeItem);
-            }, 100);
-        }
+            }
+            
+            const activeButton = document.querySelector('.tab-button.active');
+            if (activeButton && typeof animateTabIndicator === 'function') {
+                animateTabIndicator(activeButton);
+            }
+        }, 100);
+    });
+    
+    // 🔄 Gestionnaire de changement d'orientation pour iPad
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            console.log('📱 Changement d\'orientation détecté');
+            adjustInterfaceForPlatform();
+        }, 200);
     });
 }
 

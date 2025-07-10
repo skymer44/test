@@ -595,11 +595,52 @@ header h1 {
 }
 
 /* ========================================
-   🎯 PWA MODE STANDALONE - PRIORITÉ ABSOLUE
+   🎯 CLASSES SPÉCIFIQUES PAR PLATEFORME PWA
    ======================================== */
 
-/* RÈGLE PWA SPÉCIFIQUE - doit être AVANT les media queries mobile */
-@media all and (display-mode: standalone) {
+/* Règles spécifiques pour forcer l'affichage correct */
+body.pwa-desktop .mobile-bottom-nav,
+body.pwa-ipad-landscape .mobile-bottom-nav {
+    display: none !important;
+}
+
+body.pwa-desktop .tab-navigation,
+body.pwa-ipad-landscape .tab-navigation {
+    display: block !important;
+}
+
+body.pwa-ios-mobile .tab-navigation,
+body.pwa-ipad-portrait .tab-navigation {
+    display: none !important;
+}
+
+body.pwa-ios-mobile .mobile-bottom-nav,
+body.pwa-ipad-portrait .mobile-bottom-nav {
+    display: flex !important;
+}
+
+/* Ajustements spécifiques pour Mac PWA */
+body.pwa-desktop {
+    /* Assurer un padding approprié sans dock mobile */
+    main {
+        padding-bottom: 2rem !important;
+    }
+}
+
+/* Ajustements spécifiques pour iPad portrait */
+body.pwa-ipad-portrait {
+    /* Espace supplémentaire pour le dock optimisé */
+    main {
+        padding-bottom: 180px !important;
+    }
+}
+
+/* ========================================
+   🎯 PWA MODE STANDALONE - STRATÉGIE ADAPTATIVE PAR PLATEFORME
+   ======================================== */
+
+/* 📱 PWA MOBILE (iPhone uniquement) - Navigation dock */
+@media all and (display-mode: standalone) and (max-width: 768px) and (max-height: 1024px) {
     /* S'assurer que le contenu respecte les zones sûres */
     body {
         padding-top: env(safe-area-inset-top) !important;
@@ -607,7 +648,7 @@ header h1 {
         padding-right: env(safe-area-inset-right) !important;
     }
     
-    /* Navigation mobile */
+    /* Navigation mobile dock pour iPhone */
     .mobile-bottom-nav {
         display: flex !important;
         justify-content: center !important;
@@ -639,6 +680,100 @@ header h1 {
     
     .tab-navigation {
         display: none !important;
+    }
+}
+
+/* 💻 PWA DESKTOP (Mac, PC) - Navigation header comme le web */
+@media all and (display-mode: standalone) and (min-width: 769px) {
+    /* S'assurer que le contenu respecte les zones sûres */
+    body {
+        padding-top: env(safe-area-inset-top) !important;
+        padding-left: env(safe-area-inset-left) !important;
+        padding-right: env(safe-area-inset-right) !important;
+    }
+    
+    /* Forcer l'affichage de la navigation desktop */
+    .tab-navigation {
+        display: block !important;
+    }
+    
+    /* Masquer complètement la navigation mobile */
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+    
+    /* Ajuster le padding du contenu principal */
+    main {
+        padding-bottom: 2rem !important;
+    }
+}
+
+/* 📱 PWA TABLETTE (iPad Pro) - Navigation dock optimisée */
+@media all and (display-mode: standalone) and (min-width: 769px) and (max-width: 1366px) and (orientation: portrait) {
+    /* Navigation mobile dock pour tablette mais optimisée */
+    .mobile-bottom-nav {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 10000 !important;
+        padding: 1.5rem 2rem calc(1.5rem + env(safe-area-inset-bottom)) !important;
+        background: transparent !important;
+        pointer-events: none !important;
+    }
+    
+    .mobile-nav-container {
+        display: flex !important;
+        pointer-events: auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-radius: 30px !important;
+        padding: 0.75rem 1rem !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        max-width: 400px !important;
+    }
+    
+    /* Onglets plus grands pour tablette */
+    .mobile-nav-item {
+        padding: 1rem 1.5rem !important;
+        min-width: 80px !important;
+    }
+    
+    .mobile-nav-icon {
+        font-size: 1.6rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .mobile-nav-label {
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+    }
+    
+    .tab-navigation {
+        display: none !important;
+    }
+}
+
+/* 📱 PWA TABLETTE PAYSAGE (iPad Pro horizontal) - Navigation desktop */
+@media all and (display-mode: standalone) and (min-width: 769px) and (max-width: 1366px) and (orientation: landscape) {
+    /* Forcer l'affichage de la navigation desktop en mode paysage */
+    .tab-navigation {
+        display: block !important;
+    }
+    
+    /* Masquer complètement la navigation mobile */
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+    
+    /* Ajuster le padding du contenu principal */
+    main {
+        padding-bottom: 2rem !important;
     }
 }
 
