@@ -682,16 +682,20 @@ function initTabs() {
             return;
         }
         
+        // 📱 DÉTECTION IPAD: Ajuster les calculs pour iPad vs iPhone
+        const isIPadVersion = window.innerWidth >= 769 && window.innerWidth <= 1366;
+        const padding = isIPadVersion ? 0.75 : 0.5; // rem
+        const marginOffset = isIPadVersion ? 0.5 : 0.33; // rem
+        
         // Position relative de l'onglet actif par rapport au conteneur
         const relativeLeft = activeItemRect.left - containerRect.left;
         
         // Largeur de l'onglet actif
         const itemWidth = activeItemRect.width;
         
-        // L'indicateur CSS a une largeur de calc(33.333% - 0.33rem)
-        // Calculons sa largeur réelle
+        // L'indicateur CSS a une largeur différente selon la plateforme
         const remToPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-        const indicatorWidth = (containerRect.width * 0.33333) - (0.33 * remToPx);
+        const indicatorWidth = (containerRect.width * 0.33333) - (marginOffset * remToPx);
         
         // 🛡️ PROTECTION: Vérifier que l'indicateur a une largeur positive
         if (indicatorWidth <= 0) {
@@ -703,8 +707,8 @@ function initTabs() {
         // Position = position de l'onglet + (largeur onglet - largeur indicateur) / 2
         const centeredPosition = relativeLeft + (itemWidth - indicatorWidth) / 2;
         
-        // Tenir compte du left: 0.5rem de l'indicateur
-        const leftOffset = 0.5 * remToPx;
+        // Tenir compte du padding différent selon la plateforme
+        const leftOffset = padding * remToPx;
         const finalPosition = centeredPosition - leftOffset;
         
         // 🛡️ PROTECTION: S'assurer que la position est un nombre valide
@@ -716,7 +720,7 @@ function initTabs() {
         // Appliquer la position en pixels
         container.style.setProperty('--nav-indicator-position', `${finalPosition}px`);
         
-        console.log(`🎨 Animation indicateur mobile vers onglet ${activeIndex} (${finalPosition.toFixed(1)}px)`);
+        console.log(`🎨 Animation indicateur mobile vers onglet ${activeIndex} (${finalPosition.toFixed(1)}px) [${isIPadVersion ? 'iPad' : 'iPhone'}]`);
     };
     
     // Gérer les clics sur les boutons d'onglets desktop

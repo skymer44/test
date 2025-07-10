@@ -736,22 +736,115 @@ body.pwa-ipad-portrait {
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
         max-width: 400px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        /* ✅ AJOUT: Optimisations performance comme iPhone */
+        will-change: transform !important;
+        transform: translateZ(0) !important;
     }
     
-    /* Onglets plus grands pour tablette */
+    /* ✅ CORRECTION: Indicateur animé pour iPad comme iPhone */
+    .mobile-nav-container::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0.75rem !important;
+        bottom: 0.75rem !important;
+        left: 0.75rem !important;
+        width: calc(33.333% - 0.5rem) !important;
+        background: var(--mobile-nav-color, linear-gradient(135deg, #4299e1 0%, #667eea 100%)) !important;
+        border-radius: 25px !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform: translateX(var(--nav-indicator-position, 0)) !important;
+        z-index: 1 !important;
+        box-shadow: var(--mobile-nav-shadow, 0 4px 12px rgba(66, 153, 225, 0.3)) !important;
+    }
+
+    /* ✅ CORRECTION: Couleurs selon l'onglet actif pour iPad */
+    .mobile-nav-container[data-active-tab="prochains-evenements"]::before {
+        --mobile-nav-color: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
+        --mobile-nav-shadow: 0 4px 12px rgba(72, 187, 120, 0.3) !important;
+    }
+
+    .mobile-nav-container[data-active-tab="programmes"]::before {
+        --mobile-nav-color: linear-gradient(135deg, #4299e1 0%, #667eea 100%) !important;
+        --mobile-nav-shadow: 0 4px 12px rgba(66, 153, 225, 0.3) !important;
+    }
+
+    .mobile-nav-container[data-active-tab="partitions"]::before {
+        --mobile-nav-color: linear-gradient(135deg, #e53e3e 0%, #c53030 100%) !important;
+        --mobile-nav-shadow: 0 4px 12px rgba(229, 62, 62, 0.3) !important;
+    }
+    
+    /* ✅ CORRECTION: Onglets optimisés pour tablette avec centrage */
     .mobile-nav-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
         padding: 1rem 1.5rem !important;
+        border-radius: 25px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer !important;
+        flex: 1 !important;
         min-width: 80px !important;
+        position: relative !important;
+        z-index: 2 !important;
+        background: transparent !important;
+        text-align: center !important;
+    }
+    
+    /* ✅ CORRECTION: États actif/inactif comme iPhone */
+    .mobile-nav-item.active {
+        background: transparent !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
     
     .mobile-nav-icon {
         font-size: 1.6rem !important;
         margin-bottom: 0.5rem !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* ✅ CORRECTION: Couleurs des icônes selon l'état */
+    .mobile-nav-item.active .mobile-nav-icon {
+        color: #ffffff !important;
+        transform: scale(1.1) !important;
+    }
+    
+    .mobile-nav-item:not(.active) .mobile-nav-icon {
+        color: #64748b !important;
+        transform: scale(0.95) !important;
     }
     
     .mobile-nav-label {
         font-size: 0.8rem !important;
         font-weight: 600 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        text-align: center !important;
+        line-height: 1.2 !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+    }
+    
+    /* ✅ CORRECTION: Couleurs des labels selon l'état */
+    .mobile-nav-item.active .mobile-nav-label {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    .mobile-nav-item:not(.active) .mobile-nav-label {
+        color: #64748b !important;
+        opacity: 0.8 !important;
+    }
+    
+    /* ✅ CORRECTION: Effet hover/tap pour tablette */
+    .mobile-nav-item:not(.active):active {
+        transform: scale(0.98) !important;
     }
     
     .tab-navigation {
