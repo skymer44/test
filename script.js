@@ -95,7 +95,9 @@ class SkeletonLoadingManager {
             'header',
             '.tab-navigation',
             'main',
-            '.mobile-bottom-nav'
+            '.mobile-bottom-nav',
+            '.main-event-content',
+            '#upcoming-events-list'
         ];
         
         elementsToAnimate.forEach((selector, index) => {
@@ -106,6 +108,8 @@ class SkeletonLoadingManager {
                 }, index * 100);
             }
         });
+        
+        console.log('🎨 Animation de révélation du contenu terminée');
     }
 }
 

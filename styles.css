@@ -22,8 +22,17 @@
     .skeleton-loading h1,
     .skeleton-loading h2,
     .skeleton-loading h3,
+    .skeleton-loading h4,
+    .skeleton-loading h5,
     .skeleton-loading .tab-button,
-    .skeleton-loading .mobile-nav-item {
+    .skeleton-loading .mobile-nav-item,
+    .skeleton-loading .main-event-content,
+    .skeleton-loading .event-type-badge,
+    .skeleton-loading .event-date,
+    .skeleton-loading .countdown-number,
+    .skeleton-loading .event-pieces h4,
+    .skeleton-loading .piece-item,
+    .skeleton-loading .event-notes {
         background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
         background-size: 200% 100%;
         animation: skeletonShimmer 1.5s infinite;
@@ -34,13 +43,16 @@
     }
     
     .skeleton-loading .tab-button svg,
-    .skeleton-loading .mobile-nav-item svg {
+    .skeleton-loading .mobile-nav-item svg,
+    .skeleton-loading .main-event-content svg,
+    .skeleton-loading .event-type-badge svg {
         opacity: 0;
     }
     
     /* Formes de skeleton pour différents éléments */
     .skeleton-loading .piece-card,
-    .skeleton-loading .mini-event-card {
+    .skeleton-loading .mini-event-card,
+    .skeleton-loading .main-event-content {
         background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
         background-size: 200% 100%;
         animation: skeletonShimmer 1.5s infinite;
@@ -49,8 +61,41 @@
     }
     
     .skeleton-loading .piece-card > *,
-    .skeleton-loading .mini-event-card > * {
-        opacity: 0;
+    .skeleton-loading .mini-event-card > *,
+    .skeleton-loading .main-event-content > * {
+        opacity: 0.3;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeletonShimmer 1.5s infinite;
+        color: transparent !important;
+    }
+    
+    /* Skeleton spécifique pour la grande carte événement */
+    .skeleton-loading .main-event-content .main-event-header,
+    .skeleton-loading .main-event-content .event-meta,
+    .skeleton-loading .main-event-content .event-pieces,
+    .skeleton-loading .main-event-content .pieces-list {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeletonShimmer 1.5s infinite;
+        border-radius: 4px;
+        margin-bottom: 8px;
+        min-height: 24px;
+    }
+    
+    /* Forcer l'animation skeleton sur la zone principale des événements */
+    .skeleton-loading #main-next-event,
+    .skeleton-loading #upcoming-events-list {
+        opacity: 0.8;
+    }
+    
+    .skeleton-loading #main-next-event *,
+    .skeleton-loading #upcoming-events-list * {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+        background-size: 200% 100% !important;
+        animation: skeletonShimmer 1.5s infinite !important;
+        color: transparent !important;
+        border-radius: 4px;
     }
 }
 
@@ -98,11 +143,68 @@
 .ios-pwa.skeleton-loading h1,
 .ios-pwa.skeleton-loading h2,
 .ios-pwa.skeleton-loading h3,
+.ios-pwa.skeleton-loading h4,
+.ios-pwa.skeleton-loading h5,
 .ios-pwa.skeleton-loading .tab-button,
-.ios-pwa.skeleton-loading .mobile-nav-item {
+.ios-pwa.skeleton-loading .mobile-nav-item,
+.ios-pwa.skeleton-loading .main-event-content,
+.ios-pwa.skeleton-loading .event-type-badge,
+.ios-pwa.skeleton-loading .event-date,
+.ios-pwa.skeleton-loading .countdown-number,
+.ios-pwa.skeleton-loading .event-pieces h4,
+.ios-pwa.skeleton-loading .piece-item,
+.ios-pwa.skeleton-loading .event-notes {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: skeletonShimmer 1.5s infinite;
+    color: transparent !important;
+    border-radius: 4px;
+}
+
+.ios-pwa.skeleton-loading .piece-card,
+.ios-pwa.skeleton-loading .mini-event-card,
+.ios-pwa.skeleton-loading .main-event-content {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: 8px;
+    min-height: 120px;
+}
+
+.ios-pwa.skeleton-loading .piece-card > *,
+.ios-pwa.skeleton-loading .mini-event-card > *,
+.ios-pwa.skeleton-loading .main-event-content > * {
+    opacity: 0.3;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    color: transparent !important;
+}
+
+/* Skeleton spécifique pour la grande carte événement iOS */
+.ios-pwa.skeleton-loading .main-event-content .main-event-header,
+.ios-pwa.skeleton-loading .main-event-content .event-meta,
+.ios-pwa.skeleton-loading .main-event-content .event-pieces,
+.ios-pwa.skeleton-loading .main-event-content .pieces-list {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    min-height: 24px;
+}
+
+/* Forcer l'animation skeleton sur la zone principale des événements iOS */
+.ios-pwa.skeleton-loading #main-next-event,
+.ios-pwa.skeleton-loading #upcoming-events-list {
+    opacity: 0.8;
+}
+
+.ios-pwa.skeleton-loading #main-next-event *,
+.ios-pwa.skeleton-loading #upcoming-events-list * {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+    background-size: 200% 100% !important;
+    animation: skeletonShimmer 1.5s infinite !important;
     color: transparent !important;
     border-radius: 4px;
 }
