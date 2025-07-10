@@ -2,10 +2,14 @@
   <!-- Background gris foncé -->
   <rect width="512" height="512" fill="#2a2a2a" />
   
-  <!-- Icône de partition exactement comme dans les onglets, centrée et bien proportionnée -->
-  <g transform="translate(256, 256) scale(10)">
-    <path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
-    <path d="M14 2v6h6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M8 13h8M8 17h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Icône de partition - juste contour blanc, pas de remplissage -->
+  <g transform="translate(256, 256)">
+    <!-- Document principal (contour blanc uniquement) -->
+    <path d="M-80 -150 L50 -150 L120 -80 L120 150 A16 16 0 0 1 104 166 L-80 166 A16 16 0 0 1 -96 150 L-96 -134 A16 16 0 0 1 -80 -150 Z" 
+          stroke="white" stroke-width="12" stroke-linejoin="round" fill="none"/>
+    <!-- Coin plié (blanc aussi) -->
+    <path d="M50 -150 L50 -80 L120 -80" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Lignes de texte (blanches) -->
+    <path d="M-50 -20 L80 -20 M-50 20 L80 20 M-50 60 L60 60" stroke="white" stroke-width="8" stroke-linecap="round"/>
   </g>
 </svg>
