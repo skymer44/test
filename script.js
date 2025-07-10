@@ -446,9 +446,6 @@ function createPieceElement(piece) {
     const div = document.createElement('div');
     div.className = 'piece-card';
     
-    // 🎯 Les nouveaux éléments suivent le système d'animation de scroll automatiquement
-    // La fonction setupProgrammeScrollAnimations() s'occupera d'eux au bon moment
-    
     let linksHTML = '';
     if (piece.links) {
         const links = [];
@@ -796,10 +793,11 @@ function initTabs() {
     });
 }
 
-// � FONCTION POUR DÉCLENCHER LES ANIMATIONS SPÉCIFIQUES À CHAQUE ONGLET
+// FONCTION POUR DÉCLENCHER LES ANIMATIONS NATURELLES AU SCROLL
 function triggerTabAnimations(tabId) {
-    console.log(`🎬 Déclenchement des animations pour l'onglet: ${tabId}`);
+    console.log(`🎬 Configuration des animations naturelles pour l'onglet: ${tabId}`);
     
+    // Options pour l'animation au scroll (découverte naturelle)
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -808,7 +806,7 @@ function triggerTabAnimations(tabId) {
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Animation d'apparition
+                // Animation d'apparition douce
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0)';
                 
@@ -819,12 +817,23 @@ function triggerTabAnimations(tabId) {
     }, observerOptions);
     
     if (tabId === 'programmes') {
-        // 🔄 RÉINITIALISER le flag d'animation pour permettre la reconfiguration
-        window.programmeAnimationsSetup = false;
+        // Animations naturelles pour l'onglet Programme musical
+        console.log('🎵 Configuration des animations scroll naturelles pour Programme musical');
         
-        // Animations pour l'onglet Programme musical
-        console.log('🎵 Déclenchement des animations pour Programme musical');
-        setupProgrammeScrollAnimations();
+        // Trouver tous les éléments à animer au scroll
+        setTimeout(() => {
+            const programmeElements = document.querySelectorAll('#programmes .piece-card, #programmes .concert-section');
+            
+            programmeElements.forEach((element, index) => {
+                // Préparer l'animation au scroll pour tous les éléments
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(element);
+            });
+            
+            console.log(`✅ ${programmeElements.length} éléments configurés pour animation au scroll`);
+        }, 100);
         
     } else if (tabId === 'prochains-evenements') {
         // Animations pour l'onglet Prochains événements
@@ -4580,90 +4589,6 @@ console.log('🔄 Synchronisation Notion configurée!');
         console.log('✅ Cache-busting mobile ultra-simplifié opérationnel');
     }
 })();
-
-// 🎭 FONCTION D'ANIMATIONS DE SCROLL POUR PROGRAMME MUSICAL (inspirée des événements)
-function setupProgrammeScrollAnimations() {
-    console.log('🎯 Configuration des animations scroll pour Programme musical');
-    
-    // 🛡️ PROTECTION ANTI-BOUCLE INFINIE
-    if (window.programmeAnimationsSetup) {
-        console.log('🛡️ Animations déjà configurées, éviter la duplication');
-        return;
-    }
-    
-    // Options pour l'animation au scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Animation d'apparition
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                
-                console.log('✨ Élément de programme révélé au scroll');
-                
-                // Ne plus observer après animation
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    
-    // 🎯 TENTATIVES LIMITÉES pour éviter la boucle infinie
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    const trySetupAnimations = () => {
-        attempts++;
-        
-        const programmeElements = document.querySelectorAll('#programmes .concert-section, #programmes .piece-card, #programmes .section-header');
-        
-        if (programmeElements.length === 0) {
-            if (attempts < maxAttempts) {
-                console.log(`⚠️ Tentative ${attempts}/${maxAttempts} - Aucun élément trouvé dans programmes - retry dans 500ms`);
-                setTimeout(trySetupAnimations, 500);
-            } else {
-                console.warn('❌ Abandon après 10 tentatives - Contenu programme non trouvé');
-                window.programmeAnimationsSetup = true; // Marquer comme "fait" pour éviter les répétitions
-            }
-            return;
-        }
-        
-        // ✅ CONTENU TROUVÉ - Configurer les animations
-        let animatedElementsCount = 0;
-        
-        programmeElements.forEach((element, index) => {
-            // Nettoyer les styles précédents
-            element.dataset.animationPrepared = 'true';
-            
-            // Les 2 premiers éléments sont immédiatement visibles
-            if (index < 2) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            } else {
-                // Les éléments suivants : préparer l'animation
-                element.style.opacity = '0';
-                element.style.transform = 'translateY(20px)';
-                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(element);
-                animatedElementsCount++;
-            }
-        });
-        
-        console.log(`✅ ${programmeElements.length} éléments trouvés - ${animatedElementsCount} avec animation scroll`);
-        
-        // Sauvegarder l'observateur et marquer comme configuré
-        window.programmeScrollObserver = observer;
-        window.programmeAnimationsSetup = true;
-    };
-    
-    // Démarrer avec un délai initial
-    setTimeout(trySetupAnimations, 300);
-}
 
 // ========================================
 // 📱 FONCTIONS UTILITAIRES PWA
