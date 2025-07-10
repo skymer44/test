@@ -1,15 +1,15 @@
-// ====== ANIMATION SKELETON PWA ======
-// Système d'animation squelette pendant le chargement (PWA uniquement)
+// ====== ANIMATION SKELETON PWA REPENSÉE ======
+// Système d'animation skeleton légère pendant le chargement (PWA uniquement)
 class SkeletonLoadingManager {
     constructor() {
-        this.minimumLoadingTime = 800; // Temps minimum pour voir l'effet (0.8s)
+        this.minimumLoadingTime = 600; // Temps minimum pour voir l'effet (0.6s)
         this.startTime = Date.now();
         this.resourcesLoaded = false;
         this.domReady = false;
         
         // Vérifier si on est en mode PWA
         if (this.isPWAMode()) {
-            console.log('🎨 Mode PWA détecté - animation skeleton activée');
+            console.log('🎨 Mode PWA détecté - animation skeleton légère activée');
             this.init();
         } else {
             console.log('🌐 Mode navigateur détecté - chargement normal');
@@ -34,7 +34,7 @@ class SkeletonLoadingManager {
     }
     
     init() {
-        // Activer l'état de chargement skeleton
+        // Activer l'état de chargement skeleton (seulement si les conteneurs sont vides)
         document.body.classList.add('skeleton-loading');
         
         // Écouter le chargement du DOM
@@ -58,11 +58,11 @@ class SkeletonLoadingManager {
             });
         }
         
-        // Timeout de sécurité (montrer le contenu après 3 secondes maximum)
+        // Timeout de sécurité (montrer le contenu après 2 secondes maximum)
         setTimeout(() => {
             console.log('⏰ Timeout skeleton - affichage forcé du contenu');
             this.showContent();
-        }, 3000);
+        }, 2000);
     }
     
     checkReadyToShow() {
@@ -85,27 +85,23 @@ class SkeletonLoadingManager {
         document.body.classList.remove('skeleton-loading');
         document.body.classList.add('content-loaded');
         
-        // Petite animation d'apparition en cascade
+        // Animation d'apparition douce
         this.animateContentAppearance();
     }
     
     animateContentAppearance() {
-        // Animation en cascade des éléments principaux
+        // Animation simple des éléments principaux
         const elementsToAnimate = [
-            'header',
-            '.tab-navigation',
-            'main',
-            '.mobile-bottom-nav',
-            '.main-event-content',
+            '#main-next-event',
             '#upcoming-events-list'
         ];
         
         elementsToAnimate.forEach((selector, index) => {
             const element = document.querySelector(selector);
-            if (element) {
+            if (element && element.children.length > 0) {
                 setTimeout(() => {
-                    element.classList.add('skeleton-revealed');
-                }, index * 100);
+                    element.classList.add('content-revealed');
+                }, index * 150);
             }
         });
         
