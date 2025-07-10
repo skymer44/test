@@ -2,24 +2,10 @@
   <!-- Background gris foncé -->
   <rect width="512" height="512" fill="#2a2a2a" />
   
-  <!-- Main card/fiche -->
-  <rect x="156" y="156" width="200" height="240" rx="12" ry="12" fill="none" stroke="white" stroke-width="4" />
-  
-  <!-- Header area -->
-  <line x1="176" y1="196" x2="336" y2="196" stroke="white" stroke-width="2" />
-  
-  <!-- Text lines -->
-  <line x1="176" y1="220" x2="296" y2="220" stroke="#ccc" stroke-width="1.5" />
-  <line x1="176" y1="240" x2="316" y2="240" stroke="#ccc" stroke-width="1.5" />
-  <line x1="176" y1="260" x2="276" y2="260" stroke="#ccc" stroke-width="1.5" />
-  
-  <!-- Note de musique complète et reconnaissable -->
-  <g transform="translate(256, 330)">
-    <!-- Tige de la note -->
-    <rect x="12" y="-50" width="3" height="50" fill="white" />
-    <!-- Tête de note (ovale inclinée) -->
-    <ellipse cx="0" cy="0" rx="10" ry="7" fill="white" transform="rotate(-20)" />
-    <!-- Crochet/flag -->
-    <path d="M 15 -50 Q 30 -45 35 -25 Q 32 -20 25 -23 Q 18 -27 15 -35 Z" fill="white" />
+  <!-- Icône de partition exactement comme dans les onglets, centrée et bien proportionnée -->
+  <g transform="translate(256, 256) scale(10)">
+    <path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+    <path d="M14 2v6h6" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 13h8M8 17h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
   </g>
 </svg>
