@@ -43,7 +43,30 @@
                 z-index: 10000 !important;
             }
         }
+        
+        /* Écran de chargement masqué par défaut (sauf en mode PWA) */
+        .splash-screen {
+            display: none !important;
+        }
+        
+        /* Afficher uniquement en mode PWA */
+        @media (display-mode: standalone) {
+            .splash-screen {
+                display: flex !important;
+            }
+        }
+        
+        /* Détection JavaScript pour iOS PWA */
+        .ios-pwa .splash-screen {
+            display: flex !important;
+        }
     </style>
+    <script>
+        // Détection immédiate iOS PWA pour éviter le flash
+        if (window.navigator.standalone === true) {
+            document.documentElement.classList.add('ios-pwa');
+        }
+    </script>
     <link rel="stylesheet" href="styles.css?v=v20250708_a280087e">
 </head>
 <body>

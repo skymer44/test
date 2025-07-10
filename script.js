@@ -8,7 +8,39 @@ class SplashScreenManager {
         this.resourcesLoaded = false;
         this.domReady = false;
         
-        this.init();
+        // Vérifier si on est en mode PWA
+        if (this.isPWAMode()) {
+            console.log('🚀 Mode PWA détecté - écran de chargement activé');
+            this.init();
+        } else {
+            console.log('🌐 Mode navigateur détecté - écran de chargement désactivé');
+            this.disableSplash();
+        }
+    }
+    
+    // Détecter si on est en mode PWA (application installée)
+    isPWAMode() {
+        // Méthode 1: display-mode standalone
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        
+        // Méthode 2: iOS PWA mode
+        const isIOSPWA = window.navigator.standalone === true;
+        
+        // Méthode 3: Vérifier si lancé depuis l'écran d'accueil
+        const isFromHomeScreen = window.matchMedia('(display-mode: standalone)').matches ||
+                                window.navigator.standalone ||
+                                document.referrer.includes('android-app://');
+        
+        return isStandalone || isIOSPWA || isFromHomeScreen;
+    }
+    
+    // Désactiver complètement l'écran de chargement
+    disableSplash() {
+        if (this.splashScreen) {
+            this.splashScreen.style.display = 'none';
+        }
+        document.body.classList.remove('content-loading');
+        document.body.classList.add('content-loaded');
     }
     
     init() {

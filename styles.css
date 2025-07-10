@@ -26,6 +26,22 @@
     /* Support pour les zones sécurisées */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    /* Masqué par défaut en mode navigateur */
+    display: none;
+}
+
+/* Afficher l'écran de chargement uniquement en mode PWA */
+@media (display-mode: standalone) {
+    .splash-screen {
+        display: flex;
+    }
+}
+
+/* Support pour iOS PWA */
+@media all and (display-mode: standalone) {
+    .splash-screen {
+        display: flex;
+    }
 }
 
 .splash-screen.hidden {
