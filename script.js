@@ -1,3 +1,91 @@
+// ====== ÉCRAN DE CHARGEMENT PWA ======
+// Gestion de l'écran de chargement au démarrage de l'application
+class SplashScreenManager {
+    constructor() {
+        this.splashScreen = document.getElementById('splash-screen');
+        this.minimumLoadingTime = 1500; // Temps minimum d'affichage (1.5s)
+        this.startTime = Date.now();
+        this.resourcesLoaded = false;
+        this.domReady = false;
+        
+        this.init();
+    }
+    
+    init() {
+        // Marquer le contenu comme en cours de chargement
+        document.body.classList.add('content-loading');
+        
+        // Écouter le chargement du DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.domReady = true;
+                this.checkReadyToHide();
+            });
+        } else {
+            this.domReady = true;
+        }
+        
+        // Écouter le chargement complet des ressources
+        if (document.readyState === 'complete') {
+            this.resourcesLoaded = true;
+            this.checkReadyToHide();
+        } else {
+            window.addEventListener('load', () => {
+                this.resourcesLoaded = true;
+                this.checkReadyToHide();
+            });
+        }
+        
+        // Timeout de sécurité (masquer après 5 secondes maximum)
+        setTimeout(() => {
+            console.log('⏰ Timeout écran de chargement - masquage forcé');
+            this.hideSplash();
+        }, 5000);
+    }
+    
+    checkReadyToHide() {
+        if (!this.domReady || !this.resourcesLoaded) {
+            return;
+        }
+        
+        const elapsedTime = Date.now() - this.startTime;
+        const remainingTime = Math.max(0, this.minimumLoadingTime - elapsedTime);
+        
+        setTimeout(() => {
+            this.hideSplash();
+        }, remainingTime);
+    }
+    
+    hideSplash() {
+        if (!this.splashScreen) return;
+        
+        console.log('✨ Masquage de l\'écran de chargement');
+        
+        // Animation de sortie
+        this.splashScreen.classList.add('hidden');
+        
+        // Afficher le contenu principal
+        document.body.classList.remove('content-loading');
+        document.body.classList.add('content-loaded');
+        
+        // Retirer l'écran de chargement du DOM après l'animation
+        setTimeout(() => {
+            if (this.splashScreen && this.splashScreen.parentNode) {
+                this.splashScreen.parentNode.removeChild(this.splashScreen);
+            }
+        }, 600); // Correspond à la durée de transition CSS
+    }
+}
+
+// Initialiser l'écran de chargement dès que possible
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new SplashScreenManager();
+    });
+} else {
+    new SplashScreenManager();
+}
+
 // 📱 PWA Service Worker Registration (optimisé v20250710)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
