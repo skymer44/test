@@ -43,23 +43,6 @@
                 z-index: 10000 !important;
             }
         }
-        
-        /* Écran de chargement masqué par défaut (sauf en mode PWA) */
-        .splash-screen {
-            display: none !important;
-        }
-        
-        /* Afficher uniquement en mode PWA */
-        @media (display-mode: standalone) {
-            .splash-screen {
-                display: flex !important;
-            }
-        }
-        
-        /* Détection JavaScript pour iOS PWA */
-        .ios-pwa .splash-screen {
-            display: flex !important;
-        }
     </style>
     <script>
         // Détection immédiate iOS PWA pour éviter le flash
@@ -70,41 +53,6 @@
     <link rel="stylesheet" href="styles.css?v=v20250708_a280087e">
 </head>
 <body>
-    <!-- Écran de chargement PWA -->
-    <div id="splash-screen" class="splash-screen">
-        <div class="splash-content">
-            <!-- Logo avec animation -->
-            <div class="splash-logo">
-                <svg width="120" height="120" viewBox="0 0 152 152" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="splashBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea"/>
-                            <stop offset="100%" style="stop-color:#764ba2"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="152" height="152" rx="28" fill="url(#splashBg)"/>
-                    <circle cx="76" cy="76" r="28" fill="white"/>
-                    <rect x="74" y="48" width="3" height="57" fill="white"/>
-                    <text x="76" y="130" text-anchor="middle" fill="white" font-family="Arial" font-size="15" font-weight="bold">2026</text>
-                </svg>
-            </div>
-            
-            <!-- Titre de l'application -->
-            <h1 class="splash-title">Fiche Musicien</h1>
-            <p class="splash-subtitle">Programme Musical 2026</p>
-            
-            <!-- Indicateur de chargement -->
-            <div class="splash-loader">
-                <div class="loader-circle"></div>
-                <div class="loader-circle"></div>
-                <div class="loader-circle"></div>
-            </div>
-            
-            <!-- Texte de chargement -->
-            <p class="splash-loading-text">Chargement en cours...</p>
-        </div>
-    </div>
-
     <!-- Définition du dégradé SVG pour les icônes -->
     <svg style="display: none;">
         <defs>
@@ -115,7 +63,7 @@
         </defs>
     </svg>
 
-    <!-- Contenu principal de l'application (masqué pendant le chargement) -->
+    <!-- Contenu principal de l'application -->
     <div id="app-content" class="app-content">
     <header>
         <div class="header-content">

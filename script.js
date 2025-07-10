@@ -1,32 +1,26 @@
-// ====== ÉCRAN DE CHARGEMENT PWA ======
-// Gestion de l'écran de chargement au démarrage de l'application
-class SplashScreenManager {
+// ====== ANIMATION SKELETON PWA ======
+// Système d'animation squelette pendant le chargement (PWA uniquement)
+class SkeletonLoadingManager {
     constructor() {
-        this.splashScreen = document.getElementById('splash-screen');
-        this.minimumLoadingTime = 1500; // Temps minimum d'affichage (1.5s)
+        this.minimumLoadingTime = 800; // Temps minimum pour voir l'effet (0.8s)
         this.startTime = Date.now();
         this.resourcesLoaded = false;
         this.domReady = false;
         
         // Vérifier si on est en mode PWA
         if (this.isPWAMode()) {
-            console.log('🚀 Mode PWA détecté - écran de chargement activé');
+            console.log('🎨 Mode PWA détecté - animation skeleton activée');
             this.init();
         } else {
-            console.log('🌐 Mode navigateur détecté - écran de chargement désactivé');
-            this.disableSplash();
+            console.log('🌐 Mode navigateur détecté - chargement normal');
+            this.disableSkeleton();
         }
     }
     
     // Détecter si on est en mode PWA (application installée)
     isPWAMode() {
-        // Méthode 1: display-mode standalone
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-        
-        // Méthode 2: iOS PWA mode
         const isIOSPWA = window.navigator.standalone === true;
-        
-        // Méthode 3: Vérifier si lancé depuis l'écran d'accueil
         const isFromHomeScreen = window.matchMedia('(display-mode: standalone)').matches ||
                                 window.navigator.standalone ||
                                 document.referrer.includes('android-app://');
@@ -34,24 +28,20 @@ class SplashScreenManager {
         return isStandalone || isIOSPWA || isFromHomeScreen;
     }
     
-    // Désactiver complètement l'écran de chargement
-    disableSplash() {
-        if (this.splashScreen) {
-            this.splashScreen.style.display = 'none';
-        }
-        document.body.classList.remove('content-loading');
+    // Pas de skeleton en mode navigateur normal
+    disableSkeleton() {
         document.body.classList.add('content-loaded');
     }
     
     init() {
-        // Marquer le contenu comme en cours de chargement
-        document.body.classList.add('content-loading');
+        // Activer l'état de chargement skeleton
+        document.body.classList.add('skeleton-loading');
         
         // Écouter le chargement du DOM
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 this.domReady = true;
-                this.checkReadyToHide();
+                this.checkReadyToShow();
             });
         } else {
             this.domReady = true;
@@ -60,22 +50,22 @@ class SplashScreenManager {
         // Écouter le chargement complet des ressources
         if (document.readyState === 'complete') {
             this.resourcesLoaded = true;
-            this.checkReadyToHide();
+            this.checkReadyToShow();
         } else {
             window.addEventListener('load', () => {
                 this.resourcesLoaded = true;
-                this.checkReadyToHide();
+                this.checkReadyToShow();
             });
         }
         
-        // Timeout de sécurité (masquer après 5 secondes maximum)
+        // Timeout de sécurité (montrer le contenu après 3 secondes maximum)
         setTimeout(() => {
-            console.log('⏰ Timeout écran de chargement - masquage forcé');
-            this.hideSplash();
-        }, 5000);
+            console.log('⏰ Timeout skeleton - affichage forcé du contenu');
+            this.showContent();
+        }, 3000);
     }
     
-    checkReadyToHide() {
+    checkReadyToShow() {
         if (!this.domReady || !this.resourcesLoaded) {
             return;
         }
@@ -84,38 +74,48 @@ class SplashScreenManager {
         const remainingTime = Math.max(0, this.minimumLoadingTime - elapsedTime);
         
         setTimeout(() => {
-            this.hideSplash();
+            this.showContent();
         }, remainingTime);
     }
     
-    hideSplash() {
-        if (!this.splashScreen) return;
+    showContent() {
+        console.log('✨ Transition skeleton vers contenu réel');
         
-        console.log('✨ Masquage de l\'écran de chargement');
-        
-        // Animation de sortie
-        this.splashScreen.classList.add('hidden');
-        
-        // Afficher le contenu principal
-        document.body.classList.remove('content-loading');
+        // Transition fluide du skeleton vers le contenu
+        document.body.classList.remove('skeleton-loading');
         document.body.classList.add('content-loaded');
         
-        // Retirer l'écran de chargement du DOM après l'animation
-        setTimeout(() => {
-            if (this.splashScreen && this.splashScreen.parentNode) {
-                this.splashScreen.parentNode.removeChild(this.splashScreen);
+        // Petite animation d'apparition en cascade
+        this.animateContentAppearance();
+    }
+    
+    animateContentAppearance() {
+        // Animation en cascade des éléments principaux
+        const elementsToAnimate = [
+            'header',
+            '.tab-navigation',
+            'main',
+            '.mobile-bottom-nav'
+        ];
+        
+        elementsToAnimate.forEach((selector, index) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                setTimeout(() => {
+                    element.classList.add('skeleton-revealed');
+                }, index * 100);
             }
-        }, 600); // Correspond à la durée de transition CSS
+        });
     }
 }
 
-// Initialiser l'écran de chargement dès que possible
+// Initialiser le système skeleton dès que possible
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        new SplashScreenManager();
+        new SkeletonLoadingManager();
     });
 } else {
-    new SplashScreenManager();
+    new SkeletonLoadingManager();
 }
 
 // 📱 PWA Service Worker Registration (optimisé v20250710)

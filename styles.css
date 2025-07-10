@@ -10,118 +10,79 @@
     display: none !important;
 }
 
-/* ====== ÉCRAN DE CHARGEMENT PWA ====== */
-.splash-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
-    /* Support pour les zones sécurisées */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    /* Masqué par défaut en mode navigateur */
-    display: none;
-}
+/* ====== SYSTÈME SKELETON LOADING PWA ====== */
+/* Animation skeleton uniquement en mode PWA - plus moderne et moins intrusif */
 
-/* Afficher l'écran de chargement uniquement en mode PWA */
+/* État de chargement skeleton - uniquement en mode PWA */
 @media (display-mode: standalone) {
-    .splash-screen {
-        display: flex;
+    .skeleton-loading .app-content {
+        animation: skeletonPulse 1.5s ease-in-out infinite alternate;
+    }
+    
+    .skeleton-loading h1,
+    .skeleton-loading h2,
+    .skeleton-loading h3,
+    .skeleton-loading .tab-button,
+    .skeleton-loading .mobile-nav-item {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeletonShimmer 1.5s infinite;
+        color: transparent !important;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .skeleton-loading .tab-button svg,
+    .skeleton-loading .mobile-nav-item svg {
+        opacity: 0;
+    }
+    
+    /* Formes de skeleton pour différents éléments */
+    .skeleton-loading .piece-card,
+    .skeleton-loading .mini-event-card {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeletonShimmer 1.5s infinite;
+        border-radius: 8px;
+        min-height: 120px;
+    }
+    
+    .skeleton-loading .piece-card > *,
+    .skeleton-loading .mini-event-card > * {
+        opacity: 0;
     }
 }
 
-/* Support pour iOS PWA */
-@media all and (display-mode: standalone) {
-    .splash-screen {
-        display: flex;
+/* Animation du shimmer (effet de brillance qui passe) */
+@keyframes skeletonShimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
     }
 }
 
-.splash-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+/* Animation de pulsation douce */
+@keyframes skeletonPulse {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
 }
 
-.splash-content {
-    text-align: center;
-    color: white;
-    max-width: 300px;
-    padding: 20px;
+/* Animation d'apparition du contenu */
+.skeleton-revealed {
+    animation: contentReveal 0.4s ease-out forwards;
 }
 
-.splash-logo {
-    margin-bottom: 24px;
-    animation: splashPulse 2s ease-in-out infinite;
-}
-
-.splash-logo svg {
-    width: 120px;
-    height: 120px;
-    filter: drop-shadow(0 8px 32px rgba(0,0,0,0.3));
-}
-
-.splash-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    opacity: 0;
-    animation: slideInUp 0.8s ease-out 0.3s forwards;
-}
-
-.splash-subtitle {
-    font-size: 16px;
-    opacity: 0.9;
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: slideInUp 0.8s ease-out 0.5s forwards;
-}
-
-.splash-loader {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    opacity: 0;
-    animation: slideInUp 0.8s ease-out 0.7s forwards;
-}
-
-.loader-circle {
-    width: 12px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    animation: loaderBounce 1.4s ease-in-out infinite both;
-}
-
-.loader-circle:nth-child(1) { animation-delay: -0.32s; }
-.loader-circle:nth-child(2) { animation-delay: -0.16s; }
-.loader-circle:nth-child(3) { animation-delay: 0s; }
-
-.splash-loading-text {
-    font-size: 14px;
-    opacity: 0.8;
-    opacity: 0;
-    animation: slideInUp 0.8s ease-out 0.9s forwards;
-}
-
-/* Animations pour l'écran de chargement */
-@keyframes splashPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes slideInUp {
+@keyframes contentReveal {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -129,63 +90,29 @@
     }
 }
 
-@keyframes loaderBounce {
-    0%, 80%, 100% {
-        transform: scale(0.6);
-        opacity: 0.5;
-    }
-    40% {
-        transform: scale(1);
-        opacity: 1;
-    }
+/* Support pour iOS PWA */
+.ios-pwa.skeleton-loading .app-content {
+    animation: skeletonPulse 1.5s ease-in-out infinite alternate;
 }
 
-/* Masquer le contenu principal pendant le chargement */
-.content-loading .app-content {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.6s ease-in, visibility 0.6s ease-in;
-}
-
-.content-loaded .app-content {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Responsive pour écran de chargement */
-@media (max-width: 480px) {
-    .splash-logo svg {
-        width: 100px;
-        height: 100px;
-    }
-    
-    .splash-title {
-        font-size: 24px;
-    }
-    
-    .splash-subtitle {
-        font-size: 14px;
-    }
+.ios-pwa.skeleton-loading h1,
+.ios-pwa.skeleton-loading h2,
+.ios-pwa.skeleton-loading h3,
+.ios-pwa.skeleton-loading .tab-button,
+.ios-pwa.skeleton-loading .mobile-nav-item {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.5s infinite;
+    color: transparent !important;
+    border-radius: 4px;
 }
 
 /* Réduction des animations si préférence utilisateur */
 @media (prefers-reduced-motion: reduce) {
-    .splash-screen,
-    .splash-logo,
-    .splash-title,
-    .splash-subtitle,
-    .splash-loader,
-    .splash-loading-text {
+    .skeleton-loading *,
+    .skeleton-revealed {
         animation: none !important;
         transition-duration: 0.1s !important;
-    }
-    
-    .splash-title,
-    .splash-subtitle,
-    .splash-loader,
-    .splash-loading-text {
-        opacity: 1;
-        transform: none;
     }
 }
 
