@@ -140,7 +140,7 @@
       }
     },
     {
-      "title": "The Lion King",
+      "title": "The Lion Kings",
       "composer": "John Higgins",
       "duration": "08:40",
       "info": "Super pièce",
@@ -152,7 +152,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
-        "lastModified": "2025-07-06T12:47:00.000Z",
+        "lastModified": "2025-07-11T09:07:00.000Z",
         "order": 3
       }
     },
@@ -256,7 +256,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-07-11T06:52:08.447Z",
+    "syncDate": "2025-07-11T09:08:27.440Z",
     "source": "notion",
     "totalPieces": 15
   }
