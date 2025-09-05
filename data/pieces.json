@@ -137,7 +137,7 @@
       "title": "Ammerland",
       "composer": "Jacob de Haan",
       "duration": "03:10",
-      "info": "Très interessant pour le son mais assez chère",
+      "info": "Très interessant pour le son",
       "links": {
         "audio": "https://www.youtube.com/watch?v=y5GQ0we6dOc",
         "purchase": "https://www.laflutedepan.com/partition/10102812/de-haan-jacob-ammerland-concert-bandharmonie.html"
@@ -146,7 +146,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80aa-89ed-d0e586cc1c74",
-        "lastModified": "2025-07-09T08:05:00.000Z",
+        "lastModified": "2025-09-05T08:46:00.000Z",
         "order": 1
       }
     },
@@ -154,7 +154,7 @@
       "title": "Music from How To Train Your Dragon",
       "composer": "John Powell/arr. Sean O'Loughlin",
       "duration": "04:50",
-      "info": "Marche très bien, joviale",
+      "info": "Marche très bien.",
       "links": {
         "audio": "https://www.youtube.com/watch?v=FfOuif5v554&list=RDFfOuif5v554&start_radio=1",
         "purchase": "https://www.sheetmusicdirect.com/en-US/Search.aspx?query=Music from How To Train Your Dragon - 02501568&utm_source=youtube&utm_medium=band-orch-scoreplay"
@@ -163,7 +163,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80cd-9f3b-e2ad6dd48f98",
-        "lastModified": "2025-07-06T12:47:00.000Z",
+        "lastModified": "2025-09-05T08:47:00.000Z",
         "order": 2
       }
     },
@@ -171,7 +171,7 @@
       "title": "The Lion King",
       "composer": "John Higgins",
       "duration": "08:40",
-      "info": "Super pièce",
+      "info": "Très bon arrangement",
       "links": {
         "audio": "https://www.youtube.com/watch?v=WEEDErl0wlI&list=RDWEEDErl0wlI&start_radio=1",
         "purchase": "https://www.halleonard.com/product/viewproduct.action?itemid=20523032&subsiteid=1"
@@ -180,7 +180,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-80ac-a0d9-c5cf323b4723",
-        "lastModified": "2025-07-11T09:09:00.000Z",
+        "lastModified": "2025-09-05T08:47:00.000Z",
         "order": 3
       }
     },
@@ -188,7 +188,6 @@
       "title": "Selections from The Nightmare Before Christmas",
       "composer": "Elfman/arr. Brown",
       "duration": "05:12",
-      "info": "Excellent",
       "links": {
         "audio": "https://www.youtube.com/watch?v=294MV8S7dU4",
         "original": "https://www.youtube.com/watch?v=SAfmjPwxspI&list=RDSAfmjPwxspI&start_radio=1",
@@ -198,7 +197,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-8052-94c2-d3c8ddadf9b0",
-        "lastModified": "2025-07-06T12:47:00.000Z",
+        "lastModified": "2025-09-05T08:47:00.000Z",
         "order": 4
       }
     },
@@ -206,7 +205,6 @@
       "title": "Allegretto from Symphony No. 7",
       "composer": "Beethoven/arr. Longfield",
       "duration": "03:00",
-      "info": "Bien arrangée, bien gérer la répartition",
       "links": {
         "audio": "https://www.youtube.com/watch?v=-McQCz0vWc8&list=RD-McQCz0vWc8&start_radio=1",
         "original": "https://www.youtube.com/watch?v=xaYWy3eHtCM&list=RDxaYWy3eHtCM&start_radio=1",
@@ -216,7 +214,7 @@
         "notion": true,
         "database": "Ma région virtuose",
         "pageId": "223fcf9e-3abc-8089-a923-cb0d70a75d1a",
-        "lastModified": "2025-07-06T12:48:00.000Z",
+        "lastModified": "2025-09-05T08:47:00.000Z",
         "order": 5
       }
     },
@@ -256,7 +254,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2025-09-05T06:40:24.490Z",
+    "syncDate": "2025-09-05T08:49:06.237Z",
     "source": "notion",
     "totalPieces": 15
   }
