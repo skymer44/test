@@ -217,11 +217,45 @@
         "lastModified": "2025-09-05T08:47:00.000Z",
         "order": 5
       }
+    },
+    {
+      "title": "Oregon",
+      "composer": "Jacob de Haan",
+      "duration": "09:09",
+      "info": "Vérifier le niveau et l'intérêt",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=to3gePlszMY&list=RDto3gePlszMY&start_radio=1",
+        "purchase": "https://www.rundel.de/fr/artikel/oregon/DH890139"
+      },
+      "source": {
+        "notion": true,
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-8052-9473-c178b85357c2",
+        "lastModified": "2025-07-07T16:58:00.000Z",
+        "order": 1
+      }
+    },
+    {
+      "title": "Danse Bacchanale Samson et Dalila, Op. 47",
+      "composer": "Camille Saint-Saëns / arr. L. Steiger",
+      "duration": "07:20",
+      "info": "La pièce est peut-être trop dure. ",
+      "links": {
+        "audio": "https://www.youtube.com/watch?v=1VuTNuH6Oio&list=RD1VuTNuH6Oio&start_radio=1",
+        "purchase": "https://www.hebu-music.com/en/article/camille-saint-saens/neil-a-kjos-music-company/danse-bacchanale-samson-and-delilah.150183/"
+      },
+      "source": {
+        "notion": true,
+        "database": "Pièces qui n’ont pas trouvé leur concert",
+        "pageId": "223fcf9e-3abc-806b-b57f-e10a1bd9d36a",
+        "lastModified": "2025-07-06T12:51:00.000Z",
+        "order": 2
+      }
     }
   ],
   "metadata": {
-    "syncDate": "2026-03-25T22:45:03.685Z",
+    "syncDate": "2026-03-26T06:50:53.498Z",
     "source": "notion",
-    "totalPieces": 13
+    "totalPieces": 15
   }
 }
