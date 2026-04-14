@@ -240,29 +240,6 @@
       }
     },
     {
-      "date": "2025-10-23",
-      "type": [
-        {
-          "name": "Répétition pendant les vacances",
-          "color": "purple"
-        }
-      ],
-      "title": [
-        {
-          "name": "Répétition pendant les vacances",
-          "color": "purple"
-        }
-      ],
-      "pieces": [],
-      "notes": "La date sera confirmée ultérieurement. ",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-81c9-a72c-efa4ab4a42d5",
-        "lastModified": "2025-07-06T17:08:00.000Z"
-      }
-    },
-    {
       "date": "2025-10-30",
       "type": [
         {
@@ -283,6 +260,29 @@
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-81a8-a7aa-c7f3b61c1a7c",
         "lastModified": "2025-07-06T16:50:00.000Z"
+      }
+    },
+    {
+      "date": "2025-10-23",
+      "type": [
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
+      ],
+      "title": [
+        {
+          "name": "Répétition pendant les vacances",
+          "color": "purple"
+        }
+      ],
+      "pieces": [],
+      "notes": "La date sera confirmée ultérieurement. ",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81c9-a72c-efa4ab4a42d5",
+        "lastModified": "2025-07-06T17:08:00.000Z"
       }
     },
     {
@@ -516,29 +516,6 @@
       }
     },
     {
-      "date": "2026-01-15",
-      "type": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "title": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "pieces": [],
-      "notes": "",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-81f9-b503-ca0fd6473dc6",
-        "lastModified": "2025-07-06T16:52:00.000Z"
-      }
-    },
-    {
       "date": "2026-01-22",
       "type": [
         {
@@ -562,7 +539,7 @@
       }
     },
     {
-      "date": "2026-01-29",
+      "date": "2026-01-15",
       "type": [
         {
           "name": "Répétition",
@@ -580,7 +557,7 @@
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-817a-b981-e35d4e15b97d",
+        "pageId": "228fcf9e-3abc-81f9-b503-ca0fd6473dc6",
         "lastModified": "2025-07-06T16:52:00.000Z"
       }
     },
@@ -608,6 +585,29 @@
       }
     },
     {
+      "date": "2026-01-29",
+      "type": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "title": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-817a-b981-e35d4e15b97d",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
       "date": "2026-02-12",
       "type": [
         {
@@ -627,6 +627,29 @@
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8162-a5bf-f12f59a44106",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-02-26",
+      "type": [
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
+      ],
+      "title": [
+        {
+          "name": "Pas de répétition",
+          "color": "red"
+        }
+      ],
+      "pieces": [],
+      "notes": "2ᵉ jeudi vacances Hiver",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8136-8bb8-fa226daba24c",
         "lastModified": "2025-07-06T16:52:00.000Z"
       }
     },
@@ -651,29 +674,6 @@
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8148-b9a4-e5709596f0ce",
         "lastModified": "2025-07-06T17:09:00.000Z"
-      }
-    },
-    {
-      "date": "2026-02-26",
-      "type": [
-        {
-          "name": "Pas de répétition",
-          "color": "red"
-        }
-      ],
-      "title": [
-        {
-          "name": "Pas de répétition",
-          "color": "red"
-        }
-      ],
-      "pieces": [],
-      "notes": "2ᵉ jeudi vacances Hiver",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-8136-8bb8-fa226daba24c",
-        "lastModified": "2025-07-06T16:52:00.000Z"
       }
     },
     {
@@ -746,29 +746,6 @@
       }
     },
     {
-      "date": "2026-03-26",
-      "type": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "title": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "pieces": [],
-      "notes": "",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-8165-9f69-c17847b9f2f5",
-        "lastModified": "2025-07-06T16:52:00.000Z"
-      }
-    },
-    {
       "date": "2026-04-02",
       "type": [
         {
@@ -788,6 +765,29 @@
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8137-a804-eaa6f4a14949",
+        "lastModified": "2025-07-06T16:52:00.000Z"
+      }
+    },
+    {
+      "date": "2026-03-26",
+      "type": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "title": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8165-9f69-c17847b9f2f5",
         "lastModified": "2025-07-06T16:52:00.000Z"
       }
     },
@@ -812,29 +812,6 @@
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8131-b24b-d116f63c5f51",
         "lastModified": "2025-07-06T16:52:00.000Z"
-      }
-    },
-    {
-      "date": "2026-04-11",
-      "type": [
-        {
-          "name": "Concert avec Eric Aubier",
-          "color": "green"
-        }
-      ],
-      "title": [
-        {
-          "name": "Concert avec Eric Aubier",
-          "color": "green"
-        }
-      ],
-      "pieces": [],
-      "notes": "Beaucoup de choses à confirmer",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-8022-b8aa-fcfaed646145",
-        "lastModified": "2025-07-06T17:07:00.000Z"
       }
     },
     {
@@ -976,29 +953,6 @@
       }
     },
     {
-      "date": "2026-05-28",
-      "type": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "title": [
-        {
-          "name": "Répétition",
-          "color": "default"
-        }
-      ],
-      "pieces": [],
-      "notes": "",
-      "source": {
-        "notion": true,
-        "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-81fc-bdf6-f615b0d625f4",
-        "lastModified": "2025-07-06T16:53:00.000Z"
-      }
-    },
-    {
       "date": "2026-06-04",
       "type": [
         {
@@ -1018,6 +972,29 @@
         "notion": true,
         "database": "Programme répétitions 2025-2026",
         "pageId": "228fcf9e-3abc-8142-bb3e-e049b3922b25",
+        "lastModified": "2025-07-06T16:53:00.000Z"
+      }
+    },
+    {
+      "date": "2026-05-28",
+      "type": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "title": [
+        {
+          "name": "Répétition",
+          "color": "default"
+        }
+      ],
+      "pieces": [],
+      "notes": "",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-81fc-bdf6-f615b0d625f4",
         "lastModified": "2025-07-06T16:53:00.000Z"
       }
     },
@@ -1068,26 +1045,26 @@
       }
     },
     {
-      "date": "2026-06-19",
+      "date": "2026-07-02",
       "type": [
         {
-          "name": "Fête de la musique",
-          "color": "green"
+          "name": "Répétition",
+          "color": "default"
         }
       ],
       "title": [
         {
-          "name": "Fête de la musique",
-          "color": "green"
+          "name": "Répétition",
+          "color": "default"
         }
       ],
       "pieces": [],
-      "notes": "Date provisoire à confirmer",
+      "notes": "",
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-8049-b32b-d4c8bbe8a05e",
-        "lastModified": "2025-07-06T17:07:00.000Z"
+        "pageId": "228fcf9e-3abc-81bd-aad2-e10b4e804f2f",
+        "lastModified": "2025-07-06T16:53:00.000Z"
       }
     },
     {
@@ -1114,26 +1091,49 @@
       }
     },
     {
-      "date": "2026-07-02",
+      "date": "2026-04-11",
       "type": [
         {
-          "name": "Répétition",
-          "color": "default"
+          "name": "Concert avec Eric Aubier",
+          "color": "green"
         }
       ],
       "title": [
         {
-          "name": "Répétition",
-          "color": "default"
+          "name": "Concert avec Eric Aubier",
+          "color": "green"
         }
       ],
       "pieces": [],
-      "notes": "",
+      "notes": "Beaucoup de choses à confirmer",
       "source": {
         "notion": true,
         "database": "Programme répétitions 2025-2026",
-        "pageId": "228fcf9e-3abc-81bd-aad2-e10b4e804f2f",
-        "lastModified": "2025-07-06T16:53:00.000Z"
+        "pageId": "228fcf9e-3abc-8022-b8aa-fcfaed646145",
+        "lastModified": "2025-07-06T17:07:00.000Z"
+      }
+    },
+    {
+      "date": "2026-06-19",
+      "type": [
+        {
+          "name": "Fête de la musique",
+          "color": "green"
+        }
+      ],
+      "title": [
+        {
+          "name": "Fête de la musique",
+          "color": "green"
+        }
+      ],
+      "pieces": [],
+      "notes": "Date provisoire à confirmer",
+      "source": {
+        "notion": true,
+        "database": "Programme répétitions 2025-2026",
+        "pageId": "228fcf9e-3abc-8049-b32b-d4c8bbe8a05e",
+        "lastModified": "2025-07-06T17:07:00.000Z"
       }
     },
     {
@@ -1182,7 +1182,7 @@
     }
   ],
   "metadata": {
-    "syncDate": "2026-04-14T07:04:01.625Z",
+    "syncDate": "2026-04-14T22:46:06.360Z",
     "source": "notion",
     "totalEvents": 47
   }
